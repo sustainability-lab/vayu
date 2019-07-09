@@ -30,6 +30,7 @@ pm25 = mydata.pm25
 
 
 def calendar_array(dates, data):
+    
     i, j = zip(*[d.isocalendar()[1:] for d in dates])
     i = np.array(i) - min(i)
     j = np.array(j) - 1
@@ -42,12 +43,10 @@ def calendar_array(dates, data):
 
 def calendar_heatmap(ax, dates, data):
     i, j, calendar = calendar_array(dates, data)
-    im = ax.imshow(calendar, interpolation='none', cmap='coolwarm')
+    im = ax.imshow(calendar, interpolation='none', cmap='YlOrRd')
     label_days(ax, dates, i, j, calendar)
-    label_months(ax, dates, i, j, calendar)
-    ax.figure.colorbar(im)
-    
-    #ax.figure.colorbar(figsize=(10, 10))
+   # ax.figure.colorbar(im)
+
 
 def label_days(ax, dates, i, j, calendar):
     ni, nj = calendar.shape
@@ -56,91 +55,71 @@ def label_days(ax, dates, i, j, calendar):
 
     for (i, j), day in np.ndenumerate(day_of_month):
         if np.isfinite(day):
-            #print(ax)
-# =============================================================================
-#             if j ==12:
-#                 day = day+1
-# =============================================================================
             ax.text(j, i, int(day), ha='center', va='top')
-            if avg_ws[int(day)-1+a]<=5:
-                ax.text(j,i,"    -->", ha = 'left', va = 'bottom', rotation = avg_wd[int(day)-1+a])#########
-            elif avg_ws[int(day)-1+a]<=10:
-                ax.text(j,i,"    ---->", ha = 'left', va = 'bottom', rotation = avg_wd[int(day)-1+a])#########
-            elif avg_ws[int(day)-1+a]>10 :
-                ax.text(j,i,"    ------>", ha = 'left', va = 'bottom', rotation = avg_wd[int(day)-1+a])#########
-            #print(avg_wd.dtype)
+            ################
+            ax.arrow(j, i, avg_ws[int(day)-1+a]*np.cos(avg_wd[int(day)-1+a]*np.pi/180.)/15., 
+                                  -avg_ws[int(day)-1+a]*np.sin(avg_wd[int(day)-1+a]*np.pi/180.)/15.,
+                                  head_width=0.05, head_length=.1, fc='k', ec='k')
+            ##################
     ax.set(xticks=np.arange(7), 
            xticklabels=['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'])
     ax.xaxis.tick_top()
 
-def label_months(ax, dates, i, j, calendar):
-    month_labels = np.array(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul',
-                             'Aug', 'Sep', 'Oct', 'Nov', 'Dec'])
-    months = np.array([d.month for d in dates])
-    uniq_months = sorted(set(months))
-    yticks = [i[months == m].mean() for m in uniq_months]
-    labels = [month_labels[m - 1] for m in uniq_months]
-    ax.set(yticks=yticks)
-    ax.set_yticklabels(labels, rotation=90)
 
 #############
-
 df = pd.read_csv("mydata.csv")
-avg_ws = []
-for j in range(0,len(df),24):
-    x = df["ws"][j:j+24].values
-    x = x[~np.isnan(x)]
-    avg_x = np.mean(x)
-    avg_ws.append(avg_x)
-avg_wd = []
-for j in range(0,len(df),24):
-    x = df["wd"][j:j+24].values
-    x = x[~np.isnan(x)]
-    avg_x = np.mean(x)
-    avg_wd.append(avg_x)
-avg_pm25 = []
-for j in range(0,len(df),24):
-    x = df["pm25"][j:j+24].values
-    x = x[~np.isnan(x)]
-    avg_x = np.mean(x)
-    avg_pm25.append(avg_x)
+df.index= pd.to_datetime(df.date)
+df = df.drop("date", axis=1)
+df_2003= df['2003'].resample("1D").mean()
+df_2003 = df_2003.fillna(method='ffill')
+df_2003['month'] = df_2003.index.month
+df_2003.index.dayofweek
 
-avg_ws = array( avg_ws )
-avg_ws=avg_ws.astype(np.int)
-avg_wd = array( avg_wd )
-avg_wd=avg_wd.astype(np.int)
-#np.array(avg_wd, dtype=np.int32)
+t = 1
+fig,ax = plt.subplots(figsize=(10,10), nrows=4, ncols=3)
 
-#############33
-i = 1
-a = 1826
-b = 1857
-while i<=12:
-    data = avg_pm25[a:b]
-    num = len(data)
-    if i!=12:
-        start = dt.datetime(2019, i, 1)
-    elif i == 12:
-        start = dt.datetime(2017, i, 2)
-    dates = [start + dt.timedelta(days=i) for i in range(num)] 
-    fig, ax = plt.subplots(figsize=(10,10))
+
+while t<=12:
     
-    calendar_heatmap(ax, dates, data)
-    #plt.subplot(4,3,i)
-    i = i+1
-    if i ==2:
-        a = a+31
-        b = b+28
-    elif i==3:
-        a = a+28
-        b = b+31
-    elif i%2!=0:
-        a = a+30
-        b = b+31
-    elif i%2==0:
-        a = a+31
-        b = b+30
-        
+    avg_ws = []
+    avg_wd = []
+    avg_pm25 = []
+    df_2003_1 = df_2003[df_2003.month==t]
+    avg_wd = df_2003_1['wd']
+    avg_ws = df_2003_1['ws']
+    avg_pm25 = df_2003_1['pm25']
+    print(avg_wd[0:5])
+    
+    #############
+    i = 1
+    a = 0
+    b = len(avg_pm25)
+    while i<=1:
+        data = avg_pm25[a:b]
+        num = len(data)
+        if t ==12:
+            start = dt.datetime(2003, 1, 1)
+        else:
+            start = dt.datetime(2003, t, 1)
+        dates = [start + dt.timedelta(days=i) for i in range(num)] 
+        #fig,ax = plt.subplots(figsize=(10,10))
+        #plt.subplot(4,3,t)
+        #axes = fig.add_subplot(4, 3, t)
+        #fig, ax = plt.subplots(nrows=4, ncols=3)
+        month_labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul','Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        ax[(t-1)//3][(t-1)%3].set_title(month_labels[t-1])
+        calendar_heatmap(ax[(t-1)//3][(t-1)%3], dates, data)
+        i = i+1
+    t = t+1 
+
+plt.tight_layout()
+    #plt.subplot(4,3,t-1)
+plt.show()
+x = range(10)
+y = range(10)
+
+
+
 plt.show()
 plt.close('all')
 
