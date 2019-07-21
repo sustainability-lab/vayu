@@ -1,12 +1,12 @@
+import locale
 import matplotlib as mpl
 from matplotlib import docstring
 import numpy as np
-import locale
-import random
 import pandas as pd
+import random
 from matplotlib.projections.polar import PolarAxes
+from numpy.lib.twodim_base import histogram2d
 import matplotlib.pyplot as plt
-from pylab import poly_between
 
 ZBASE = -1000  # The starting zorder for all drawing, negative to have the grid on
 VAR_DEFAULT = "speed"
@@ -15,12 +15,6 @@ FIGSIZE_DEFAULT = (8, 8)
 DPI_DEFAULT = 80
 CALM_CIRCLE_COLOR = "red"
 CALM_CIRCLE_ALPHA = 0.4
-
-
-def _autogen_docstring(base):
-    msg = ""
-    addendum = docstring.Appender(msg, "\n\n")
-    return lambda func: addendum(docstring.copy_dedent(base)(func))
 
 class WindroseAxes(PolarAxes):
     """
@@ -328,131 +322,6 @@ class WindroseAxes(PolarAxes):
             self.add_artist(circle)
         return self.calm_count or 0
 
-    def contour(self, direction, var, **kwargs):
-        """
-        Plot a windrose in linear mode. For each var bins, a line will be
-        draw on the axes, a segment between each sector (center to center).
-        Each line can be formated (color, width, ...) like with standard plot
-        pylab command.
-        Parameters
-        ----------
-        direction : 1D array
-            directions the wind blows from, North centred
-        var : 1D array
-            values of the variable to compute. Typically the wind speeds.
-        Other Parameters
-        ----------------
-        sector : integer, optional
-            number of sectors used to compute the windrose table. If not set,
-            nsectors=12, then each sector will be 360/12=22.5°, and the
-            resulting computed table will be aligned with the cardinals points.
-        bins : 1D array or integer, optional
-            number of bins, or a sequence of bins variable. If not set, bins=6,
-            then bins=linspace(min(var), max(var), 6)
-        blowto : bool, optional
-            If True, the windrose will be pi rotated, to show where the wind
-            blow to (usefull for pollutant rose).
-        colors : string or tuple, optional
-            one string color ('k' or 'black'), in this case all bins will be
-            plotted in this color; a tuple of matplotlib color args (string,
-            float, rgb, etc), different levels will be plotted in different
-            colors in the order specified.
-        cmap : a cm Colormap instance from :obj:`matplotlib.cm`, optional
-            if cmap == None and colors == None, a default Colormap is used.
-        others kwargs
-            Any supported argument of :obj:`matplotlib.pyplot.plot`
-        """
-        bins, nbins, nsector, colors, angles, kwargs = self._init_plot(
-            direction, var, **kwargs
-        )
-
-        # closing lines
-        angles = np.hstack((angles, angles[-1] - 2 * np.pi / nsector))
-        vals = np.hstack(
-            (
-                self._info["table"],
-                np.reshape(
-                    self._info["table"][:, 0], (self._info["table"].shape[0], 1)
-                ),
-            )
-        )
-
-        offset = self._calm_circle()
-        for i in range(nbins):
-            val = vals[i, :] + offset
-            offset += vals[i, :]
-            zorder = ZBASE + nbins - i
-            patch = self.plot(angles, val, color=colors[i], zorder=zorder, **kwargs)
-            self.patches_list.extend(patch)
-        self._update()
-
-    def contourf(self, direction, var, **kwargs):
-        """
-        Plot a windrose in filled mode. For each var bins, a line will be
-        draw on the axes, a segment between each sector (center to center).
-        Each line can be formated (color, width, ...) like with standard plot
-        pylab command.
-        Parameters
-        ----------
-        direction : 1D array
-            directions the wind blows from, North centred
-        var : 1D array
-            values of the variable to compute. Typically the wind speeds
-        Other Parameters
-        ----------------
-        nsector: integer, optional
-            number of sectors used to compute the windrose table. If not set,
-            nsectors=12, then each sector will be 360/12=22.5°, and the
-            resulting computed table will be aligned with the cardinals points.
-        bins : 1D array or integer, optional
-            number of bins, or a sequence of bins variable. If not set, bins=6,
-            then bins=linspace(min(`var`), max(`var`), 6)
-        blowto : bool, optional
-            If True, the windrose will be pi rotated, to show where the wind
-            blow to (usefull for pollutant rose).
-        colors : string or tuple, optional
-            one string color ('k' or 'black'), in this case all bins will be
-            plotted in this color; a tuple of matplotlib color args (string,
-            float, rgb, etc), different levels will be plotted in different
-            colors in the order specified.
-        cmap : a cm Colormap instance from :obj:`matplotlib.cm`, optional
-            if cmap == None and colors == None, a default Colormap is used.
-        others kwargs
-            Any supported argument of :obj:`matplotlib.pyplot.plot`
-        """
-
-        bins, nbins, nsector, colors, angles, kwargs = self._init_plot(
-            direction, var, **kwargs
-        )
-        kwargs.pop("facecolor", None)
-        kwargs.pop("edgecolor", None)
-
-        # closing lines
-        angles = np.hstack((angles, angles[-1] - 2 * np.pi / nsector))
-        vals = np.hstack(
-            (
-                self._info["table"],
-                np.reshape(
-                    self._info["table"][:, 0], (self._info["table"].shape[0], 1)
-                ),
-            )
-        )
-        offset = self._calm_circle()
-        for i in range(nbins):
-            val = vals[i, :] + offset
-            offset += vals[i, :]
-            zorder = ZBASE + nbins - i
-            xs, ys = poly_between(angles, 0, val)
-            patch = self.fill(
-                xs,
-                ys,
-                facecolor=colors[i],
-                edgecolor=colors[i],
-                zorder=zorder,
-                **kwargs
-            )
-            self.patches_list.extend(patch)
-        self._update()
 
     def bar(self, direction, var, **kwargs):
         """
@@ -528,29 +397,74 @@ class WindroseAxes(PolarAxes):
                     self.patches_list.append(patch)
         self._update()
 
-mydata = pd.read_csv("mydata.csv")
+def histogram(direction, var, bins, nsector, normed=False, blowto=False):
+    if len(var) != len(direction):
+        raise ValueError("var and direction must have same length")
+
+    angle = 360. / nsector
+
+    dir_bins = np.arange(-angle / 2, 360. + angle, angle, dtype=np.float)
+    dir_edges = dir_bins.tolist()
+    dir_edges.pop(-1)
+    dir_edges[0] = dir_edges.pop(-1)
+    dir_bins[0] = 0.
+
+    var_bins = bins.tolist()
+    var_bins.append(np.inf)
+
+    if blowto:
+        direction = direction + 180.
+        direction[direction >= 360.] = direction[direction >= 360.] - 360
+
+    table = histogram2d(x=var, y=direction, bins=[var_bins, dir_bins], normed=False)[0]
+    # add the last value to the first to have the table of North winds
+    table[:, 0] = table[:, 0] + table[:, -1]
+    # and remove the last col
+    table = table[:, :-1]
+    if normed:
+        table = table * 100 / table.sum()
+
+    return dir_edges, var_bins, table
+
+
+
 #print(mydata.head())
 
-pm10 = mydata.pm10
-o3 = mydata.o3
-ws = mydata.ws
-wd = mydata.wd
-nox = mydata.nox
-no2 = mydata.no2
-pm25 = mydata.pm25
 
-pollutant = input ("Enter pollutant for windrose:") 
-if pollutant == "pm25":
-    pollutant = pm25
-elif pollutant == "pm10":
-    pollutant = pm10
-elif pollutant == "nox":
-    pollutant = nox
-elif pollutant == "no2":
-    pollutant = no2
+def windRose(df,pollutant):
+    file = input ("Enter file name (ex: X.csv) : ") 
+    df = pd.read_csv(file)
+    pm10 = df.pm10
+    o3 = df.o3
+    ws = df.ws
+    wd = df.wd
+    nox = df.nox
+    no2 = df.no2
+    pm25 = df.pm25
+    if pollutant == "pm25":
+        pollutant = pm25
+    elif pollutant == "pm10":
+        pollutant = pm10
+    elif pollutant == "nox":
+        pollutant = nox
+    elif pollutant == "no2":
+        pollutant = no2
 
-ax = WindroseAxes.from_ax()
-ax.bar(wd, pollutant, normed=True,opening=0.8, edgecolor='white', bins = [0,10,20,30,40,398], cmap = plt.cm.jet)
-mean_values = True
-ax.set_legend()
+    ax = WindroseAxes.from_ax()
+    wd = df.wd
+    ax.bar(wd, pollutant, normed=True,opening=0.8, edgecolor='white', bins = [0,10,20,30,40,398], cmap = plt.cm.jet)
+    mean_values = True
+    ax.set_legend()
+
+windRose(df,'pm25')
+
+
+
+
+
+
+
+
+
+
 
