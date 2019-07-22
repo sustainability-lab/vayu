@@ -10,23 +10,15 @@ Created on Wed Jun  5 15:52:41 2019
 
 
 
-import datetime as dt
-import matplotlib.pyplot as plt
-import matplotlib as mpl
-import numpy as np
-import pandas as pd
-from numpy  import array
 
-mydata = pd.read_csv("mydata.csv")
+#mydata = pd.read_csv("mydata.csv")
 def calendarPlot(df,pollutant,year,**kwargs):
-    
-    pm10 = df.pm10
-    o3 = df.o3
-    ws = df.ws
-    wd = df.wd
-    nox = df.nox
-    no2 = df.no2
-    pm25 = df.pm25
+    import datetime as dt
+    import matplotlib.pyplot as plt
+    import matplotlib as mpl
+    import numpy as np
+    import pandas as pd
+    from numpy  import array
     
     
     
@@ -71,9 +63,7 @@ def calendarPlot(df,pollutant,year,**kwargs):
         
         
     
-    file = input ("Enter file name (ex: X.csv): " ) 
-    #############
-    df = pd.read_csv(file)
+    
     df.index= pd.to_datetime(df.date)
     df = df.drop("date", axis=1)
     df_2003= df[year].resample("1D").mean()
@@ -146,7 +136,7 @@ def calendarPlot(df,pollutant,year,**kwargs):
     plt.show()
     plt.close('all')
 
-calendarPlot(mydata,'pm25','2003')
+#calendarPlot(mydata,'pm25','2003')
 
 
 

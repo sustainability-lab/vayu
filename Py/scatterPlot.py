@@ -5,17 +5,15 @@ Spyder Editor
 """
 
 
-import numpy as np
-import seaborn as sns
-import pandas as pd
-import matplotlib as mpl
-import matplotlib.pyplot as plt
-import matplotlib.cm as cm
-from math import pi
 
-file = input ("Enter file name (ex: X.csv) : ") 
-df = pd.read_csv(file)
 def scatterPlot(df,x,y,**kwargs):
+    import numpy as np
+    import seaborn as sns
+    import pandas as pd
+    import matplotlib as mpl
+    import matplotlib.pyplot as plt
+    import matplotlib.cm as cm
+    from math import pi
 #print(mydata.head())
 
     pm10 = df.pm10
@@ -60,7 +58,10 @@ def scatterPlot(df,x,y,**kwargs):
     sns.jointplot(x=x, y=y, kind='hex')
     
     plt.show()
-    
-scatterPlot(df,'nox','no2')
+
+# =============================================================================
+# df = pd.read_csv("mydata.csv")
+# scatterPlot(df,'nox','no2')
+# =============================================================================
 
   

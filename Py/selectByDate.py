@@ -4,13 +4,11 @@ Created on Sun Jul 21 19:40:26 2019
 
 @author: Man Vinayaka
 """
-import pandas as pd
-import numpy as np
+
 #Select by Data
 def selectByDate(df,year):
-    file = input ("Enter file name (ex: X.csv): " ) 
-    #############
-    df = pd.read_csv(file)
+    import pandas as pd
+    import numpy as np
     df.index= pd.to_datetime(df.date)
     df = df.drop("date", axis=1)
     df_n= df[year].resample("1D").mean()
@@ -19,4 +17,7 @@ def selectByDate(df,year):
     df_n.index.dayofweek
     print(df_n)
 
-selectByDate(df,'2003')
+# =============================================================================
+# df = pd.read_csv("mydata.csv")
+# selectByDate(df,'2003')
+# =============================================================================

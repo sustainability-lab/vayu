@@ -5,18 +5,16 @@ Created on Mon Jul 22 08:21:55 2019
 @author: Man Vinayaka
 """
 
-import datetime as dt
-import matplotlib.pyplot as plt
-import matplotlib as mpl
-import numpy as np
-import pandas as pd
-from numpy  import array
-import matplotlib.patches as mpatches
+
 
 def timeProp(df,year,pollutant):
-    file = input ("Enter file name (ex: X.csv): " ) 
-    #############
-    df = pd.read_csv(file)
+    import datetime as dt
+    import matplotlib.pyplot as plt
+    import matplotlib as mpl
+    import numpy as np
+    import pandas as pd
+    from numpy  import array
+    import matplotlib.patches as mpatches
     df.index= pd.to_datetime(df.date)
     df = df.drop("date", axis=1)
     df_2003= df[year]
@@ -133,4 +131,8 @@ def timeProp(df,year,pollutant):
     plt.xlabel('Contribution weighted by Mean')
     plt.ylabel('pollutant')
     plt.show()
-timeProp(mydata,'2003','so2')
+    
+# =============================================================================
+# mydata = pd.read_csv('mydata.csv')
+# timeProp(mydata,'2003','so2')
+# =============================================================================

@@ -4,15 +4,14 @@ Created on Sun Jul 21 21:50:55 2019
 
 @author: Man Vinayaka
 """
-import numpy as np
-import pandas as pd
-import matplotlib as mpl
-import matplotlib.pyplot as plt
+
 
 def timePlot(df,year,month):
-    file = input ("Enter file name (ex: X.csv): " ) 
-    #############
-    df = pd.read_csv(file)
+    import numpy as np
+    import pandas as pd
+    import matplotlib as mpl
+    import matplotlib.pyplot as plt
+    
     df.index= pd.to_datetime(df.date)
     df = df.drop("date", axis=1)
     df_n= df[year]
@@ -56,6 +55,8 @@ def timePlot(df,year,month):
 
     #a.axes.get_xaxis().set_visible(False)
     #print(df_n_1)
-mydata = pd.read_csv('mydata.csv')
-#selectByDate(mydata,'2003',8)
-print(timePlot(mydata,'2003',8))
+# =============================================================================
+# mydata = pd.read_csv('mydata.csv')
+# #selectByDate(mydata,'2003',8)
+# timePlot(mydata,'2003',8)
+# =============================================================================

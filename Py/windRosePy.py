@@ -432,8 +432,6 @@ def histogram(direction, var, bins, nsector, normed=False, blowto=False):
 
 
 def windRose(df,pollutant):
-    file = input ("Enter file name (ex: X.csv) : ") 
-    df = pd.read_csv(file)
     pm10 = df.pm10
     o3 = df.o3
     ws = df.ws
@@ -455,8 +453,11 @@ def windRose(df,pollutant):
     ax.bar(wd, pollutant, normed=True,opening=0.8, edgecolor='white', bins = [0,10,20,30,40,398], cmap = plt.cm.jet)
     mean_values = True
     ax.set_legend()
-
-windRose(df,'pm25')
+    
+# =============================================================================
+# df = pd.read_csv('mydata.csv')
+# windRose(df,'pm25')
+# =============================================================================
 
 
 
