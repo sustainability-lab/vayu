@@ -9,7 +9,7 @@ import pandas as pd
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 
-def selectByDate(df,year,month):
+def timePlot(df,year,month):
     file = input ("Enter file name (ex: X.csv): " ) 
     #############
     df = pd.read_csv(file)
@@ -58,4 +58,4 @@ def selectByDate(df,year,month):
     #print(df_n_1)
 mydata = pd.read_csv('mydata.csv')
 #selectByDate(mydata,'2003',8)
-print(selectByDate(mydata,'2003',8))
+print(timePlot(mydata,'2003',8))
