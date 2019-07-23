@@ -16,6 +16,7 @@ DPI_DEFAULT = 80
 CALM_CIRCLE_COLOR = "red"
 CALM_CIRCLE_ALPHA = 0.4
 
+
 class WindroseAxes(PolarAxes):
     """
     Create a windrose axes
@@ -313,7 +314,7 @@ class WindroseAxes(PolarAxes):
         """
         if self.calm_count and self.calm_count > 0:
             circle = mpl.patches.Circle(
-                (0., 0.),
+                (0.0, 0.0),
                 self.calm_count,
                 transform=self.transData._b,
                 color=CALM_CIRCLE_COLOR,
@@ -321,7 +322,6 @@ class WindroseAxes(PolarAxes):
             )
             self.add_artist(circle)
         return self.calm_count or 0
-
 
     def bar(self, direction, var, **kwargs):
         """
@@ -397,24 +397,25 @@ class WindroseAxes(PolarAxes):
                     self.patches_list.append(patch)
         self._update()
 
+
 def histogram(direction, var, bins, nsector, normed=False, blowto=False):
     if len(var) != len(direction):
         raise ValueError("var and direction must have same length")
 
-    angle = 360. / nsector
+    angle = 360.0 / nsector
 
-    dir_bins = np.arange(-angle / 2, 360. + angle, angle, dtype=np.float)
+    dir_bins = np.arange(-angle / 2, 360.0 + angle, angle, dtype=np.float)
     dir_edges = dir_bins.tolist()
     dir_edges.pop(-1)
     dir_edges[0] = dir_edges.pop(-1)
-    dir_bins[0] = 0.
+    dir_bins[0] = 0.0
 
     var_bins = bins.tolist()
     var_bins.append(np.inf)
 
     if blowto:
-        direction = direction + 180.
-        direction[direction >= 360.] = direction[direction >= 360.] - 360
+        direction = direction + 180.0
+        direction[direction >= 360.0] = direction[direction >= 360.0] - 360
 
     table = histogram2d(x=var, y=direction, bins=[var_bins, dir_bins], normed=False)[0]
     # add the last value to the first to have the table of North winds
@@ -427,11 +428,10 @@ def histogram(direction, var, bins, nsector, normed=False, blowto=False):
     return dir_edges, var_bins, table
 
 
+# print(mydata.head())
 
-#print(mydata.head())
 
-
-def windRose(df,pollutant):
+def windRose(df, pollutant):
     pm10 = df.pm10
     o3 = df.o3
     ws = df.ws
@@ -450,22 +450,20 @@ def windRose(df,pollutant):
 
     ax = WindroseAxes.from_ax()
     wd = df.wd
-    ax.bar(wd, pollutant, normed=True,opening=0.8, edgecolor='white', bins = [0,10,20,30,40,398], cmap = plt.cm.jet)
+    ax.bar(
+        wd,
+        pollutant,
+        normed=True,
+        opening=0.8,
+        edgecolor="white",
+        bins=[0, 10, 20, 30, 40, 398],
+        cmap=plt.cm.jet,
+    )
     mean_values = True
     ax.set_legend()
-    
+
+
 # =============================================================================
 # df = pd.read_csv('mydata.csv')
 # windRose(df,'pm25')
 # =============================================================================
-
-
-
-
-
-
-
-
-
-
-
