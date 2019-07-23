@@ -6,6 +6,10 @@ Created on Mon Jul 22 12:48:26 2019
 """
 
 def summaryPlot(df):
+    """ Plots import summary of data frame given. Plots line plots
+        and histograms for each polutant as well as statiscs such as 
+        mean,max,min,median, and 95th percentile
+    """      
     import datetime as dt
     import matplotlib.pyplot as plt
     import matplotlib as mpl
@@ -15,23 +19,27 @@ def summaryPlot(df):
     import matplotlib.patches as mpatches
     import seaborn as sns
     from matplotlib.pyplot import figure
+    
     class color:
+       # Allows for bolded and underlined text 
        BOLD = '\033[1m'
        UNDERLINE = '\033[4m'
        END = '\033[0m'
-    
+    # Reads df and fills empty values
     df.index= pd.to_datetime(df.date)
     df = df.drop("date", axis=1)
     df_all= df.resample("1D")
     df_all = df_all.fillna(method='ffill')
+    
     dataPoints = ['pm25','co','so2','pm10','o3','no2','nox','wd','ws']
-    #print(df_all)
+
     
     i = 0
     sub = 1
     while i<9:
-    
-        plt.figure(i+1,figsize=(50, 50))
+    # Plots line and histogram plots for ecery polutant 
+    # in the correct location based on subplot 
+        plt.figure(1,figsize=(50, 50))
         plt.subplot(9,2,sub)
         sub = sub+1
         a = df_all[dataPoints[i]].plot.line(color="gold")
@@ -46,6 +54,7 @@ def summaryPlot(df):
         i = i+1
     i = 0
     while i<9:
+        # Calculates statistics 
         nDf = df[dataPoints[i]]
         missing = nDf.isna().sum() + sum(n < 0 for n in nDf)
         minVal = nDf.min()
@@ -63,5 +72,7 @@ def summaryPlot(df):
         print('95th percentile = '+ str(percentile))
         i = i+1
 
-#df = pd.read_csv('mydata.csv')
-#summaryPlot(df)
+# =============================================================================
+# df = pd.read_csv('mydata.csv')
+# summaryPlot(df)
+# =============================================================================

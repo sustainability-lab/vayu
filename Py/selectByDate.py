@@ -7,6 +7,9 @@ Created on Sun Jul 21 19:40:26 2019
 
 #Select by Data
 def selectByDate(df,year):
+    """ Utility function to cut given dataframe by the year 
+        and find the average value of each day 
+    """  
     import pandas as pd
     import numpy as np
     df.index= pd.to_datetime(df.date)

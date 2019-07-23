@@ -5,7 +5,14 @@ Created on Mon Jul 22 20:50:49 2019
 @author: Man Vinayaka
 """
 def timeVariation(df,pollutant):
-
+    """ 4 seperate plots are plotted:
+        
+        1) the average pollutant level per day by each hour for each day of the 
+            week across all of the data
+        2) the average pollutant level by each hour, across all data
+        3) the average pollutant level by each month of the year for across data
+        4) the average pollutant level per day of the week across all data
+    """  
     import datetime as dt
     import matplotlib.pyplot as plt
     import matplotlib as mpl
@@ -14,6 +21,8 @@ def timeVariation(df,pollutant):
     from numpy  import array
     
     dayWeek = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']
+    
+    #Adds month,day, and hour columns in df for futher pandas manipulation
     
     df.index= pd.to_datetime(df.date)
     df = df.drop("date", axis=1)
@@ -25,7 +34,7 @@ def timeVariation(df,pollutant):
     
     x = 0
     sub = 1
-    
+    # for plot 1
     while x<7:
         monday = []
         a = df_new[df_new.day==x]
@@ -54,7 +63,7 @@ def timeVariation(df,pollutant):
         plt.grid()
         
         x = x+1
-        
+    # plot 2    
     a = df_new
     hourly = []
     i = 0
@@ -66,19 +75,17 @@ def timeVariation(df,pollutant):
             hourly.append(c)
     df_1 = pd.DataFrame(hourly)
     df_1.columns = [pollutant]      
-    #print(df_1)
     plt.subplot(1,3,1)
     a = df_1[pollutant].plot.line(color="#ff9999")
-        #a.axes.get_xaxis().set_visible(False)
     a.yaxis.set_label_position("left")
     plt.ylabel(pollutant)
     plt.xlabel('hour')
     plt.ylim((20,45))
     plt.xlim((0,23))
     plt.grid()
-    
+
+    # plot 3
     a = df_new.fillna(method='ffill')
-    #print(df_new)
     monthly = []
     i = 0
     plt.figure(2,figsize=(30, 3))
@@ -87,20 +94,18 @@ def timeVariation(df,pollutant):
             c = b[pollutant].mean()
             i = i+1
             monthly.append(c)
-    #print((monthly))
     df_1 = pd.DataFrame(monthly)
     df_1.columns = [pollutant]      
-    #print(df_1)
     plt.subplot(1,3,2)
     a = df_1[pollutant].plot.line(color="#ff9999")
-        #a.axes.get_xaxis().set_visible(False)
     a.yaxis.set_label_position("left")
     plt.ylabel(pollutant)
     plt.xlabel('month')
     plt.ylim((30,40))
     plt.xlim((0,12))
     plt.grid()
-    #print(c)
+
+    # plot 4
     x = 0
     weekday = []
     while x<7:

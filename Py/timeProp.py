@@ -8,6 +8,14 @@ Created on Mon Jul 22 08:21:55 2019
 
 
 def timeProp(df,year,pollutant):
+    """ Plot a stacked bar graph of all data in the df
+        based on frequency of wind direction in compass
+        directions. Takes the average of every 3 days
+        in each bar. The hight of the bar is value of 
+        the pollutant that 3 day period. The bars are 
+        binned proportionaly based on the overall value of the 
+        pollutant 
+    """      
     import datetime as dt
     import matplotlib.pyplot as plt
     import matplotlib as mpl
@@ -15,13 +23,19 @@ def timeProp(df,year,pollutant):
     import pandas as pd
     from numpy  import array
     import matplotlib.patches as mpatches
+    
+# =============================================================================
+#     Cuts data into the year specified and averages the 
+#     values of each day 
+# =============================================================================
     df.index= pd.to_datetime(df.date)
     df = df.drop("date", axis=1)
     df_2003= df[year]
     df_2003 = df_2003.fillna(method='ffill')
     df_2003['month'] = df_2003.index.month
-    #############
-    polArray= df['2003'].resample("1D").mean()
+    
+    #New df containing only the values of the pollutant specified 
+    polArray= df[year].resample("1D").mean()
     polArray=df_2003[pollutant]
     
     
@@ -36,12 +50,12 @@ def timeProp(df,year,pollutant):
     polMeanS = 0
     polMeanE = 3
     dfStart = 0
-    dfEnd = 72
+    dfEnd = 72 # 24*3 for 3 day average
     
     
     x = 0
     
-    while x<121:
+    while x<121: # 365 days / 3 = 121 floored. Represents number of bars total
         n = 0
         ne = 0
         e = 0
@@ -54,7 +68,7 @@ def timeProp(df,year,pollutant):
         b = a['wd']
         
         i = 0 
-        while i <72:
+        while i <72: # Bins the wd data into categories for stacked bar graph
             if b[i]>348.75 or b[i]<33.75:
                 n = n+1
             elif b[i]>33.75 and b[i]<78.75:
@@ -73,6 +87,8 @@ def timeProp(df,year,pollutant):
                 nw=nw+1
             
             i = i+1
+        # calculates the 3 day proportion mean of each polutant and stores 
+        # it in a new list
         n = (n/72)*(polArray[polMeanS:polMeanE].mean())
         ne = (ne/72)*(polArray[polMeanS:polMeanE].mean())
         e = (e/72)*(polArray[polMeanS:polMeanE].mean())
@@ -91,6 +107,7 @@ def timeProp(df,year,pollutant):
         wA.append(s)
         nwA.append(nw)
         x=x+1
+        # Adds to start and end values to get through end of df
         polMeanS = polMeanS+3
         polMeanE = polMeanE+3
         dfStart = dfStart+72
@@ -102,7 +119,8 @@ def timeProp(df,year,pollutant):
     
     
     
-    
+    # Plots the stacked bar graph with specific color represtations.
+    # A legend is also plotted 
     X = np.arange(121)
     
     data = np.array([nA,neA,eA,seA,sA,swA,wA,nwA])

@@ -11,8 +11,13 @@ Created on Wed Jun  5 15:52:41 2019
 
 
 
-#mydata = pd.read_csv("mydata.csv")
+
 def calendarPlot(df,pollutant,year,**kwargs):
+    """ Plots a heatmap on a calendar layout based 
+        on the intensity of the pollutant per day.
+        Each day contains an arrow indicating both 
+        wind direction as well as wind speed
+    """      
     import datetime as dt
     import matplotlib.pyplot as plt
     import matplotlib as mpl
@@ -23,7 +28,9 @@ def calendarPlot(df,pollutant,year,**kwargs):
     
     
     def calendar_array(dates, data):
-        
+        """ creates the calendar array returning i,j giving
+            positional values in the array
+        """          
         i, j = zip(*[d.isocalendar()[1:] for d in dates])
         i = np.array(i) - min(i)
         j = np.array(j) - 1
@@ -35,6 +42,8 @@ def calendarPlot(df,pollutant,year,**kwargs):
     
     
     def calendar_heatmap(ax, dates, data):
+        """ Sets heatmap information
+        """          
         i, j, calendar = calendar_array(dates, data)
         im = ax.imshow(calendar, interpolation='none', cmap='YlOrRd',vmin=0, vmax=40)
         label_days(ax, dates, i, j, calendar)
@@ -42,28 +51,31 @@ def calendarPlot(df,pollutant,year,**kwargs):
     
     
     def label_days(ax, dates, i, j, calendar):
+        """ Based on the day of the week, it will print that 
+            text on each box of the day. The arrow is also ploted on
+            each box for every day converting the given wind direction
+            to a xy coordinate
+        """          
         ni, nj = calendar.shape
         day_of_month = np.nan * np.zeros((ni, 7))
         day_of_month[i, j] = [d.day for d in dates]
     
         for (i, j), day in np.ndenumerate(day_of_month):
             if np.isfinite(day):
-                # ax.text(j, i, int(day), ha='center', va='top')
-                ################
                 ax.arrow(j, i, avg_ws[int(day)-1+a]*np.cos(avg_wd[int(day)-1+a]*np.pi/180.)/15., 
                                       -avg_ws[int(day)-1+a]*np.sin(avg_wd[int(day)-1+a]*np.pi/180.)/15.,
                                       head_width=0.15, head_length=.1, fc='k', ec='k')
-                ##################
-    # =============================================================================
-    #     ax.set(xticks=np.arange(7), 
-    #            xticklabels=['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'])
-    # =============================================================================
+
         ax.set_yticklabels([])
         ax.set_xticklabels([])
         
         
     
-    
+# =============================================================================
+#     Cuts given data to show average of each day. 
+#     Adds a month coloumn to the df as well
+# =============================================================================
+         
     df.index= pd.to_datetime(df.date)
     df = df.drop("date", axis=1)
     df_2003= df[year].resample("1D").mean()
@@ -76,7 +88,12 @@ def calendarPlot(df,pollutant,year,**kwargs):
     fig,ax = plt.subplots(figsize=(10,10), nrows=4, ncols=4)
     
     
-    
+# =============================================================================
+#     """ Plots 12 seperate plots that are then put togeather in a 
+#         4x4 arrangement with the last column being used to plot 
+#         the colorbar 
+#     """      
+# =============================================================================
     while t<=12:
         
         avg_ws = []
@@ -86,9 +103,9 @@ def calendarPlot(df,pollutant,year,**kwargs):
         avg_wd = df_2003_1['wd']
         avg_ws = df_2003_1['ws']
         avg_pm25 = df_2003_1[pollutant]
-        #print(avg_wd[0:5])
         
-        #############
+        
+        
         i = 1
         a = 0
         b = len(avg_pm25)
@@ -120,11 +137,12 @@ def calendarPlot(df,pollutant,year,**kwargs):
     
     plt.tight_layout()
     
-    
+# =============================================================================
+#    Colorbar plotting  
+# =============================================================================
     grid = plt.GridSpec(4, 4, wspace=2, hspace=0.3)
     
     cbar_ax = plt.subplot(grid[:, 3])
-    #cbar_ax.imshow(np.random.randn(20, 5))
     cmap = plt.cm.get_cmap('YlOrRd')
     norm = mpl.colors.Normalize(vmin=0, vmax=50)
        
@@ -135,6 +153,7 @@ def calendarPlot(df,pollutant,year,**kwargs):
     
     plt.show()
     plt.close('all')
+
 
 #calendarPlot(mydata,'pm25','2003')
 

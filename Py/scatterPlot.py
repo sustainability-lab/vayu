@@ -14,7 +14,6 @@ def scatterPlot(df,x,y,**kwargs):
     import matplotlib.pyplot as plt
     import matplotlib.cm as cm
     from math import pi
-#print(mydata.head())
 
     pm10 = df.pm10
     o3 = df.o3
@@ -25,7 +24,7 @@ def scatterPlot(df,x,y,**kwargs):
     
     
     #########################################
-    
+    # converts wind data to randians 
     df = pd.DataFrame({"speed": ws, "direction": wd})
     df['speed_x'] = df['speed'] * np.sin(df['direction'] * pi / 180.0)
     df['speed_y'] = df['speed'] * np.cos(df['direction'] * pi / 180.0)
@@ -35,9 +34,9 @@ def scatterPlot(df,x,y,**kwargs):
     ax.set_aspect('equal')
     _ = df.plot(kind='scatter', x='speed_x', y='speed_y', alpha=0.35, ax=ax)
     
-    #print(mydata.head())
+ 
     ####################################
-    #print(no2)
+	# simple seaborn plot that shows how given variables relate with one another
     if x =='nox':
         x = nox
     elif x =='no2':

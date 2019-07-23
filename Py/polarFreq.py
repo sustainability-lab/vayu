@@ -9,6 +9,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
+# =============================================================================
+# Needs work, data is random at the moment
+# Not fully functional at the moment
+# =============================================================================
 
 df = pd.read_csv("mydata.csv")
 mydata = pd.read_csv("mydata.csv")
