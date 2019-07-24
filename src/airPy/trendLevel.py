@@ -1,4 +1,4 @@
-def trend_level(df, pollutant, **kwargs):
+def trendLevel(df, pollutant, **kwargs):
     """
     Plot that shows the overall pollutant trend for every year in the 
     df. It takes the average hour value of each month and plots a heatmap
@@ -43,5 +43,5 @@ def trend_level(df, pollutant, **kwargs):
 
 # =============================================================================
 # df = pd.read_csv("mydata.csv")
-# trend_level(df,'nox')
+# trendLevel(df,'nox')
 # =============================================================================

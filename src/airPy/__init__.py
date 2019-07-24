@@ -12,3 +12,11 @@ finally:
 
 from .scatterPlot import scatterPlot
 from .timePlot import timePlot
+from .calendarPlot import calendarPlot
+from .linearRelation import linearRelation
+from .selectByDate import selectByDate
+from .summaryPlot import summaryPlot
+from .timePlot import timePlot
+from .timeVariation import timeVariation
+from .trendLevel import trendLevel
+from .windRosePy import windRose
