@@ -5,7 +5,7 @@ console script. To run this script uncomment the following lines in the
 [options.entry_points] section in setup.cfg:
 
     console_scripts =
-         fibonacci = airpy.skeleton:run
+         fibonacci = airPy.skeleton:run
 
 Then run `python setup.py install` which will install the command `fibonacci`
 inside your current environment.
@@ -19,7 +19,7 @@ import argparse
 import sys
 import logging
 
-from airpy import __version__
+from airPy import __version__
 
 __author__ = "manvinayaka"
 __copyright__ = "manvinayaka"
