@@ -18,10 +18,10 @@ def calendarPlot(df, pollutant, year, **kwargs):
 	Parameters
         ----------
 	df: data frame
-		minimally containing date and at least one other numeric variable
+	minimally containing date and at least one other numeric variable
         pollutant: type string
             Mandatory. A pollutant name corresponding to 
-			a variable in a data frame, ex: 'pm25'
+		a variable in a data frame, ex: 'pm25'
         year: type string
             Year to plot, ex: '2003'
     """
