@@ -10,6 +10,17 @@ def linearRelation(df, pol1, pol2):
     """ This plot given two pollutants will graph the linear 
         relationship. The df given will be converted to the slope
         between the pollutants. 
+		
+		Parameters
+		----------
+		df: data frame
+			minimally containing date and two pollutants
+		pol1: type string
+			First pollutant that when plotted would appear
+			on the x-axis of a relationship, ex: 'nox'
+		pol2: type string
+			Second pollutant that when plotted would appear
+			on the y-axis of a relationship, ex: 'pm10'		
     """
     import datetime as dt
     import matplotlib.pyplot as plt
@@ -26,17 +37,6 @@ def linearRelation(df, pol1, pol2):
         and converts it to a string type within a list 
         to be called on later to determine manipulation 
         of data
-		
-		Parameters
-		----------
-		df: data frame
-			minimally containing date and two pollutants
-		pol1: type string
-			First pollutant that when plotted would appear
-			on the x-axis of a relationship, ex: 'nox'
-		pol2: type string
-			Second pollutant that when plotted would appear
-			on the y-axis of a relationship, ex: 'pm10'
     """
     i = 0
     year = []
