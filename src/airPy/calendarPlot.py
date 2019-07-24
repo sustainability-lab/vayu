@@ -15,9 +15,9 @@ def calendarPlot(df, pollutant, year, **kwargs):
         Each day contains an arrow indicating both 
         wind direction as well as wind speed
 		
-		Parameters
+Parameters
         ----------
-		df: data frame
+df: data frame
 			 minimally containing date and at least 
 			 one other numeric variable
         pollutant: type string
