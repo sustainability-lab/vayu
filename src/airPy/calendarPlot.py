@@ -15,15 +15,16 @@ def calendarPlot(df, pollutant, year, **kwargs):
         Each day contains an arrow indicating both 
         wind direction as well as wind speed
 		
-	Parameters
-        ----------
-	df: data frame
-	minimally containing date and at least one other numeric variable
-        pollutant: type string
-            Mandatory. A pollutant name corresponding to 
-		a variable in a data frame, ex: 'pm25'
-        year: type string
-            Year to plot, ex: '2003'
+		Parameters
+		----------
+		df: data frame
+			minimally containing date and at least one other
+			numeric variable 
+		pollutant: type string
+			A pollutant name correspoinding to 
+			a variable in a data frame, ex: 'pm25'
+		year: type string
+			Year to plot, ex '2003'
     """
     import datetime as dt
     import matplotlib.pyplot as plt
