@@ -8,6 +8,16 @@ Created on Sun Jul 21 21:50:55 2019
 
 def timePlot(df, year, month):
     """ Plot time series of ws,nox,o3,pm25,pm10 given a month and year
+		
+		Parameters
+		----------
+		df: data frame
+			a data frame of time series. Must have a date field
+			and at least one variable to plot
+		year: type string
+			year of which data will be cut
+		month: type int
+			month of what plot will be graphed
     """
     import numpy as np
     import pandas as pd

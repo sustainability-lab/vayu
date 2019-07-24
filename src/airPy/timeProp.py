@@ -14,6 +14,16 @@ def timeProp(df, year, pollutant):
         the pollutant that 3 day period. The bars are 
         binned proportionaly based on the overall value of the 
         pollutant 
+		
+		Parameters
+		----------
+		df: data frame
+			data frame which has the fields of date and the pollutant
+			to be graphed
+		year: type string
+			The year of which the data will be cut
+		pollutant: type string
+			The pollutant of which to plot
     """
     import datetime as dt
     import matplotlib.pyplot as plt

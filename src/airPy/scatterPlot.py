@@ -6,6 +6,18 @@ Spyder Editor
 
 
 def scatterPlot(df, x, y, **kwargs):
+	"""
+	Parameters
+	----------
+	df: data frame 
+		data frame containing at least 
+		2 numeric variables to plot
+	x: type string
+		name of x variable to plot
+	y: type string
+		name of y variable to plot
+		
+	"""
     import numpy as np
     import seaborn as sns
     import pandas as pd

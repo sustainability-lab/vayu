@@ -10,6 +10,12 @@ def summaryPlot(df):
     """ Plots import summary of data frame given. Plots line plots
         and histograms for each polutant as well as statiscs such as 
         mean,max,min,median, and 95th percentile
+		
+		Parameters
+		----------
+		df: data frame
+			data frame to be summarised. Must contain a date field
+			and at least one other parameter 
     """
     import datetime as dt
     import matplotlib.pyplot as plt

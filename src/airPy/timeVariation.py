@@ -14,6 +14,14 @@ def timeVariation(df, pollutant):
         2) the average pollutant level by each hour, across all data
         3) the average pollutant level by each month of the year for across data
         4) the average pollutant level per day of the week across all data
+		
+		Parameters
+		----------
+		df: data frame
+			data frame of hourly data. 
+			Must include a date field and at least one variable to plot
+		pollutant: type string
+			Name of variable to plot
     """
     import datetime as dt
     import matplotlib.pyplot as plt
