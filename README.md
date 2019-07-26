@@ -2,6 +2,7 @@
 airPy
 =====
 
+![](logo.png)
 
 Tools for Air Quality Data Analysis 
 
