@@ -1,8 +1,8 @@
 =====
-airPy
+vayu
 =====
 
-This is the documentation of **airPy**.
+This is the documentation of **vayu**.
 
 .. note::
 
