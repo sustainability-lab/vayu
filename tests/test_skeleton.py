@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import pytest
-from airPy.skeleton import fib
+from vayu.skeleton import fib
 
 __author__ = "manvinayaka"
 __copyright__ = "manvinayaka"
