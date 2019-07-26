@@ -82,13 +82,18 @@ def interpolPlot(
 
 
 # =============================================================================
+# from geopandas import GeoDataFrame
+# import pandas as pd
+# import matplotlib.pyplot as plt
+# from vayu import interpolPlot
+
 # shapeFile = "re/tl_2017_us_state.shp"
-# long = "Logitude"
+# long = "Longitude"
 # lat = "Latitude"
 # pollutant = "Arithmetic Mean"
-# df = pd.read_csv(daily_44201_2018.csv)
+# df = pd.read_csv("re/daily_44201_2018.csv")
 # shape_df = GeoDataFrame.from_file(shapeFile)
-# shape_df.drop(shape_df.index[[34, 35, 36, 40, 41,49,31]],
-# inplace=True)
+# shape_df.drop(shape_df.index[[34, 35, 36, 40, 41, 49, 31]], inplace=True)
 # interpolPlot(df, shape_df, long, lat, pollutant)
+# plt.show()
 # =============================================================================
