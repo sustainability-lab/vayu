@@ -17,6 +17,7 @@ def interpolPlot(
     from geopandas import GeoDataFrame
     from shapely.geometry import Polygon, MultiPolygon
     from sklearn.ensemble import RandomForestRegressor
+    from matplotlib.colors import ListedColormap
 
     from polire.custom import CustomInterpolator
 
@@ -52,10 +53,16 @@ def interpolPlot(
             elif len(mpoly) == 1:
                 polygons.append(mpoly[0])
                 colors.append(polygon.get_facecolor().tolist()[0])
+        if type(collec_poly.cmap) != ListedColormap:
+            raise ValueError("""We only support ListedColormap right now.\n"""
+                """simply convert your cmap to ListedColormap using url here."""
+                """https://matplotlib.org/3.1.0/tutorials/colors/colormap-manipulation.html#sphx-glr-tutorials-colors-colormap-manipulation-py""")
+
+        ixs = [collec_poly.cmap.colors.index(c[:3]) for c in colors]
         return GeoDataFrame(
             geometry=polygons,
             data={'RGBA': colors, 
-                'cmapIX': [collec_poly.cmap.colors.index(c[:3]) for c in colors]},
+                'cmapIX': ixs},
             crs={'init': 'epsg:4326'})
 
     z = trainy
