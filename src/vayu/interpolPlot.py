@@ -43,7 +43,8 @@ def interpolPlot(
                             holes = [h for h in poly[1:] if len(h) > 3]
                     mpoly.append(Polygon(exterior, holes))
                 except:
-                    print("Warning: Geometry error when making polygon #{}".format(i))
+                    print('Warning: Geometry error when making polygon #{}'
+                        .format(i))
             if len(mpoly) > 1:
                 mpoly = MultiPolygon(mpoly)
                 polygons.append(mpoly)
@@ -52,8 +53,10 @@ def interpolPlot(
                 polygons.append(mpoly[0])
                 colors.append(polygon.get_facecolor().tolist()[0])
         return GeoDataFrame(
-            geometry=polygons, data={"RGBA": colors}, crs={"init": "epsg:4326"}
-        )
+            geometry=polygons,
+            data={'RGBA': colors, 
+                'cmapIX': [collec_poly.cmap.colors.index(c[:3]) for c in colors]},
+            crs={'init': 'epsg:4326'})
 
     z = trainy
     x1max, x2max = np.max(trainX, axis=0)
@@ -67,28 +70,64 @@ def interpolPlot(
     zi = t.predict(np.asarray([Xi.ravel(), Yi.ravel()]).T)
     zi = zi.reshape(Xi.shape)
 
+    vmin = zi.min()
+    vmax = zi.max()
     collec_poly = plt.contourf(
-        Xi, Yi, zi, partitions, vmax=abs(zi).max(), vmin=-abs(zi).max(), cmap=cmap
+        Xi, Yi, zi, partitions, vmin=vmin, vmax=vmax, cmap=cmap
     )
     plt.close()
 
     gdf = collec_to_gdf(collec_poly)
-    gdf["geo"] = gdf["geometry"].astype(str)
+    # new min max vales in term of index of colors
+    vmax2 = gdf.cmapIX.max()
+    vmin2 = gdf.cmapIX.min()
 
-    res_intersection = geopandas.overlay(shape_df, gdf, how="intersection")
-    ax = res_intersection.plot(column="geo", cmap=cmap, figsize=(40, 40))
-    plt.axis("off")
+    # intersection with shape_df
+    inter = geopandas.overlay(shape_df, gdf, how='intersection')
+
+    ax = inter.plot(
+        column = 'cmapIX',
+        cmap=cmap,
+        figsize=(40, 40),
+        vmax = vmax2,
+        vmin = vmin2,
+    )
+    shape_df.plot(
+        ax = ax,
+        color = 'none', 
+        edgecolor='k', 
+        figsize=(40, 40)
+    )
+    
+    plt.axis('off')
+    fig = ax.get_figure()
+    cax = fig.add_axes([0.9, 0.3, 0.03, 0.4])
+    sm = plt.cm.ScalarMappable(
+        cmap=cmap, 
+        norm=plt.Normalize(vmin=vmin, vmax=vmax)
+        )
+    sm._A = []
+
+    bounds = np.linspace(vmin, vmax, partitions)
+    fig.colorbar(
+        sm, cax=cax, ticks=bounds,
+        boundaries=bounds, format='%1.1E')
     return ax
 
 
 # =============================================================================
+# from geopandas import GeoDataFrame
+# import pandas as pd
+# import matplotlib.pyplot as plt
+# from vayu import interpolPlot
+
 # shapeFile = "re/tl_2017_us_state.shp"
-# long = "Logitude"
+# long = "Longitude"
 # lat = "Latitude"
 # pollutant = "Arithmetic Mean"
-# df = pd.read_csv(daily_44201_2018.csv)
+# df = pd.read_csv("re/daily_44201_2018.csv")
 # shape_df = GeoDataFrame.from_file(shapeFile)
-# shape_df.drop(shape_df.index[[34, 35, 36, 40, 41,49,31]],
-# inplace=True)
+# shape_df.drop(shape_df.index[[34, 35, 36, 40, 41, 49, 31]], inplace=True)
 # interpolPlot(df, shape_df, long, lat, pollutant)
+# plt.show()
 # =============================================================================
