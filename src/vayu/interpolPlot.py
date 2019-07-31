@@ -102,9 +102,16 @@ def interpolPlot(
     plt.axis('off')
     fig = ax.get_figure()
     cax = fig.add_axes([0.9, 0.3, 0.03, 0.4])
-    sm = plt.cm.ScalarMappable(cmap=cmap, norm=plt.Normalize(vmin=vmin, vmax=vmax))
+    sm = plt.cm.ScalarMappable(
+        cmap=cmap, 
+        norm=plt.Normalize(vmin=vmin, vmax=vmax)
+        )
     sm._A = []
-    fig.colorbar(sm, cax=cax)
+
+    bounds = np.linspace(vmin, vmax, partitions)
+    fig.colorbar(
+        sm, cax=cax, ticks=bounds,
+        boundaries=bounds, format='%1.1E')
     return ax
 
 
