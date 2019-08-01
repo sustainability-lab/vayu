@@ -7,7 +7,9 @@ Created on Thu Jul 25 143303 2019
 
 
 def interpolPlot(
-    df, shape_df, long, lat, pollutant, resolution=100, partitions=15, cmap="inferno"
+    df, shape_df, long, lat, pollutant, 
+    resolution=100, partitions=15, cmap="inferno",
+    Tcolor = 'red', markersize = 3,
 ):
 
     import geopandas
@@ -15,9 +17,9 @@ def interpolPlot(
     import pandas as pd
     import matplotlib.pyplot as plt
     from geopandas import GeoDataFrame
-    from shapely.geometry import Polygon, MultiPolygon
     from sklearn.ensemble import RandomForestRegressor
     from matplotlib.colors import ListedColormap
+    from shapely.geometry import (Polygon, MultiPolygon, Point)
 
     from polire.custom import CustomInterpolator
 
@@ -63,7 +65,7 @@ def interpolPlot(
             geometry=polygons,
             data={'RGBA': colors, 
                 'cmapIX': ixs},
-            crs={'init': 'epsg:4326'})
+            crs={'init': 'epsg:4269'})
 
     z = trainy
     x1max, x2max = np.max(trainX, axis=0)
@@ -99,12 +101,24 @@ def interpolPlot(
         vmax = vmax2,
         vmin = vmin2,
     )
-    shape_df.plot(
+    ax = shape_df.plot(
         ax = ax,
         color = 'none', 
-        edgecolor='k', 
+        edgecolor='k',
         figsize=(40, 40)
     )
+    # getting geodataframe the train points
+    geometry = [Point(xy) for xy in zip(df[long], df[lat])]
+    geodf = geopandas.GeoDataFrame(
+        df, crs={'init': 'epsg:4269'},
+        geometry=geometry)
+
+    # finding the intersection and plotting
+    from geopandas.tools import sjoin
+    inter2 = sjoin(geodf, shape_df)
+    inter2.plot(
+        ax = ax, color=Tcolor, label="Train points",
+        markersize=markersize,)
     
     plt.axis('off')
     fig = ax.get_figure()
@@ -114,6 +128,8 @@ def interpolPlot(
         norm=plt.Normalize(vmin=vmin, vmax=vmax)
         )
     sm._A = []
+
+    ax.legend()
 
     bounds = np.linspace(vmin, vmax, partitions)
     fig.colorbar(
