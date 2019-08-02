@@ -49,3 +49,5 @@ MANIFEST
 .venv*/
 .env
 .vscode
+re
+te.py

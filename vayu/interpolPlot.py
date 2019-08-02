@@ -9,7 +9,7 @@ Created on Thu Jul 25 143303 2019
 def interpolPlot(
     df, shape_df, long, lat, pollutant, 
     resolution=100, partitions=15, cmap="inferno",
-    Tcolor = 'red', markersize = 3,
+    Tcolor = 'red', markersize = 3, plot_train_points=False
 ):
 
     import geopandas
@@ -93,7 +93,6 @@ def interpolPlot(
 
     # intersection with shape_df
     inter = geopandas.overlay(shape_df, gdf, how='intersection')
-
     ax = inter.plot(
         column = 'cmapIX',
         cmap=cmap,
@@ -107,19 +106,22 @@ def interpolPlot(
         edgecolor='k',
         figsize=(40, 40)
     )
-    # getting geodataframe the train points
-    geometry = [Point(xy) for xy in zip(df[long], df[lat])]
-    geodf = geopandas.GeoDataFrame(
-        df, crs={'init': 'epsg:4269'},
-        geometry=geometry)
+    # getting geodataframe of the train points
+    if plot_train_points:
+        geometry = [Point(xy) for xy in zip(df[long], df[lat])]
+        geodf = geopandas.GeoDataFrame(
+            df, crs={'init': 'epsg:4269'},
+            geometry=geometry
+        )
 
-    # finding the intersection and plotting
-    from geopandas.tools import sjoin
-    inter2 = sjoin(geodf, shape_df)
-    inter2.plot(
-        ax = ax, color=Tcolor, label="Train points",
-        markersize=markersize,)
-    
+        # finding the intersection and plotting
+        from geopandas.tools import sjoin
+        inter2 = sjoin(geodf, shape_df)
+        inter2.plot(
+            ax = ax, color=Tcolor, label="Train points",
+            markersize=markersize
+        )
+        
     plt.axis('off')
     fig = ax.get_figure()
     cax = fig.add_axes([0.9, 0.3, 0.03, 0.4])
@@ -128,7 +130,6 @@ def interpolPlot(
         norm=plt.Normalize(vmin=vmin, vmax=vmax)
         )
     sm._A = []
-
     ax.legend()
 
     bounds = np.linspace(vmin, vmax, partitions)
