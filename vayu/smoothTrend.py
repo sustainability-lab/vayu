@@ -18,15 +18,15 @@ def smoothTrend(df, pollutant, Type):
         the pollutant every month of every year. Then plots a
         smooth line of best fit through the plot showing the user
         the overall trend of the pollutant through the years.
-		
-		Parameters
-		----------
-		df: data frame
-			minimally containing date and at least one other
-			pollutant 
-		pollutant: type string
-			A pollutant name correspoinding to 
-			a variable in a data frame, ex: 'pm25'
+
+        Parameters
+        ----------
+        df: data frame
+            minimally containing date and at least one other
+            pollutant 
+        pollutant: type string
+            A pollutant name correspoinding to 
+            a variable in a data frame, ex: 'pm25'
         Type: type int
             Value can be either 1 or 2
             1: normal trend line
