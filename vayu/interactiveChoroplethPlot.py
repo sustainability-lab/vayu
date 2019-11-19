@@ -2,7 +2,7 @@
 
 """
 Created on Mon Aug 26 15:30:00 2019
-@author: Prerna Khanna, Tanmay Srivastava
+@author: Tanmay Srivastava, Prerna Khanna
 """
 #!/usr/bin/env python
 
