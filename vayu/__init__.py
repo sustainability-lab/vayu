@@ -10,14 +10,16 @@ except DistributionNotFound:
 finally:
     del get_distribution, DistributionNotFound
 
+from .timeInteractiveScatterPlot import timeInteractiveScatterPlot
 from .scatterPlot import scatterPlot
 from .timePlot import timePlot
 from .calendarPlot import calendarPlot
 from .linearRelation import linearRelation
 from .selectByDate import selectByDate
 from .summaryPlot import summaryPlot
-from .timePlot import timePlot
+from .timeProp import timeProp
 from .timeVariation import timeVariation
 from .trendLevel import trendLevel
 from .windRosePy import windRose
 from .interpolPlot import interpolPlot
+from .smoothTrend import smoothTrend
