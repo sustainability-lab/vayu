@@ -49,5 +49,7 @@ MANIFEST
 .venv*/
 .env
 .vscode
-re
+examples/shapeFiles/*
+Report/*
+temporary/*
 te.py
