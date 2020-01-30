@@ -5,8 +5,7 @@ Tools for Air Quality Data Analysis
 
 Description
 ===========
-
-Python Library to better understand the air quaility data thorugh visualizations.
+Python Library to better understand the air quaility data through visualizations.
 
 
 # Installation
