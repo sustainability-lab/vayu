@@ -5,11 +5,13 @@ Tools for Air Quality Data Analysis
 
 Description
 ===========
-
-This is custom python version of the open source R library 'openAir'
+Python Library to better understand the air quaility data through visualizations.
 
 
 # Installation
-
+```
+pip install vayu
+```
 
 # Sample Usage
+For sample usage please look at the jupyer notebooks in the examples folder.
