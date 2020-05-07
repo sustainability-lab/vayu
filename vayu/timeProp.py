@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Created on Mon Jul 22 08:21:55 2019
-@author: Man Vinayaka
+@author: Man Vinayaka, Prerna Khanna, Tanmay Srivastava
 """
 
 def timeProp(df, year, pollutant, avg_days, 

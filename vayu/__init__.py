@@ -23,3 +23,4 @@ from .trendLevel import trendLevel
 from .windRosePy import windRose
 from .interpolPlot import interpolPlot
 from .smoothTrend import smoothTrend
+from .interactiveChoroplethPlot import interactiveChoroplethPlot
