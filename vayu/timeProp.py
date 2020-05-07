@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 """
 Created on Mon Jul 22 08:21:55 2019
-
 @author: Man Vinayaka
 """
 
-
-def timeProp(df, year, pollutant):
+def timeProp(df, year, pollutant, avg_days, 
+             date_time_col_name):
     """ Plot a stacked bar graph of all data in the df
         based on frequency of wind direction in compass
         directions. Takes the average of every 3 days
@@ -14,16 +13,21 @@ def timeProp(df, year, pollutant):
         the pollutant that 3 day period. The bars are 
         binned proportionaly based on the overall value of the 
         pollutant 
-		
-		Parameters
-		----------
-		df: data frame
-			data frame which has the fields of date and the pollutant
-			to be graphed
-		year: type string
-			The year of which the data will be cut
-		pollutant: type string
-			The pollutant of which to plot
+        
+        Parameters
+        ----------
+        df: data frame
+            data frame which has the fields of date and the pollutant
+            to be graphed
+        year: type string
+            The year of which the data will be cut
+        pollutant: type string
+            The pollutant of which to plot
+    avg_days: type integer
+      number of days to take the average of (controlling 
+      granularity of the X-axis)
+    date_time_col_name: type string
+      df column name containing date-time stamps  
     """
     import datetime as dt
     import matplotlib.pyplot as plt
@@ -37,15 +41,15 @@ def timeProp(df, year, pollutant):
     #     Cuts data into the year specified and averages the
     #     values of each day
     # =============================================================================
-    df.index = pd.to_datetime(df.date)
-    df = df.drop("date", axis=1)
-    df_2003 = df[year]
-    df_2003 = df_2003.fillna(method="ffill")
-    df_2003["month"] = df_2003.index.month
+    df.index = pd.to_datetime(df[date_time_col_name])
+    df = df.drop(date_time_col_name, axis=1)
+    df_year = df[year]
+    df_year = df_year.fillna(method="ffill")
+    df_year["month"] = df_year.index.month
 
     # New df containing only the values of the pollutant specified
     polArray = df[year].resample("1D").mean()
-    polArray = df_2003[pollutant]
+    polArray = df_year[pollutant]
 
     nA = []
     neA = []
@@ -56,13 +60,13 @@ def timeProp(df, year, pollutant):
     wA = []
     nwA = []
     polMeanS = 0
-    polMeanE = 3
+    polMeanE = avg_days
     dfStart = 0
-    dfEnd = 72  # 24*3 for 3 day average
+    dfEnd = 24*avg_days  # 24*3 for 3 day average
 
     x = 0
 
-    while x < 121:  # 365 days / 3 = 121 floored. Represents number of bars total
+    while x < int(365/avg_days):  # example: 365 days / 3 = 121 floored. Represents number of bars total
         n = 0
         ne = 0
         e = 0
@@ -71,11 +75,11 @@ def timeProp(df, year, pollutant):
         sw = 0
         w = 0
         nw = 0
-        a = df_2003[dfStart:dfEnd]
+        a = df_year[dfStart:dfEnd]
         b = a["wd"]
 
         i = 0
-        while i < 72:  # Bins the wd data into categories for stacked bar graph
+        while i < 24*avg_days:  # Bins the wd data into categories for stacked bar graph
             if b[i] > 348.75 or b[i] < 33.75:
                 n = n + 1
             elif b[i] > 33.75 and b[i] < 78.75:
@@ -96,14 +100,14 @@ def timeProp(df, year, pollutant):
             i = i + 1
         # calculates the 3 day proportion mean of each polutant and stores
         # it in a new list
-        n = (n / 72) * (polArray[polMeanS:polMeanE].mean())
-        ne = (ne / 72) * (polArray[polMeanS:polMeanE].mean())
-        e = (e / 72) * (polArray[polMeanS:polMeanE].mean())
-        se = (se / 72) * (polArray[polMeanS:polMeanE].mean())
-        s = (s / 72) * (polArray[polMeanS:polMeanE].mean())
-        sw = (sw / 72) * (polArray[polMeanS:polMeanE].mean())
-        w = (w / 72) * (polArray[polMeanS:polMeanE].mean())
-        nw = (nw / 72) * (polArray[polMeanS:polMeanE].mean())
+        n = (n / 24*avg_days) * (polArray[polMeanS:polMeanE].mean())
+        ne = (ne / 24*avg_days) * (polArray[polMeanS:polMeanE].mean())
+        e = (e / 24*avg_days) * (polArray[polMeanS:polMeanE].mean())
+        se = (se / 24*avg_days) * (polArray[polMeanS:polMeanE].mean())
+        s = (s / 24*avg_days) * (polArray[polMeanS:polMeanE].mean())
+        sw = (sw / 24*avg_days) * (polArray[polMeanS:polMeanE].mean())
+        w = (w / 24*avg_days) * (polArray[polMeanS:polMeanE].mean())
+        nw = (nw / 24*avg_days) * (polArray[polMeanS:polMeanE].mean())
 
         nA.append(n)
         neA.append(ne)
@@ -115,21 +119,22 @@ def timeProp(df, year, pollutant):
         nwA.append(nw)
         x = x + 1
         # Adds to start and end values to get through end of df
-        polMeanS = polMeanS + 3
-        polMeanE = polMeanE + 3
-        dfStart = dfStart + 72
-        dfEnd = dfEnd + 72
+        polMeanS = polMeanS + avg_days
+        polMeanE = polMeanE + avg_days
+        dfStart = dfStart + 24*avg_days
+        dfEnd = dfEnd + 24*avg_days
 
     #########################################
 
     # Plots the stacked bar graph with specific color represtations.
     # A legend is also plotted
-    X = np.arange(121)
+    X = np.arange(int(365/avg_days))
 
     data = np.array([nA, neA, eA, seA, sA, swA, wA, nwA])
 
     color_list = ["red", "blue", "green", "purple", "orange", "yellow", "brown", "pink"]
     X = np.arange(data.shape[1])
+    
     for i in range(data.shape[0]):
         plt.bar(
             X,
@@ -162,7 +167,7 @@ def timeProp(df, year, pollutant):
     )
 
     plt.xticks(
-        np.arange(0, 121, 10),
+        np.arange(0, int(365/avg_days), 30/avg_days),
         (
             "Jan",
             "Feb",
@@ -178,11 +183,11 @@ def timeProp(df, year, pollutant):
             "Dec",
         ),
     )
-    plt.title("wind direction")
+    plt.title("Wind Direction")
     plt.xlabel("Contribution weighted by Mean")
-    plt.ylabel("pollutant")
+    plt.ylabel("Pollutant (µg/m³)")
+    plt.rcParams["figure.figsize"]= 20,6
     plt.show()
-
 
 # =============================================================================
 # mydata = pd.read_csv('mydata.csv')
