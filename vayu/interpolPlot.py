@@ -4,7 +4,57 @@ def interpolPlot(
     Tcolor = 'red', markersize = 3, plot_train_points=False, 
     extrapolate=True
 ):
+    """Interpolates data at unknown locations--based on the passed
+    `Interpolator`--and plots them on a geographical plot.
 
+    Parameters
+    ----------
+
+    df: data frame 
+        minimally containing latitude and longitude
+        and pollutant value
+
+    shape_df: geo pandas data frame 
+       minimally containing DISTRICT    and geometry
+
+    long: type string
+        name of column in df having longitudes
+
+    lat: type string
+        name of column in df having latitudes
+
+    pollutant: type string
+        name of column in df having pollutant values.
+
+    Interpolator: sklean type estimator
+        Interpolator to be used to interpolate values.
+        eg. Lasso from sklearn.linear_models
+
+    resolution: type int
+        Resolution at which to interpolate. Bigger number 
+        means more granularity.
+
+    partitions: type int
+        Levels in the contour created.
+
+    cmap: type string or type matplotlib.colors.ListedColormap
+        cmap to be used while creating contours
+
+    Tcolor: type string
+        Color to be used while plotting training points.
+
+    markersize: type float
+        Training Point markersize. 
+        (Also varies with the amount of pollution found)            
+
+    plot_train_points: type bool
+        If True, plots, the training points used to interpolate.
+
+    extrapolate: type bool
+        If False, limits interpolation within bounds of the
+        training points used.
+    """
+    
     import geopandas
     import numpy as np
     import pandas as pd
