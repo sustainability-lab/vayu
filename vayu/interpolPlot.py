@@ -1,5 +1,5 @@
 def interpolPlot(
-    df, shape_df, long, lat, pollutant, 
+    df, shape_df, long, lat, pollutant, Interpolator,
     resolution=100, partitions=15, cmap="inferno",
     Tcolor = 'red', markersize = 3, plot_train_points=False, 
     extrapolate=True
@@ -10,15 +10,22 @@ def interpolPlot(
     import pandas as pd
     import matplotlib.pyplot as plt
     from geopandas import GeoDataFrame
-    from sklearn.ensemble import RandomForestRegressor
     from matplotlib.colors import ListedColormap
     from shapely.geometry import (Polygon, MultiPolygon, Point)
-
-    from polire.custom import CustomInterpolator
 
     df = df.sample(frac=1)
     trainX = df[[long, lat]].values
     trainy = df[pollutant].values
+
+    def bounds_minmax(bound1, bound2 = None):
+        if bound2 is None:
+            return bound1
+        temp = []
+        temp.append(min(bound1[0], bound2[0]))
+        temp.append(min(bound1[1], bound2[1]))
+        temp.append(max(bound1[2], bound2[2]))
+        temp.append(max(bound1[3], bound2[3]))
+        return temp
 
     def collec_to_gdf(collec_poly):
         """Transform a `matplotlib.contour.QuadContourSet` to a GeoDataFrame"""
@@ -75,7 +82,7 @@ def interpolPlot(
     xi = np.linspace(x1min, x1max, resolution)
     yi = np.linspace(x2min, x2max, resolution)
     Xi, Yi = np.meshgrid(xi, yi)
-    t = CustomInterpolator(RandomForestRegressor)
+    t = Interpolator
     t.fit(trainX, z)
 
     zi = t.predict(np.asarray([Xi.ravel(), Yi.ravel()]).T)
@@ -98,7 +105,7 @@ def interpolPlot(
     ax = inter.plot(
         column = 'cmapIX',
         cmap=cmap,
-        figsize=(40, 40),
+        figsize=(12, 12),
         vmax = vmax2,
         vmin = vmin2,
     )
@@ -106,7 +113,7 @@ def interpolPlot(
         ax = ax,
         color = 'none', 
         edgecolor='k',
-        figsize=(40, 40)
+        figsize=(12, 12)
     )
     # getting geodataframe of the train points
     if plot_train_points:
@@ -121,7 +128,7 @@ def interpolPlot(
         inter2 = sjoin(geodf, shape_df)
         inter2.plot(
             ax = ax, color=Tcolor, label="Train points",
-            markersize=markersize
+            markersize=markersize * df[pollutant].values
         )
 
     plt.axis('off')
