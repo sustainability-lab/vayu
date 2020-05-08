@@ -1,15 +1,8 @@
-# -- coding utf-8 --
-"""
-Created on Thu Jul 25 143303 2019
-
-@author Man Vinayaka
-"""
-
-
 def interpolPlot(
     df, shape_df, long, lat, pollutant, 
     resolution=100, partitions=15, cmap="inferno",
-    Tcolor = 'red', markersize = 3, plot_train_points=False
+    Tcolor = 'red', markersize = 3, plot_train_points=False, 
+    extrapolate=True
 ):
 
     import geopandas
@@ -68,8 +61,17 @@ def interpolPlot(
             crs={'init': 'epsg:4269'})
 
     z = trainy
-    x1max, x2max = np.max(trainX, axis=0)
-    x1min, x2min = np.min(trainX, axis=0)
+    if not extrapolate:
+        x1max, x2max = np.max(trainX, axis=0)
+        x1min, x2min = np.min(trainX, axis=0)
+    else:
+        bounds = None
+        for index, row in shape_df.iterrows():
+            poly = row["geometry"]
+            bounds = bounds_minmax(poly.bounds, bounds)
+
+        x1max, x2max = bounds[2:]
+        x1min, x2min = bounds[:2]
     xi = np.linspace(x1min, x1max, resolution)
     yi = np.linspace(x2min, x2max, resolution)
     Xi, Yi = np.meshgrid(xi, yi)
@@ -121,7 +123,7 @@ def interpolPlot(
             ax = ax, color=Tcolor, label="Train points",
             markersize=markersize
         )
-        
+
     plt.axis('off')
     fig = ax.get_figure()
     cax = fig.add_axes([0.9, 0.3, 0.03, 0.4])
@@ -137,6 +139,7 @@ def interpolPlot(
         sm, cax=cax, ticks=bounds,
         boundaries=bounds, format='%1.1E')
     return ax
+
 
 
 # =============================================================================
