@@ -10,6 +10,8 @@ Welcome to vayu's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   pages/installation
+
 
 
 Indices and tables
