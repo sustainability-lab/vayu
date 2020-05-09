@@ -23,7 +23,7 @@ VERSION = __version__
 INSTALL_REQUIRES = [
     'matplotlib', 'numpy', 
     'pandas', 'geopandas', 'scipy', 
-    'scikit-learn', 'folium'
+    'scikit-learn', 'folium', 'plotly'
     ]
 CLASSIFIERS = ['Intended Audience :: Science/Research',
                'Intended Audience :: Developers',
