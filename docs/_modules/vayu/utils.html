@@ -1,0 +1,193 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>vayu.utils &#8212; vayu 0.0.134 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for vayu.utils</h1><div class="highlight"><pre>
+<div class="viewcode-block" id="Legend"><a class="viewcode-back" href="../../pages/vayu.html#vayu.utils.Legend">[docs]</a><span></span><span class="k">class</span> <span class="nc">Legend</span><span class="p">:</span>
+  <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+  <span class="kn">import</span> <span class="nn">branca.colormap</span> <span class="k">as</span> <span class="nn">cm</span>
+
+  <span class="n">country_pollutants</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="s1">&#39;Canada&#39;</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="s1">&#39;AQHI&#39;</span> <span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;notation&#39;</span> <span class="p">:</span> <span class="s1">&#39;Air Quality Health Index&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;bin_edges&#39;</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">]),</span>
+            <span class="s1">&#39;color_scale&#39;</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="s1">&#39;#00ccff&#39;</span><span class="p">,</span> <span class="s1">&#39;#0099cc&#39;</span><span class="p">,</span> <span class="s1">&#39;#006699&#39;</span><span class="p">,</span> <span class="s1">&#39;#ffff00&#39;</span><span class="p">,</span><span class="s1">&#39;#ffcc00&#39;</span><span class="p">,</span><span class="s1">&#39;#ff9933&#39;</span><span class="p">,</span> 
+                                       <span class="s1">&#39;#ff6666&#39;</span><span class="p">,</span> <span class="s1">&#39;#ff0000&#39;</span><span class="p">,</span> <span class="s1">&#39;#cc0000&#39;</span><span class="p">,</span> <span class="s1">&#39;#990000&#39;</span><span class="p">,</span> <span class="s1">&#39;#660000&#39;</span><span class="p">])</span>
+          <span class="p">}</span>
+      <span class="p">},</span>
+      <span class="s1">&#39;Hong Kong&#39;</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="s1">&#39;AQHI&#39;</span> <span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;notation&#39;</span> <span class="p">:</span> <span class="s1">&#39;Air Quality Health Index&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;bin_edges&#39;</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">]),</span>
+            <span class="s1">&#39;color_scale&#39;</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="s1">&#39;#008000&#39;</span><span class="p">,</span> <span class="s1">&#39;#FFA500&#39;</span><span class="p">,</span> <span class="s1">&#39;#FF0000&#39;</span><span class="p">,</span> <span class="s1">&#39;#A52A2A&#39;</span><span class="p">,</span> <span class="s1">&#39;#000000&#39;</span><span class="p">])</span> 
+          <span class="p">}</span>       
+      <span class="p">},</span>      
+      <span class="s1">&#39;Mainland China&#39;</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="s1">&#39;AQI&#39;</span> <span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;notation&#39;</span> <span class="p">:</span> <span class="s1">&#39;Air Quality Index&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;bin_edges&#39;</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">50</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span><span class="mi">200</span><span class="p">,</span><span class="mi">300</span><span class="p">,</span><span class="mi">450</span><span class="p">]),</span>
+            <span class="s1">&#39;color_scale&#39;</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="s1">&#39;#00FF00&#39;</span><span class="p">,</span> <span class="s1">&#39;#FFFF00&#39;</span><span class="p">,</span><span class="s1">&#39;#FF9900&#39;</span><span class="p">,</span><span class="s1">&#39;#FF0000&#39;</span><span class="p">,</span><span class="s1">&#39;#540099&#39;</span><span class="p">,</span><span class="s1">&#39;#800000&#39;</span><span class="p">])</span>
+          <span class="p">}</span>          
+      <span class="p">},</span>      
+      <span class="s1">&#39;South Korea&#39;</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="s1">&#39;CAI&#39;</span> <span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;notation&#39;</span> <span class="p">:</span> <span class="s1">&#39;Comprehensive Air-quality Index&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;bin_edges&#39;</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">50</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span><span class="mi">200</span><span class="p">,</span><span class="mi">350</span><span class="p">,</span><span class="mi">500</span><span class="p">]),</span>
+            <span class="s1">&#39;color_scale&#39;</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="s1">&#39;#0000FF&#39;</span><span class="p">,</span> <span class="s1">&#39;#005500&#39;</span><span class="p">,</span><span class="s1">&#39;#FFFF00&#39;</span><span class="p">,</span><span class="s1">&#39;#FF9900&#39;</span><span class="p">,</span><span class="s1">&#39;#FF0000&#39;</span><span class="p">,</span><span class="s1">&#39;#990000&#39;</span><span class="p">])</span>
+          <span class="p">}</span>          
+      <span class="p">},</span>      
+      <span class="s1">&#39;United Kingdom&#39;</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="s1">&#39;APB&#39;</span> <span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;notation&#39;</span> <span class="p">:</span> <span class="s1">&#39;Air Pollution Banding&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;bin_edges&#39;</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span><span class="mi">10</span><span class="p">]),</span>
+            <span class="s1">&#39;color_scale&#39;</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="s1">&#39;#CCFFCC&#39;</span><span class="p">,</span> <span class="s1">&#39;#66FF66&#39;</span><span class="p">,</span><span class="s1">&#39;#00FF00&#39;</span><span class="p">,</span><span class="s1">&#39;#99FF00&#39;</span><span class="p">,</span> <span class="s1">&#39;#FFFF00&#39;</span><span class="p">,</span> <span class="s1">&#39;#FFCC00&#39;</span><span class="p">,</span>
+                                      <span class="s1">&#39;#FF6600&#39;</span><span class="p">,</span> <span class="s1">&#39;#FF3300&#39;</span><span class="p">,</span> <span class="s1">&#39;#FF0000&#39;</span><span class="p">,</span> <span class="s1">&#39;#FF0066&#39;</span><span class="p">])</span>
+          <span class="p">}</span>          
+      <span class="p">},</span>
+      <span class="s1">&#39;India&#39;</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="s1">&#39;AQI&#39;</span> <span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;notation&#39;</span> <span class="p">:</span> <span class="s1">&#39;Air Quality Index&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;bin_edges&#39;</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">500</span><span class="p">]),</span>
+            <span class="s1">&#39;color_scale&#39;</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="s1">&#39;#00CC00&#39;</span><span class="p">,</span> <span class="s1">&#39;#66CC00&#39;</span><span class="p">,</span> <span class="s1">&#39;#FFFF00&#39;</span><span class="p">,</span> <span class="s1">&#39;#FF9900&#39;</span><span class="p">,</span> <span class="s1">&#39;#FF0000&#39;</span><span class="p">,</span> <span class="s1">&#39;#A52A2A&#39;</span><span class="p">])</span>
+          <span class="p">},</span>
+          <span class="s1">&#39;so2&#39;</span><span class="p">:</span> <span class="p">{</span>      
+            <span class="s1">&#39;notation&#39;</span> <span class="p">:</span><span class="s1">&#39;Sulphur dioxide&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;bin_edges&#39;</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">40</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">380</span><span class="p">,</span> <span class="mi">800</span><span class="p">,</span> <span class="mi">1600</span><span class="p">]),</span>
+            <span class="s1">&#39;color_scale&#39;</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="s1">&#39;#00CC00&#39;</span><span class="p">,</span> <span class="s1">&#39;#66CC00&#39;</span><span class="p">,</span> <span class="s1">&#39;#FFFF00&#39;</span><span class="p">,</span> <span class="s1">&#39;#FF9900&#39;</span><span class="p">,</span> <span class="s1">&#39;#FF0000&#39;</span><span class="p">,</span> <span class="s1">&#39;#A52A2A&#39;</span><span class="p">])</span>      
+          <span class="p">},</span>
+          <span class="s1">&#39;pm10&#39;</span><span class="p">:</span> <span class="p">{</span>        
+              <span class="s1">&#39;notation&#39;</span> <span class="p">:</span><span class="s1">&#39;Particulate matter &lt; 10 µm&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;bin_edges&#39;</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">250</span><span class="p">,</span> <span class="mi">350</span><span class="p">,</span> <span class="mi">430</span><span class="p">]),</span>
+              <span class="s1">&#39;color_scale&#39;</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="s1">&#39;#00CC00&#39;</span><span class="p">,</span> <span class="s1">&#39;#66CC00&#39;</span><span class="p">,</span> <span class="s1">&#39;#FFFF00&#39;</span><span class="p">,</span> <span class="s1">&#39;#FF9900&#39;</span><span class="p">,</span> <span class="s1">&#39;#FF0000&#39;</span><span class="p">,</span> <span class="s1">&#39;#A52A2A&#39;</span><span class="p">])</span>
+          <span class="p">},</span>
+          <span class="s1">&#39;pm25&#39;</span><span class="p">:</span>  <span class="p">{</span>
+              <span class="s1">&#39;notation&#39;</span> <span class="p">:</span><span class="s1">&#39;Particulate matter &lt; 2.5 µm&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;bin_edges&#39;</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">30</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">250</span><span class="p">]),</span>
+              <span class="s1">&#39;color_scale&#39;</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="s1">&#39;#00CC00&#39;</span><span class="p">,</span> <span class="s1">&#39;#66CC00&#39;</span><span class="p">,</span> <span class="s1">&#39;#FFFF00&#39;</span><span class="p">,</span> <span class="s1">&#39;#FF9900&#39;</span><span class="p">,</span> <span class="s1">&#39;#FF0000&#39;</span><span class="p">,</span> <span class="s1">&#39;#A52A2A&#39;</span><span class="p">])</span>
+          <span class="p">},</span>
+          <span class="s1">&#39;o3&#39;</span><span class="p">:</span> <span class="p">{</span>
+              <span class="s1">&#39;notation&#39;</span> <span class="p">:</span><span class="s1">&#39;Ozone&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;bin_edges&#39;</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">168</span><span class="p">,</span> <span class="mi">208</span><span class="p">,</span> <span class="mi">748</span><span class="p">]),</span>
+              <span class="s1">&#39;color_scale&#39;</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="s1">&#39;#00CC00&#39;</span><span class="p">,</span> <span class="s1">&#39;#66CC00&#39;</span><span class="p">,</span> <span class="s1">&#39;#FFFF00&#39;</span><span class="p">,</span> <span class="s1">&#39;#FF9900&#39;</span><span class="p">,</span> <span class="s1">&#39;#FF0000&#39;</span><span class="p">,</span> <span class="s1">&#39;#A52A2A&#39;</span><span class="p">])</span>
+          <span class="p">},</span>
+          <span class="s1">&#39;no2&#39;</span><span class="p">:</span> <span class="p">{</span>
+              <span class="s1">&#39;notation&#39;</span> <span class="p">:</span><span class="s1">&#39;Nitrogen Dioxide&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;bin_edges&#39;</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">40</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="mi">280</span><span class="p">,</span> <span class="mi">400</span><span class="p">]),</span>
+              <span class="s1">&#39;color_scale&#39;</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="s1">&#39;#00CC00&#39;</span><span class="p">,</span> <span class="s1">&#39;#66CC00&#39;</span><span class="p">,</span> <span class="s1">&#39;#FFFF00&#39;</span><span class="p">,</span> <span class="s1">&#39;#FF9900&#39;</span><span class="p">,</span> <span class="s1">&#39;#FF0000&#39;</span><span class="p">,</span> <span class="s1">&#39;#A52A2A&#39;</span><span class="p">])</span>
+          <span class="p">},</span>
+          <span class="s1">&#39;co&#39;</span><span class="p">:</span> <span class="p">{</span>
+              <span class="s1">&#39;notation&#39;</span> <span class="p">:</span><span class="s1">&#39;Carbon Monoxide&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;bin_edges&#39;</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">34</span><span class="p">]),</span>
+              <span class="s1">&#39;color_scale&#39;</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="s1">&#39;#00CC00&#39;</span><span class="p">,</span> <span class="s1">&#39;#66CC00&#39;</span><span class="p">,</span> <span class="s1">&#39;#FFFF00&#39;</span><span class="p">,</span> <span class="s1">&#39;#FF9900&#39;</span><span class="p">,</span> <span class="s1">&#39;#FF0000&#39;</span><span class="p">,</span> <span class="s1">&#39;#A52A2A&#39;</span><span class="p">])</span>
+          <span class="p">},</span>
+          <span class="s1">&#39;nh3&#39;</span><span class="p">:</span> <span class="p">{</span>
+              <span class="s1">&#39;notation&#39;</span> <span class="p">:</span> <span class="s1">&#39;Ammonia&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;bin_edges&#39;</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">200</span><span class="p">,</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">800</span><span class="p">,</span> <span class="mi">1200</span><span class="p">,</span> <span class="mi">1800</span><span class="p">]),</span>
+              <span class="s1">&#39;color_scale&#39;</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="s1">&#39;#00CC00&#39;</span><span class="p">,</span> <span class="s1">&#39;#66CC00&#39;</span><span class="p">,</span> <span class="s1">&#39;#FFFF00&#39;</span><span class="p">,</span> <span class="s1">&#39;#FF9900&#39;</span><span class="p">,</span> <span class="s1">&#39;#FF0000&#39;</span><span class="p">,</span> <span class="s1">&#39;#A52A2A&#39;</span><span class="p">])</span>
+          <span class="p">},</span>
+          <span class="s1">&#39;pb&#39;</span><span class="p">:</span> <span class="p">{</span>
+              <span class="s1">&#39;notation&#39;</span> <span class="p">:</span><span class="s1">&#39;Lead&#39;</span><span class="p">,</span>
+              <span class="s1">&#39;bin_edges&#39;</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">]),</span>
+              <span class="s1">&#39;color_scale&#39;</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="s1">&#39;#00CC00&#39;</span><span class="p">,</span> <span class="s1">&#39;#66CC00&#39;</span><span class="p">,</span> <span class="s1">&#39;#FFFF00&#39;</span><span class="p">,</span> <span class="s1">&#39;#FF9900&#39;</span><span class="p">,</span> <span class="s1">&#39;#FF0000&#39;</span><span class="p">,</span> <span class="s1">&#39;#A52A2A&#39;</span><span class="p">])</span>
+          <span class="p">}</span>
+
+      <span class="p">},</span> 
+      <span class="s1">&#39;Europe&#39;</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="s1">&#39;CAQI&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;notation&#39;</span> <span class="p">:</span> <span class="s1">&#39;Common Air Quality Index (CAQI)&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;bin_edges&#39;</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">25</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">75</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">]),</span>
+            <span class="s1">&#39;color_scale&#39;</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="s1">&#39;#79BC6A&#39;</span><span class="p">,</span> <span class="s1">&#39;#BBCF4C&#39;</span><span class="p">,</span> <span class="s1">&#39;#EEC20B&#39;</span><span class="p">,</span> <span class="s1">&#39;#F29305&#39;</span><span class="p">,</span> <span class="s1">&#39;#E8416F&#39;</span><span class="p">])</span>
+          <span class="p">}</span>
+      <span class="p">},</span>
+      <span class="s1">&#39;USA&#39;</span> <span class="p">:</span> <span class="p">{</span>
+          <span class="s1">&#39;AQI&#39;</span><span class="p">:</span> <span class="p">{</span>
+          <span class="s1">&#39;notation&#39;</span> <span class="p">:</span> <span class="s1">&#39;Air Quality Index&#39;</span><span class="p">,</span>
+          <span class="s1">&#39;bin_edges&#39;</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">500</span><span class="p">]),</span>
+          <span class="s1">&#39;color_scale&#39;</span> <span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="s1">&#39;#00E400&#39;</span><span class="p">,</span> <span class="s1">&#39;#FFFF00&#39;</span><span class="p">,</span> <span class="s1">&#39;#FF7E00&#39;</span><span class="p">,</span> <span class="s1">&#39;#FF0000&#39;</span><span class="p">,</span> <span class="s1">&#39;#99004C&#39;</span><span class="p">,</span> <span class="s1">&#39;#7E0023&#39;</span><span class="p">])</span>
+          <span class="p">}</span>
+      <span class="p">}</span>
+  <span class="p">}</span>
+
+<div class="viewcode-block" id="Legend.pollutant_legend"><a class="viewcode-back" href="../../pages/vayu.html#vayu.utils.Legend.pollutant_legend">[docs]</a>  <span class="k">def</span> <span class="nf">pollutant_legend</span><span class="p">(</span><span class="n">country</span><span class="p">,</span> <span class="n">pollutant</span><span class="p">):</span>
+    <span class="n">colormap</span> <span class="o">=</span> <span class="n">Legend</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">LinearColormap</span><span class="p">(</span><span class="n">colors</span><span class="o">=</span><span class="n">Legend</span><span class="o">.</span><span class="n">country_pollutants</span><span class="p">[</span><span class="n">country</span><span class="p">][</span><span class="n">pollutant</span><span class="p">][</span><span class="s1">&#39;color_scale&#39;</span><span class="p">],</span> 
+                                        <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">Legend</span><span class="o">.</span><span class="n">country_pollutants</span><span class="p">[</span><span class="n">country</span><span class="p">][</span><span class="n">pollutant</span><span class="p">][</span><span class="s1">&#39;bin_edges&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> 
+                                        <span class="n">index</span> <span class="o">=</span> <span class="n">Legend</span><span class="o">.</span><span class="n">country_pollutants</span><span class="p">[</span><span class="n">country</span><span class="p">][</span><span class="n">pollutant</span><span class="p">][</span><span class="s1">&#39;bin_edges&#39;</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">colormap</span></div>
+
+<div class="viewcode-block" id="Legend.pollutant_color_coding"><a class="viewcode-back" href="../../pages/vayu.html#vayu.utils.Legend.pollutant_color_coding">[docs]</a>  <span class="k">def</span> <span class="nf">pollutant_color_coding</span><span class="p">(</span><span class="n">poll</span><span class="p">,</span> <span class="n">country</span><span class="p">,</span> <span class="n">pollutant</span><span class="p">):</span>  
+    <span class="n">bin_edges</span> <span class="o">=</span> <span class="n">Legend</span><span class="o">.</span><span class="n">country_pollutants</span><span class="p">[</span><span class="n">country</span><span class="p">][</span><span class="n">pollutant</span><span class="p">][</span><span class="s1">&#39;bin_edges&#39;</span><span class="p">]</span>  
+    <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">digitize</span><span class="p">(</span><span class="n">poll</span><span class="p">,</span> <span class="n">bin_edges</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">Legend</span><span class="o">.</span><span class="n">country_pollutants</span><span class="p">[</span><span class="n">country</span><span class="p">][</span><span class="n">pollutant</span><span class="p">][</span><span class="s1">&#39;color_scale&#39;</span><span class="p">][</span><span class="n">idx</span><span class="p">]</span></div></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Sustainability Lab @ IIT Gandhinagar.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

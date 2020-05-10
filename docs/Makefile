@@ -3,7 +3,8 @@
 
 # You can set these variables from the command line.
 SPHINXOPTS      =
-SPHINXBUILD     = sphinx-build
+SPHINXBUILD     = python $(shell which sphinx-build)
+# SPHINXBUILD     = sphinx-build
 SPHINXPROJ      = vayu
 SOURCEDIR       = .
 BUILDDIR        = _build
@@ -23,7 +24,15 @@ help:
 %: Makefile
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
+# environment:
+# 	@source ../../.env/bin/activate
+
+clean: 
+	@rm -rf _build
+
 github:
+# 	@make environment
+	@make clean
 	@$(SPHINXAPIDOC) -o "$(APIDOCOUTDIR)" "$(PROJDIR)"
 	@make html
 	@cp -a _build/html/. ../docs

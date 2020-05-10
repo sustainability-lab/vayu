@@ -34,6 +34,8 @@ sys.path.insert(0, os.path.abspath('./../vayu'))
 extensions = ['sphinx.ext.autodoc',
     'sphinx.ext.coverage',
     'sphinx.ext.mathjax',
+    'sphinx.ext.napoleon', # https://www.sphinx-doc.org/en/master/usage/extensions/napoleon.html
+                           # https://numpydoc.readthedocs.io/en/latest/format.html#docstring-standard
     'sphinx.ext.viewcode',
     'sphinx.ext.githubpages']
 

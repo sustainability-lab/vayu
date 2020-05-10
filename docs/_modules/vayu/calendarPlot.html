@@ -1,56 +1,37 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
     <title>vayu.calendarPlot &#8212; vayu 0.0.134 documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '../../',
-        VERSION:     '0.0.134',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
-    <script type="text/javascript" src="../../_static/jquery.js"></script>
-    <script type="text/javascript" src="../../_static/underscore.js"></script>
-    <script type="text/javascript" src="../../_static/doctools.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
    
   <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
   
+  
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
-  </head>
-  <body>
+  </head><body>
   
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
+          
+
           <div class="body" role="main">
             
   <h1>Source code for vayu.calendarPlot</h1><div class="highlight"><pre>
-<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Created on Wed Jun  5 15:52:41 2019</span>
-
-<span class="sd">@author: Man Vinayaka</span>
-<span class="sd">&quot;&quot;&quot;</span>
-
-<span class="c1">#!/usr/bin/env python</span>
-<span class="c1"># coding: utf-8</span>
-
-
-<div class="viewcode-block" id="calendarPlot"><a class="viewcode-back" href="../../pages/vayu.html#vayu.calendarPlot.calendarPlot">[docs]</a><span class="k">def</span> <span class="nf">calendarPlot</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">pollutant</span><span class="p">,</span> <span class="n">year</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="calendarPlot"><a class="viewcode-back" href="../../pages/vayu.html#vayu.calendarPlot.calendarPlot">[docs]</a><span></span><span class="k">def</span> <span class="nf">calendarPlot</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">pollutant</span><span class="p">,</span> <span class="n">year</span><span class="p">,</span> <span class="n">country</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Plots a heatmap on a calendar layout based </span>
 <span class="sd">        on the intensity of the pollutant per day.</span>
 <span class="sd">        Each day contains an arrow indicating both </span>
@@ -65,20 +46,34 @@
 <span class="sd">			A pollutant name correspoinding to </span>
 <span class="sd">			a variable in a data frame, ex: &#39;pm25&#39;</span>
 <span class="sd">		year: type string</span>
-<span class="sd">			Year to plot, ex &#39;2003&#39;</span>
+<span class="sd">			Year to plot&#39;, ex &#39;2003&#39;    </span>
+<span class="sd">    cvals: numpy.ndarray</span>
+<span class="sd">       array containing bin edges for the pollutant</span>
+<span class="sd">    colors: numpy.ndarray</span>
+<span class="sd">       array containing hex color codes corresponding to </span>
+<span class="sd">       bin edges for the pollutant  </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">import</span> <span class="nn">datetime</span> <span class="k">as</span> <span class="nn">dt</span>
     <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
     <span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
     <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
     <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-    <span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">array</span>
+    <span class="kn">from</span> <span class="nn">numpy</span> <span class="k">import</span> <span class="n">array</span>
+    <span class="kn">from</span> <span class="nn">.utils</span> <span class="k">import</span> <span class="n">Legend</span>
+
+    <span class="n">cvals</span>  <span class="o">=</span> <span class="n">Legend</span><span class="o">.</span><span class="n">country_pollutants</span><span class="p">[</span><span class="n">country</span><span class="p">][</span><span class="n">pollutant</span><span class="p">][</span><span class="s1">&#39;bin_edges&#39;</span><span class="p">]</span>
+    <span class="n">colors</span> <span class="o">=</span> <span class="n">Legend</span><span class="o">.</span><span class="n">country_pollutants</span><span class="p">[</span><span class="n">country</span><span class="p">][</span><span class="n">pollutant</span><span class="p">][</span><span class="s1">&#39;color_scale&#39;</span><span class="p">]</span>
+
+    <span class="n">norm</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Normalize</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">cvals</span><span class="p">),</span><span class="nb">max</span><span class="p">(</span><span class="n">cvals</span><span class="p">))</span>
+    <span class="n">tuples</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">norm</span><span class="p">,</span><span class="n">cvals</span><span class="p">),</span> <span class="n">colors</span><span class="p">))</span>
+    <span class="n">cmap</span> <span class="o">=</span> <span class="n">mpl</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">LinearSegmentedColormap</span><span class="o">.</span><span class="n">from_list</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">tuples</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">calendar_array</span><span class="p">(</span><span class="n">dates</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; creates the calendar array returning i,j giving</span>
 <span class="sd">            positional values in the array</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="n">d</span><span class="o">.</span><span class="n">isocalendar</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dates</span><span class="p">])</span>
+<span class="sd">        &quot;&quot;&quot;</span>        
+        <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="p">[</span><span class="n">d</span><span class="o">.</span><span class="n">isocalendar</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dates</span><span class="p">])</span>        
+        
         <span class="n">i</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">-</span> <span class="nb">min</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
         <span class="n">j</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">j</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
         <span class="n">ni</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
@@ -91,7 +86,7 @@
         <span class="sd">&quot;&quot;&quot; Sets heatmap information</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">calendar</span> <span class="o">=</span> <span class="n">calendar_array</span><span class="p">(</span><span class="n">dates</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
-        <span class="n">im</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">calendar</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;YlOrRd&quot;</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+        <span class="n">im</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">calendar</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span> <span class="n">cmap</span><span class="p">)</span>
         <span class="n">label_days</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">dates</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">calendar</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">label_days</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">dates</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">calendar</span><span class="p">):</span>
@@ -131,10 +126,9 @@
 
     <span class="n">df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">date</span><span class="p">)</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-    <span class="n">df_2003</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">year</span><span class="p">]</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="s2">&quot;1D&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
-    <span class="n">df_2003</span> <span class="o">=</span> <span class="n">df_2003</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s2">&quot;ffill&quot;</span><span class="p">)</span>
-    <span class="n">df_2003</span><span class="p">[</span><span class="s2">&quot;month&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_2003</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">month</span>
-    <span class="n">df_2003</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">dayofweek</span>
+    <span class="n">df_year</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">year</span><span class="p">]</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="s2">&quot;1D&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="n">df_year</span><span class="p">[</span><span class="s2">&quot;month&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_year</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">month</span>
+    <span class="n">df_year</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">dayofweek</span>
 
     <span class="n">t</span> <span class="o">=</span> <span class="mi">1</span>
 
@@ -151,10 +145,10 @@
         <span class="n">avg_ws</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">avg_wd</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">avg_pm25</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">df_2003_1</span> <span class="o">=</span> <span class="n">df_2003</span><span class="p">[</span><span class="n">df_2003</span><span class="o">.</span><span class="n">month</span> <span class="o">==</span> <span class="n">t</span><span class="p">]</span>
-        <span class="n">avg_wd</span> <span class="o">=</span> <span class="n">df_2003_1</span><span class="p">[</span><span class="s2">&quot;wd&quot;</span><span class="p">]</span>
-        <span class="n">avg_ws</span> <span class="o">=</span> <span class="n">df_2003_1</span><span class="p">[</span><span class="s2">&quot;ws&quot;</span><span class="p">]</span>
-        <span class="n">avg_pm25</span> <span class="o">=</span> <span class="n">df_2003_1</span><span class="p">[</span><span class="n">pollutant</span><span class="p">]</span>
+        <span class="n">df_year_1</span> <span class="o">=</span> <span class="n">df_year</span><span class="p">[</span><span class="n">df_year</span><span class="o">.</span><span class="n">month</span> <span class="o">==</span> <span class="n">t</span><span class="p">]</span>
+        <span class="n">avg_wd</span> <span class="o">=</span> <span class="n">df_year_1</span><span class="p">[</span><span class="s2">&quot;wd&quot;</span><span class="p">]</span>
+        <span class="n">avg_ws</span> <span class="o">=</span> <span class="n">df_year_1</span><span class="p">[</span><span class="s2">&quot;ws&quot;</span><span class="p">]</span>
+        <span class="n">avg_pm25</span> <span class="o">=</span> <span class="n">df_year_1</span><span class="p">[</span><span class="n">pollutant</span><span class="p">]</span>
 
         <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="n">a</span> <span class="o">=</span> <span class="mi">0</span>
@@ -163,9 +157,9 @@
             <span class="n">data</span> <span class="o">=</span> <span class="n">avg_pm25</span><span class="p">[</span><span class="n">a</span><span class="p">:</span><span class="n">b</span><span class="p">]</span>
             <span class="n">num</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">t</span> <span class="o">==</span> <span class="mi">12</span><span class="p">:</span>
-                <span class="n">start</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2003</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="n">start</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">year</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">start</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2003</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="n">start</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">year</span><span class="p">),</span> <span class="n">t</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
             <span class="n">dates</span> <span class="o">=</span> <span class="p">[</span><span class="n">start</span> <span class="o">+</span> <span class="n">dt</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num</span><span class="p">)]</span>
 
             <span class="n">month_labels</span> <span class="o">=</span> <span class="p">[</span>
@@ -195,11 +189,8 @@
     <span class="c1">#    Colorbar plotting</span>
     <span class="c1"># =============================================================================</span>
     <span class="n">grid</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">GridSpec</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">wspace</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">hspace</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
-
+    
     <span class="n">cbar_ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">grid</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">])</span>
-    <span class="n">cmap</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s2">&quot;YlOrRd&quot;</span><span class="p">)</span>
-    <span class="n">norm</span> <span class="o">=</span> <span class="n">mpl</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">Normalize</span><span class="p">(</span><span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
-
     <span class="n">cb1</span> <span class="o">=</span> <span class="n">mpl</span><span class="o">.</span><span class="n">colorbar</span><span class="o">.</span><span class="n">ColorbarBase</span><span class="p">(</span>
         <span class="n">cbar_ax</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;vertical&quot;</span>
     <span class="p">)</span>
@@ -207,12 +198,10 @@
 
     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="s2">&quot;all&quot;</span><span class="p">)</span></div>
-
-
-<span class="c1"># calendarPlot(mydata,&#39;pm25&#39;,&#39;2003&#39;)</span>
 </pre></div>
 
           </div>
+          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
@@ -226,15 +215,15 @@
 </ul>
 </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="../../search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
     </form>
+    </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -243,8 +232,8 @@
       &copy;2020, Sustainability Lab @ IIT Gandhinagar.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>
 

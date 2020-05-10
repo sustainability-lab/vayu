@@ -76,14 +76,6 @@ vayu\.selectByDate module
     :undoc-members:
     :show-inheritance:
 
-vayu\.skeleton module
----------------------
-
-.. automodule:: vayu.skeleton
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 vayu\.smoothTrend module
 ------------------------
 
