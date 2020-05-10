@@ -32,21 +32,25 @@
             
   <h1>Source code for vayu.timeVariation</h1><div class="highlight"><pre>
 <div class="viewcode-block" id="timeVariation"><a class="viewcode-back" href="../../pages/vayu.html#vayu.timeVariation.timeVariation">[docs]</a><span></span><span class="k">def</span> <span class="nf">timeVariation</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">pollutant</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; 4 seperate plots are plotted:</span>
-<span class="sd">        </span>
-<span class="sd">        1) the average pollutant level per day by each hour for each day of the </span>
-<span class="sd">            week across all of the data</span>
-<span class="sd">        2) the average pollutant level by each hour, across all data</span>
-<span class="sd">        3) the average pollutant level by each month of the year for across data</span>
-<span class="sd">        4) the average pollutant level per day of the week across all data</span>
-<span class="sd">		</span>
-<span class="sd">		Parameters</span>
-<span class="sd">		----------</span>
-<span class="sd">		df: data frame</span>
-<span class="sd">			data frame of hourly data. </span>
-<span class="sd">			Must include a date field and at least one variable to plot</span>
-<span class="sd">		pollutant: type string</span>
-<span class="sd">			Name of variable to plot</span>
+    <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">    Plots four plots:</span>
+<span class="sd">    - The average pollutant level per day by </span>
+<span class="sd">    each hour for each day of the week across all of the data</span>
+<span class="sd">    - The average pollutant level by each hour, </span>
+<span class="sd">    across all data</span>
+<span class="sd">    - The average pollutant level by each month of the</span>
+<span class="sd">    year for across data</span>
+<span class="sd">    - The average pollutant level per day of the week </span>
+<span class="sd">    across all data</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    df: pandas.DataFrame</span>
+<span class="sd">      data frame of hourly data. </span>
+<span class="sd">      Must include a date field and at least one variable to plot</span>
+<span class="sd">    pollutant: str</span>
+<span class="sd">      Name of variable to plot</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">import</span> <span class="nn">datetime</span> <span class="k">as</span> <span class="nn">dt</span>
     <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>

@@ -4,13 +4,14 @@ def trendLevel(df, pollutant, **kwargs):
     df. It takes the average hour value of each month and plots a heatmap
     showing what timesof the year there is a high concentration of the 
     pollutant.
-	
-	Parameters
-	----------
-	df: data frame
-		data frame of complete data
-	pollutant: type string
-		Name of the data series in df to produce plot
+    
+    Parameters
+    ----------
+    df: `pd.DataFrame`
+        data frame of complete data
+    pollutant: string
+        Name of the data series in df to produce plot
+    
     """
     import datetime as dt
     import matplotlib.pyplot as plt

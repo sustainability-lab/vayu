@@ -32,19 +32,25 @@
             
   <h1>Source code for vayu.googleMaps</h1><div class="highlight"><pre>
 <div class="viewcode-block" id="googleMaps"><a class="viewcode-back" href="../../pages/vayu.html#vayu.googleMaps.googleMaps">[docs]</a><span></span><span class="k">def</span> <span class="nf">googleMaps</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">long</span><span class="p">,</span> <span class="n">pollutant</span><span class="p">,</span> <span class="n">dataLoc</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Plots a geographic plot.</span>
-<span class="sd">    </span>
+    <span class="sd">&quot;&quot;&quot;Plots a geographical plot.</span>
+
 <span class="sd">    Plots a folium plot of longitude and latitude points </span>
 <span class="sd">    provided with information about each point when clicked </span>
 <span class="sd">    on.</span>
 
-<span class="sd">    Args:</span>
-<span class="sd">        df (`pandas.DataFrame`): minimally containing date and </span>
-<span class="sd">        values of pollutant, city, longitude, latitude, and AQI</span>
-<span class="sd">        lat(string): Column in df for latitude points.</span>
-<span class="sd">        long(string): Column in df for longitude points.</span>
-<span class="sd">        pollutant(string): Name of pollutant in df</span>
-<span class="sd">        dataLoc(string): Name of df column where pollutanat values are stored</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    df: pandas.DataFrame</span>
+<span class="sd">        minimally containing date and values of pollutant, city,</span>
+<span class="sd">        longitude, latitude, and AQI</span>
+<span class="sd">    lat: str</span>
+<span class="sd">        Name of column in df of where latitude points are</span>
+<span class="sd">    long: str</span>
+<span class="sd">        Name of column in df of where longitude points are</span>
+<span class="sd">    pollutant: str</span>
+<span class="sd">        Name of pollutant </span>
+<span class="sd">    dataLoc: str</span>
+<span class="sd">        Name of df column where pollutanat values are stored</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">import</span> <span class="nn">folium</span>

@@ -32,20 +32,21 @@
             
   <h1>Source code for vayu.linearRelation</h1><div class="highlight"><pre>
 <div class="viewcode-block" id="linearRelation"><a class="viewcode-back" href="../../pages/vayu.html#vayu.linearRelation.linearRelation">[docs]</a><span></span><span class="k">def</span> <span class="nf">linearRelation</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">pol1</span><span class="p">,</span> <span class="n">pol2</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; This plot given two pollutants will graph the linear </span>
-<span class="sd">        relationship. The df given will be converted to the slope</span>
-<span class="sd">        between the pollutants. </span>
-<span class="sd">		</span>
-<span class="sd">		Parameters</span>
-<span class="sd">		----------</span>
-<span class="sd">		df: data frame</span>
-<span class="sd">			minimally containing date and two pollutants</span>
-<span class="sd">		pol1: type string</span>
-<span class="sd">			First pollutant that when plotted would appear</span>
-<span class="sd">			on the x-axis of a relationship, ex: &#39;nox&#39;</span>
-<span class="sd">		pol2: type string</span>
-<span class="sd">			Second pollutant that when plotted would appear</span>
-<span class="sd">			on the y-axis of a relationship, ex: &#39;pm10&#39;		</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This plot given two pollutants will graph the linear </span>
+<span class="sd">    relationship. The df given will be converted to the slope</span>
+<span class="sd">    between the pollutants. </span>
+<span class="sd">        </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    df: data frame</span>
+<span class="sd">        minimally containing date and two pollutants</span>
+<span class="sd">    pol1: type string</span>
+<span class="sd">        First pollutant that when plotted would appear</span>
+<span class="sd">        on the x-axis of a relationship, ex: &#39;nox&#39;</span>
+<span class="sd">    pol2: type string</span>
+<span class="sd">        Second pollutant that when plotted would appear</span>
+<span class="sd">        on the y-axis of a relationship, ex: &#39;pm10&#39;     </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">import</span> <span class="nn">datetime</span> <span class="k">as</span> <span class="nn">dt</span>
     <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
@@ -58,10 +59,11 @@
     <span class="n">df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">date</span><span class="p">)</span>
     <span class="n">unique_years</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">year</span><span class="p">)</span>
 
-    <span class="sd">&quot;&quot;&quot; Finds the unique years in the given data</span>
-<span class="sd">        and converts it to a string type within a list </span>
-<span class="sd">        to be called on later to determine manipulation </span>
-<span class="sd">        of data</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Finds the unique years in the given data</span>
+<span class="sd">    and converts it to a string type within a list </span>
+<span class="sd">    to be called on later to determine manipulation </span>
+<span class="sd">    of data</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">year</span> <span class="o">=</span> <span class="p">[]</span>
@@ -72,9 +74,10 @@
     <span class="n">num_unique_years</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">year</span><span class="p">)</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-    <span class="sd">&quot;&quot;&quot; Will create a df(df_1) varying in lentgh based on the</span>
-<span class="sd">        number of years that the data contains. The df </span>
-<span class="sd">        consists of the slope between the two given pollutants</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Will create a df(df_1) varying in lentgh based on the</span>
+<span class="sd">    number of years that the data contains. The df </span>
+<span class="sd">    consists of the slope between the two given pollutants</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">values</span> <span class="o">=</span> <span class="p">[]</span>

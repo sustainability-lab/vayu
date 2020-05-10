@@ -143,47 +143,38 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">set_radii_angle</span><span class="p">(</span><span class="n">angle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">radii_angle</span><span class="p">)</span>
 
 <div class="viewcode-block" id="WindroseAxes.legend"><a class="viewcode-back" href="../../pages/vayu.html#vayu.windRosePy.WindroseAxes.legend">[docs]</a>    <span class="k">def</span> <span class="nf">legend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;lower left&quot;</span><span class="p">,</span> <span class="n">decimal_places</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Sets the legend location and her properties.</span>
-
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets the legend location and her properties.</span>
+<span class="sd">        </span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        loc: ``int``</span>
-
-<span class="sd">        string or pair of floats, default: &#39;lower left&#39; </span>
-<span class="sd">        see :obj:`matplotlib.pyplot.legend`.</span>
-<span class="sd">        </span>
+<span class="sd">        loc : int, string or pair of floats, default: &#39;lower left&#39;</span>
+<span class="sd">            see :obj:`matplotlib.pyplot.legend`.</span>
 <span class="sd">        decimal_places : int, default 1</span>
-<span class="sd">        The decimal places of the formated legend</span>
-
+<span class="sd">            The decimal places of the formated legend</span>
+<span class="sd">        </span>
 <span class="sd">        Other Parameters</span>
 <span class="sd">        ----------------</span>
 <span class="sd">        isaxes : boolean, default True</span>
 <span class="sd">            whether this is an axes legend</span>
-<span class="sd">        </span>
 <span class="sd">        prop : FontProperties(size=&#39;smaller&#39;)</span>
 <span class="sd">            the font property</span>
-<span class="sd">        </span>
 <span class="sd">        borderpad : float</span>
 <span class="sd">            the fractional whitespace inside the legend border</span>
-<span class="sd">        </span>
 <span class="sd">        shadow : boolean</span>
 <span class="sd">            if True, draw a shadow behind legend</span>
-<span class="sd">        </span>
 <span class="sd">        labelspacing : float, 0.005</span>
 <span class="sd">            the vertical space between the legend entries</span>
-<span class="sd">        </span>
 <span class="sd">        handlelenght : float, 0.05</span>
 <span class="sd">            the length of the legend lines</span>
-<span class="sd">        </span>
 <span class="sd">        handletextsep : float, 0.02</span>
 <span class="sd">            the space between the legend line and legend text</span>
-<span class="sd">        </span>
 <span class="sd">        borderaxespad : float, 0.02</span>
 <span class="sd">            the border between the axes and legend edge</span>
-<span class="sd">        </span>
 <span class="sd">        kwarg</span>
 <span class="sd">            Every other kwarg argument supported by</span>
 <span class="sd">            :obj:`matplotlib.pyplot.legend`</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">def</span> <span class="nf">get_handles</span><span class="p">():</span>
@@ -238,33 +229,24 @@
     <span class="k">def</span> <span class="nf">_init_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">direction</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Internal method used by all plotting commands</span>
-<span class="sd">        </span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        direction : 1D array,</span>
 <span class="sd">            directions the wind blows from, North centred</span>
 <span class="sd">        var : 1D array,</span>
 <span class="sd">            values of the variable to compute. Typically the wind speeds</span>
-<span class="sd">        </span>
 <span class="sd">        Other Parameters</span>
 <span class="sd">        ----------------</span>
 <span class="sd">        normed : boolean, default False</span>
-<span class="sd">        </span>
 <span class="sd">        blowto : boolean, default False</span>
-<span class="sd">        </span>
 <span class="sd">        colors : str or list of str, default None</span>
 <span class="sd">            The colors of the plot.</span>
-<span class="sd">        </span>
 <span class="sd">        cmap : color map, default `jet`</span>
 <span class="sd">            A :obj:`matplotlib.cm` colormap for the plot.</span>
 <span class="sd">            Warning! It overrides `colors`.</span>
-<span class="sd">        </span>
 <span class="sd">        weibull_factors :</span>
-<span class="sd">        </span>
 <span class="sd">        mean_values :</span>
-<span class="sd">        </span>
 <span class="sd">        frequency :</span>
-<span class="sd">        </span>
 <span class="sd">        kwarg</span>
 <span class="sd">            Any argument accepted by :obj:`matplotlib.pyplot.plot`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>

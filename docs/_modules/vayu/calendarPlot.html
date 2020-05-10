@@ -32,26 +32,29 @@
             
   <h1>Source code for vayu.calendarPlot</h1><div class="highlight"><pre>
 <div class="viewcode-block" id="calendarPlot"><a class="viewcode-back" href="../../pages/vayu.html#vayu.calendarPlot.calendarPlot">[docs]</a><span></span><span class="k">def</span> <span class="nf">calendarPlot</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">pollutant</span><span class="p">,</span> <span class="n">year</span><span class="p">,</span> <span class="n">country</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Plots a heatmap on a calendar layout based </span>
-<span class="sd">        on the intensity of the pollutant per day.</span>
-<span class="sd">        Each day contains an arrow indicating both </span>
-<span class="sd">        wind direction as well as wind speed</span>
-<span class="sd">		</span>
-<span class="sd">		Parameters</span>
-<span class="sd">		----------</span>
-<span class="sd">		df: data frame</span>
-<span class="sd">			minimally containing date and at least one other</span>
-<span class="sd">			numeric variable </span>
-<span class="sd">		pollutant: type string</span>
-<span class="sd">			A pollutant name correspoinding to </span>
-<span class="sd">			a variable in a data frame, ex: &#39;pm25&#39;</span>
-<span class="sd">		year: type string</span>
-<span class="sd">			Year to plot&#39;, ex &#39;2003&#39;    </span>
+    <span class="sd">&quot;&quot;&quot;Shows daily concentrations laid out in a calendar format.</span>
+
+<span class="sd">    Plots a heatmap on a calendar layout based </span>
+<span class="sd">    on the intensity of the pollutant per day.</span>
+<span class="sd">    Each day contains an arrow indicating both </span>
+<span class="sd">    wind direction as well as wind speed.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    df: pd.DataFrame</span>
+<span class="sd">        minimally containing date and at least one other</span>
+<span class="sd">        numeric variable</span>
+<span class="sd">    pollutant: type string</span>
+<span class="sd">        A pollutant name correspoinding to </span>
+<span class="sd">        a variable in a data frame, ex: &#39;pm25&#39;</span>
+<span class="sd">    year: type string</span>
+<span class="sd">        Year to plot, for example, &#39;2003&#39;    </span>
 <span class="sd">    cvals: numpy.ndarray</span>
 <span class="sd">       array containing bin edges for the pollutant</span>
 <span class="sd">    colors: numpy.ndarray</span>
 <span class="sd">       array containing hex color codes corresponding to </span>
-<span class="sd">       bin edges for the pollutant  </span>
+<span class="sd">       bin edges for the pollutant</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">import</span> <span class="nn">datetime</span> <span class="k">as</span> <span class="nn">dt</span>
     <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>

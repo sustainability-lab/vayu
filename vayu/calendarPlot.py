@@ -1,24 +1,27 @@
 def calendarPlot(df, pollutant, year, country, **kwargs):
-    """ Plots a heatmap on a calendar layout based 
-        on the intensity of the pollutant per day.
-        Each day contains an arrow indicating both 
-        wind direction as well as wind speed
-		
-		Parameters
-		----------
-		df: data frame
-			minimally containing date and at least one other
-			numeric variable 
-		pollutant: type string
-			A pollutant name correspoinding to 
-			a variable in a data frame, ex: 'pm25'
-		year: type string
-			Year to plot', ex '2003'    
+    """Shows daily concentrations laid out in a calendar format.
+
+    Plots a heatmap on a calendar layout based 
+    on the intensity of the pollutant per day.
+    Each day contains an arrow indicating both 
+    wind direction as well as wind speed.
+
+    Parameters
+    ----------
+    df: pd.DataFrame
+        minimally containing date and at least one other
+        numeric variable
+    pollutant: type string
+        A pollutant name correspoinding to 
+        a variable in a data frame, ex: 'pm25'
+    year: type string
+        Year to plot, for example, '2003'    
     cvals: numpy.ndarray
        array containing bin edges for the pollutant
     colors: numpy.ndarray
        array containing hex color codes corresponding to 
-       bin edges for the pollutant  
+       bin edges for the pollutant
+
     """
     import datetime as dt
     import matplotlib.pyplot as plt

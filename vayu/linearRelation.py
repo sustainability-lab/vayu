@@ -1,18 +1,19 @@
 def linearRelation(df, pol1, pol2):
-    """ This plot given two pollutants will graph the linear 
-        relationship. The df given will be converted to the slope
-        between the pollutants. 
-		
-		Parameters
-		----------
-		df: data frame
-			minimally containing date and two pollutants
-		pol1: type string
-			First pollutant that when plotted would appear
-			on the x-axis of a relationship, ex: 'nox'
-		pol2: type string
-			Second pollutant that when plotted would appear
-			on the y-axis of a relationship, ex: 'pm10'		
+    """
+    This plot given two pollutants will graph the linear 
+    relationship. The df given will be converted to the slope
+    between the pollutants. 
+        
+    Parameters
+    ----------
+    df: data frame
+        minimally containing date and two pollutants
+    pol1: type string
+        First pollutant that when plotted would appear
+        on the x-axis of a relationship, ex: 'nox'
+    pol2: type string
+        Second pollutant that when plotted would appear
+        on the y-axis of a relationship, ex: 'pm10'     
     """
     import datetime as dt
     import matplotlib.pyplot as plt
@@ -25,10 +26,11 @@ def linearRelation(df, pol1, pol2):
     df.index = pd.to_datetime(df.date)
     unique_years = np.unique(df.index.year)
 
-    """ Finds the unique years in the given data
-        and converts it to a string type within a list 
-        to be called on later to determine manipulation 
-        of data
+    """
+    Finds the unique years in the given data
+    and converts it to a string type within a list 
+    to be called on later to determine manipulation 
+    of data
     """
     i = 0
     year = []
@@ -39,9 +41,10 @@ def linearRelation(df, pol1, pol2):
     num_unique_years = len(year)
     df = df.drop("date", axis=1)
 
-    """ Will create a df(df_1) varying in lentgh based on the
-        number of years that the data contains. The df 
-        consists of the slope between the two given pollutants
+    """
+    Will create a df(df_1) varying in lentgh based on the
+    number of years that the data contains. The df 
+    consists of the slope between the two given pollutants
     """
     i = 0
     values = []

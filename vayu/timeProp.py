@@ -1,22 +1,23 @@
 def timeProp(df, year, pollutant, avg_days, 
              date_time_col_name):
-    """ Plot a stacked bar graph of all data in the df
-        based on frequency of wind direction in compass
-        directions. Takes the average of every 3 days
-        in each bar. The hight of the bar is value of 
-        the pollutant that 3 day period. The bars are 
-        binned proportionaly based on the overall value of the 
-        pollutant 
-        
-        Parameters
-        ----------
-        df: data frame
-            data frame which has the fields of date and the pollutant
-            to be graphed
-        year: type string
-            The year of which the data will be cut
-        pollutant: type string
-            The pollutant of which to plot
+    """
+    Plot a stacked bar graph of all data in the df
+    based on frequency of wind direction in compass
+    directions. Takes the average of every 3 days
+    in each bar. The hight of the bar is value of 
+    the pollutant that 3 day period. The bars are 
+    binned proportionaly based on the overall value of the 
+    pollutant 
+    
+    Parameters
+    ----------
+    df: data frame
+        data frame which has the fields of date and the pollutant
+        to be graphed
+    year: type string
+        The year of which the data will be cut
+    pollutant: type string
+        The pollutant of which to plot
     avg_days: type integer
       number of days to take the average of (controlling 
       granularity of the X-axis)

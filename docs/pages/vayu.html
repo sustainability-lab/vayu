@@ -42,20 +42,21 @@
 <dl class="py function">
 <dt id="vayu.TheilSen.TheilSen">
 <code class="sig-prename descclassname">vayu.TheilSen.</code><code class="sig-name descname">TheilSen</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span></em>, <em class="sig-param"><span class="n">pollutant</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vayu/TheilSen.html#TheilSen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vayu.TheilSen.TheilSen" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plots a connected scatter plot of the average value of
+<dd><p>Connected scatter plot.</p>
+<p>Plots a connected scatter plot of the average value of
 the pollutant every month of every year. Then plots a
 line of best fit through the plot showing the user
 the overall trend of the pollutant through the years.</p>
-<blockquote>
-<div><dl class="simple">
-<dt>df: data frame</dt><dd><p>minimally containing date and at least one other
-pollutant</p>
-</dd>
-<dt>pollutant: type string</dt><dd><p>A pollutant name correspoinding to
-a variable in a data frame, ex: ‘pm25’</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>data frame</em>) – minimally containing date and at least one other
+pollutant</p></li>
+<li><p><strong>pollutant</strong> (<em>type string</em>) – A pollutant name correspoinding to
+a variable in a data frame, ex: ‘pm25’</p></li>
+</ul>
 </dd>
 </dl>
-</div></blockquote>
 </dd></dl>
 
 </div>
@@ -64,27 +65,23 @@ a variable in a data frame, ex: ‘pm25’</p>
 <dl class="py function">
 <dt id="vayu.calendarPlot.calendarPlot">
 <code class="sig-prename descclassname">vayu.calendarPlot.</code><code class="sig-name descname">calendarPlot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span></em>, <em class="sig-param"><span class="n">pollutant</span></em>, <em class="sig-param"><span class="n">year</span></em>, <em class="sig-param"><span class="n">country</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vayu/calendarPlot.html#calendarPlot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vayu.calendarPlot.calendarPlot" title="Permalink to this definition">¶</a></dt>
-<dd><dl>
-<dt>Plots a heatmap on a calendar layout based</dt><dd><p>on the intensity of the pollutant per day.
+<dd><p>Shows daily concentrations laid out in a calendar format.</p>
+<p>Plots a heatmap on a calendar layout based
+on the intensity of the pollutant per day.
 Each day contains an arrow indicating both
-wind direction as well as wind speed</p>
-<blockquote>
-<div><dl class="simple">
-<dt>df: data frame</dt><dd><p>minimally containing date and at least one other
-numeric variable</p>
-</dd>
-<dt>pollutant: type string</dt><dd><p>A pollutant name correspoinding to
-a variable in a data frame, ex: ‘pm25’</p>
-</dd>
-<dt>year: type string</dt><dd><p>Year to plot’, ex ‘2003’</p>
-</dd>
-</dl>
-</div></blockquote>
-</dd>
-<dt>cvals: numpy.ndarray</dt><dd><p>array containing bin edges for the pollutant</p>
-</dd>
-<dt>colors: numpy.ndarray</dt><dd><p>array containing hex color codes corresponding to
-bin edges for the pollutant</p>
+wind direction as well as wind speed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pd.DataFrame</em>) – minimally containing date and at least one other
+numeric variable</p></li>
+<li><p><strong>pollutant</strong> (<em>type string</em>) – A pollutant name correspoinding to
+a variable in a data frame, ex: ‘pm25’</p></li>
+<li><p><strong>year</strong> (<em>type string</em>) – Year to plot, for example, ‘2003’</p></li>
+<li><p><strong>cvals</strong> (<em>numpy.ndarray</em>) – array containing bin edges for the pollutant</p></li>
+<li><p><strong>colors</strong> (<em>numpy.ndarray</em>) – array containing hex color codes corresponding to
+bin edges for the pollutant</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -95,19 +92,19 @@ bin edges for the pollutant</p>
 <dl class="py function">
 <dt id="vayu.googleMaps.googleMaps">
 <code class="sig-prename descclassname">vayu.googleMaps.</code><code class="sig-name descname">googleMaps</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span></em>, <em class="sig-param"><span class="n">lat</span></em>, <em class="sig-param"><span class="n">long</span></em>, <em class="sig-param"><span class="n">pollutant</span></em>, <em class="sig-param"><span class="n">dataLoc</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vayu/googleMaps.html#googleMaps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vayu.googleMaps.googleMaps" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plots a geographic plot.</p>
+<dd><p>Plots a geographical plot.</p>
 <p>Plots a folium plot of longitude and latitude points
 provided with information about each point when clicked
 on.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>df</strong> (<cite>pandas.DataFrame</cite>) – minimally containing date and</p></li>
-<li><p><strong>of pollutant</strong><strong>, </strong><strong>city</strong><strong>, </strong><strong>longitude</strong><strong>, </strong><strong>latitude</strong><strong>, </strong><strong>and AQI</strong> (<em>values</em>) – </p></li>
-<li><p><strong>lat</strong> (<em>string</em>) – Column in df for latitude points.</p></li>
-<li><p><strong>long</strong> (<em>string</em>) – Column in df for longitude points.</p></li>
-<li><p><strong>pollutant</strong> (<em>string</em>) – Name of pollutant in df</p></li>
-<li><p><strong>dataLoc</strong> (<em>string</em>) – Name of df column where pollutanat values are stored</p></li>
+<li><p><strong>df</strong> (<em>pandas.DataFrame</em>) – minimally containing date and values of pollutant, city,
+longitude, latitude, and AQI</p></li>
+<li><p><strong>lat</strong> (<em>str</em>) – Name of column in df of where latitude points are</p></li>
+<li><p><strong>long</strong> (<em>str</em>) – Name of column in df of where longitude points are</p></li>
+<li><p><strong>pollutant</strong> (<em>str</em>) – Name of pollutant</p></li>
+<li><p><strong>dataLoc</strong> (<em>str</em>) – Name of df column where pollutanat values are stored</p></li>
 </ul>
 </dd>
 </dl>
@@ -188,18 +185,17 @@ training points used.</p></li>
 <dd><p>This plot given two pollutants will graph the linear
 relationship. The df given will be converted to the slope
 between the pollutants.</p>
-<blockquote>
-<div><dl class="simple">
-<dt>df: data frame</dt><dd><p>minimally containing date and two pollutants</p>
-</dd>
-<dt>pol1: type string</dt><dd><p>First pollutant that when plotted would appear
-on the x-axis of a relationship, ex: ‘nox’</p>
-</dd>
-<dt>pol2: type string</dt><dd><p>Second pollutant that when plotted would appear
-on the y-axis of a relationship, ex: ‘pm10’</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>data frame</em>) – minimally containing date and two pollutants</p></li>
+<li><p><strong>pol1</strong> (<em>type string</em>) – First pollutant that when plotted would appear
+on the x-axis of a relationship, ex: ‘nox’</p></li>
+<li><p><strong>pol2</strong> (<em>type string</em>) – Second pollutant that when plotted would appear
+on the y-axis of a relationship, ex: ‘pm10’</p></li>
+</ul>
 </dd>
 </dl>
-</div></blockquote>
 </dd></dl>
 
 </div>
@@ -231,14 +227,14 @@ on the y-axis of a relationship, ex: ‘pm10’</p>
 <code class="sig-prename descclassname">vayu.selectByDate.</code><code class="sig-name descname">selectByDate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span></em>, <em class="sig-param"><span class="n">year</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vayu/selectByDate.html#selectByDate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vayu.selectByDate.selectByDate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Utility function to cut given dataframe by the year
 and find the average value of each day</p>
-<blockquote>
-<div><dl class="simple">
-<dt>df: data frame</dt><dd><p>a data frame containing a date field</p>
-</dd>
-<dt>year: type string</dt><dd><p>a year to select to cut data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>data frame</em>) – a data frame containing a date field</p></li>
+<li><p><strong>year</strong> (<em>type string</em>) – a year to select to cut data</p></li>
+</ul>
 </dd>
 </dl>
-</div></blockquote>
 </dd></dl>
 
 </div>
@@ -340,27 +336,24 @@ and at least one variable to plot</p></li>
 <dl class="py function">
 <dt id="vayu.timeProp.timeProp">
 <code class="sig-prename descclassname">vayu.timeProp.</code><code class="sig-name descname">timeProp</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span></em>, <em class="sig-param"><span class="n">year</span></em>, <em class="sig-param"><span class="n">pollutant</span></em>, <em class="sig-param"><span class="n">avg_days</span></em>, <em class="sig-param"><span class="n">date_time_col_name</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vayu/timeProp.html#timeProp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vayu.timeProp.timeProp" title="Permalink to this definition">¶</a></dt>
-<dd><dl>
-<dt>Plot a stacked bar graph of all data in the df</dt><dd><p>based on frequency of wind direction in compass
+<dd><p>Plot a stacked bar graph of all data in the df
+based on frequency of wind direction in compass
 directions. Takes the average of every 3 days
 in each bar. The hight of the bar is value of
 the pollutant that 3 day period. The bars are
 binned proportionaly based on the overall value of the
 pollutant</p>
-<dl class="simple">
-<dt>df: data frame</dt><dd><p>data frame which has the fields of date and the pollutant
-to be graphed</p>
-</dd>
-<dt>year: type string</dt><dd><p>The year of which the data will be cut</p>
-</dd>
-<dt>pollutant: type string</dt><dd><p>The pollutant of which to plot</p>
-</dd>
-</dl>
-</dd>
-<dt>avg_days: type integer</dt><dd><p>number of days to take the average of (controlling
-granularity of the X-axis)</p>
-</dd>
-<dt>date_time_col_name: type string</dt><dd><p>df column name containing date-time stamps</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>data frame</em>) – data frame which has the fields of date and the pollutant
+to be graphed</p></li>
+<li><p><strong>year</strong> (<em>type string</em>) – The year of which the data will be cut</p></li>
+<li><p><strong>pollutant</strong> (<em>type string</em>) – The pollutant of which to plot</p></li>
+<li><p><strong>avg_days</strong> (<em>type integer</em>) – number of days to take the average of (controlling
+granularity of the X-axis)</p></li>
+<li><p><strong>date_time_col_name</strong> (<em>type string</em>) – df column name containing date-time stamps</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -371,27 +364,24 @@ granularity of the X-axis)</p>
 <dl class="py function">
 <dt id="vayu.timeVariation.timeVariation">
 <code class="sig-prename descclassname">vayu.timeVariation.</code><code class="sig-name descname">timeVariation</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span></em>, <em class="sig-param"><span class="n">pollutant</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vayu/timeVariation.html#timeVariation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vayu.timeVariation.timeVariation" title="Permalink to this definition">¶</a></dt>
-<dd><p>4 seperate plots are plotted:</p>
-<ol class="arabic">
-<li><dl class="simple">
-<dt>the average pollutant level per day by each hour for each day of the</dt><dd><p>week across all of the data</p>
+<dd><p>Plots four plots:
+- The average pollutant level per day by
+each hour for each day of the week across all of the data
+- The average pollutant level by each hour,
+across all data
+- The average pollutant level by each month of the
+year for across data
+- The average pollutant level per day of the week
+across all data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pandas.DataFrame</em>) – data frame of hourly data.
+Must include a date field and at least one variable to plot</p></li>
+<li><p><strong>pollutant</strong> (<em>str</em>) – Name of variable to plot</p></li>
+</ul>
 </dd>
 </dl>
-</li>
-<li><p>the average pollutant level by each hour, across all data</p></li>
-<li><p>the average pollutant level by each month of the year for across data</p></li>
-<li><p>the average pollutant level per day of the week across all data</p>
-<blockquote>
-<div><dl class="simple">
-<dt>df: data frame</dt><dd><p>data frame of hourly data.
-Must include a date field and at least one variable to plot</p>
-</dd>
-<dt>pollutant: type string</dt><dd><p>Name of variable to plot</p>
-</dd>
-</dl>
-</div></blockquote>
-</li>
-</ol>
 </dd></dl>
 
 </div>
@@ -404,14 +394,14 @@ Must include a date field and at least one variable to plot</p>
 df. It takes the average hour value of each month and plots a heatmap
 showing what timesof the year there is a high concentration of the
 pollutant.</p>
-<blockquote>
-<div><dl class="simple">
-<dt>df: data frame</dt><dd><p>data frame of complete data</p>
-</dd>
-<dt>pollutant: type string</dt><dd><p>Name of the data series in df to produce plot</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<cite>pd.DataFrame</cite>) – data frame of complete data</p></li>
+<li><p><strong>pollutant</strong> (<em>string</em>) – Name of the data series in df to produce plot</p></li>
+</ul>
 </dd>
 </dl>
-</div></blockquote>
 </dd></dl>
 
 </div>
@@ -508,18 +498,12 @@ for no space)</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>loc</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – </p></li>
-<li><p><strong>or pair of floats</strong><strong>, </strong><strong>default</strong> (<em>string</em>) – </p></li>
+<li><p><strong>loc</strong> (<em>int</em><em>, </em><em>string</em><em> or </em><em>pair of floats</em><em>, </em><em>default: 'lower left'</em>) – see <code class="xref py py-obj docutils literal notranslate"><span class="pre">matplotlib.pyplot.legend</span></code>.</p></li>
+<li><p><strong>decimal_places</strong> (<em>int</em><em>, </em><em>default 1</em>) – The decimal places of the formated legend</p></li>
 </ul>
 </dd>
-</dl>
-<p>:param see <code class="xref py py-obj docutils literal notranslate"><span class="pre">matplotlib.pyplot.legend</span></code>.:
-:param decimal_places:
-:type decimal_places: int, default 1
-:param The decimal places of the formated legend:</p>
-<dl class="field-list simple">
-<dt class="field-odd">Other Parameters</dt>
-<dd class="field-odd"><ul class="simple">
+<dt class="field-even">Other Parameters</dt>
+<dd class="field-even"><ul class="simple">
 <li><p><strong>isaxes</strong> (<em>boolean, default True</em>) – whether this is an axes legend</p></li>
 <li><p><strong>prop</strong> (<em>FontProperties(size=’smaller’)</em>) – the font property</p></li>
 <li><p><strong>borderpad</strong> (<em>float</em>) – the fractional whitespace inside the legend border</p></li>
