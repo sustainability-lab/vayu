@@ -6,17 +6,34 @@
 Welcome to vayu's documentation!
 ================================
 
+Vayu is an open-source Python package for analysing air quality data. Vayu was created and is maintained by the `Sustainability Lab`__ at the `Indian Institute of Technology Gandhinagar`__.
+
+
+Vayu provides multiple visualization techniques for air quality related data. It is inspired from `OpenAIR`__ --- a air quality visualization package in R. 
+
+
+Please visit our **Offical Github code repository** `here`__. Current version:
+
+.. literalinclude:: ../vayu/_version.py
+  :language: python
+
+
+__ https://sustainability-lab.github.io/
+__ http://iitgn.ac.in/
+__ https://davidcarslaw.github.io/openair/
+__ https://github.com/sustainability-lab/vayu/
+
+
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+    :maxdepth: 1
+    :caption: Quick Links:
 
-   pages/installation
+    pages/installation
 
 
+.. Indices and tables
+.. ==================
 
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+.. * :ref:`genindex`
+.. * :ref:`modindex`
+.. * :ref:`search`

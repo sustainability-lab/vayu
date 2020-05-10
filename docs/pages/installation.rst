@@ -15,15 +15,15 @@ Documentations
 ----------------
 
 .. toctree::
-	:caption: Modules:
+    :caption: Module List:
 
-	modules
+    vayu
 
 
 Examples
 ----------
 
 .. toctree::
-	:caption: Jupyter notebooks.
+    :caption: Jupyter notebooks.
 
-	examples
+    examples

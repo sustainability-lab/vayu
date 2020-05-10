@@ -9,7 +9,7 @@ View documentations hosted at [GitHub][1].
 
 # Installation
 
-```
+```shell
 pip install vayu
 ```
 
