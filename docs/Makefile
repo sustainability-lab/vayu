@@ -26,4 +26,5 @@ help:
 github:
 	@$(SPHINXAPIDOC) -o "$(APIDOCOUTDIR)" "$(PROJDIR)"
 	@make html
-# 	@cp -a _build/html/. ../docs
+	@cp -a _build/html/. ../docs
+	@rm -r _build/html/
