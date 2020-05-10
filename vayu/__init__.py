@@ -10,17 +10,17 @@
 # finally:
 #     del get_distribution, DistributionNotFound
 
-from .timeInteractiveScatterPlot import timeInteractiveScatterPlot
-from .scatterPlot import scatterPlot
-from .timePlot import timePlot
-from .calendarPlot import calendarPlot
-from .linearRelation import linearRelation
-from .selectByDate import selectByDate
-from .summaryPlot import summaryPlot
 from .timeProp import timeProp
-from .timeVariation import timeVariation
-from .trendLevel import trendLevel
+from .timePlot import timePlot
 from .windRosePy import windRose
-from .interpolPlot import interpolPlot
+from .trendLevel import trendLevel
+from .summaryPlot import summaryPlot
+from .scatterPlot import scatterPlot
 from .smoothTrend import smoothTrend
+from .selectByDate import selectByDate
+from .calendarPlot import calendarPlot
+from .interpolPlot import interpolPlot
+from .timeVariation import timeVariation
+from .linearRelation import linearRelation
 from .interactiveChoroplethPlot import interactiveChoroplethPlot
+from .timeInteractiveScatterPlot import timeInteractiveScatterPlot

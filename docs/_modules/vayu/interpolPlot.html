@@ -1,0 +1,241 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>vayu.interpolPlot &#8212; vayu 0.0.134 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0.134',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for vayu.interpolPlot</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -- coding utf-8 --</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Created on Thu Jul 25 143303 2019</span>
+
+<span class="sd">@author Man Vinayaka</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="interpolPlot"><a class="viewcode-back" href="../../pages/vayu.html#vayu.interpolPlot.interpolPlot">[docs]</a><span class="k">def</span> <span class="nf">interpolPlot</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">,</span> <span class="n">shape_df</span><span class="p">,</span> <span class="n">long</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">pollutant</span><span class="p">,</span> 
+    <span class="n">resolution</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">partitions</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;inferno&quot;</span><span class="p">,</span>
+    <span class="n">Tcolor</span> <span class="o">=</span> <span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">markersize</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">plot_train_points</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">):</span>
+
+    <span class="kn">import</span> <span class="nn">geopandas</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+    <span class="kn">from</span> <span class="nn">geopandas</span> <span class="kn">import</span> <span class="n">GeoDataFrame</span>
+    <span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestRegressor</span>
+    <span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="kn">import</span> <span class="n">ListedColormap</span>
+    <span class="kn">from</span> <span class="nn">shapely.geometry</span> <span class="kn">import</span> <span class="p">(</span><span class="n">Polygon</span><span class="p">,</span> <span class="n">MultiPolygon</span><span class="p">,</span> <span class="n">Point</span><span class="p">)</span>
+
+    <span class="kn">from</span> <span class="nn">polire.custom</span> <span class="kn">import</span> <span class="n">CustomInterpolator</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">frac</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">trainX</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="n">long</span><span class="p">,</span> <span class="n">lat</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">trainy</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">pollutant</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="k">def</span> <span class="nf">collec_to_gdf</span><span class="p">(</span><span class="n">collec_poly</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Transform a `matplotlib.contour.QuadContourSet` to a GeoDataFrame&quot;&quot;&quot;</span>
+        <span class="n">polygons</span><span class="p">,</span> <span class="n">colors</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">polygon</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">collec_poly</span><span class="o">.</span><span class="n">collections</span><span class="p">):</span>
+            <span class="n">mpoly</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">polygon</span><span class="o">.</span><span class="n">get_paths</span><span class="p">():</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">path</span><span class="o">.</span><span class="n">should_simplify</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="n">poly</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">to_polygons</span><span class="p">()</span>
+                    <span class="c1"># Each polygon should contain an exterior ring + maybe hole(s):</span>
+                    <span class="n">exterior</span><span class="p">,</span> <span class="n">holes</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">poly</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">poly</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">:</span>
+                        <span class="c1"># The first of the list is the exterior ring :</span>
+                        <span class="n">exterior</span> <span class="o">=</span> <span class="n">poly</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                        <span class="c1"># Other(s) are hole(s):</span>
+                        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">poly</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                            <span class="n">holes</span> <span class="o">=</span> <span class="p">[</span><span class="n">h</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">poly</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">h</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">]</span>
+                    <span class="n">mpoly</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Polygon</span><span class="p">(</span><span class="n">exterior</span><span class="p">,</span> <span class="n">holes</span><span class="p">))</span>
+                <span class="k">except</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: Geometry error when making polygon #</span><span class="si">{}</span><span class="s1">&#39;</span>
+                        <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">mpoly</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">mpoly</span> <span class="o">=</span> <span class="n">MultiPolygon</span><span class="p">(</span><span class="n">mpoly</span><span class="p">)</span>
+                <span class="n">polygons</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mpoly</span><span class="p">)</span>
+                <span class="n">colors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">polygon</span><span class="o">.</span><span class="n">get_facecolor</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">mpoly</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">polygons</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mpoly</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="n">colors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">polygon</span><span class="o">.</span><span class="n">get_facecolor</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">collec_poly</span><span class="o">.</span><span class="n">cmap</span><span class="p">)</span> <span class="o">!=</span> <span class="n">ListedColormap</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;We only support ListedColormap right now.</span><span class="se">\n</span><span class="s2">&quot;&quot;&quot;</span>
+                <span class="sd">&quot;&quot;&quot;simply convert your cmap to ListedColormap using url here.&quot;&quot;&quot;</span>
+                <span class="sd">&quot;&quot;&quot;https://matplotlib.org/3.1.0/tutorials/colors/colormap-manipulation.html#sphx-glr-tutorials-colors-colormap-manipulation-py&quot;&quot;&quot;</span><span class="p">)</span>
+
+        <span class="n">ixs</span> <span class="o">=</span> <span class="p">[</span><span class="n">collec_poly</span><span class="o">.</span><span class="n">cmap</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">c</span><span class="p">[:</span><span class="mi">3</span><span class="p">])</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">colors</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">GeoDataFrame</span><span class="p">(</span>
+            <span class="n">geometry</span><span class="o">=</span><span class="n">polygons</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;RGBA&#39;</span><span class="p">:</span> <span class="n">colors</span><span class="p">,</span> 
+                <span class="s1">&#39;cmapIX&#39;</span><span class="p">:</span> <span class="n">ixs</span><span class="p">},</span>
+            <span class="n">crs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;init&#39;</span><span class="p">:</span> <span class="s1">&#39;epsg:4269&#39;</span><span class="p">})</span>
+
+    <span class="n">z</span> <span class="o">=</span> <span class="n">trainy</span>
+    <span class="n">x1max</span><span class="p">,</span> <span class="n">x2max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">trainX</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">x1min</span><span class="p">,</span> <span class="n">x2min</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">trainX</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">xi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">x1min</span><span class="p">,</span> <span class="n">x1max</span><span class="p">,</span> <span class="n">resolution</span><span class="p">)</span>
+    <span class="n">yi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">x2min</span><span class="p">,</span> <span class="n">x2max</span><span class="p">,</span> <span class="n">resolution</span><span class="p">)</span>
+    <span class="n">Xi</span><span class="p">,</span> <span class="n">Yi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">)</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">CustomInterpolator</span><span class="p">(</span><span class="n">RandomForestRegressor</span><span class="p">)</span>
+    <span class="n">t</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">trainX</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
+
+    <span class="n">zi</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">Xi</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">Yi</span><span class="o">.</span><span class="n">ravel</span><span class="p">()])</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+    <span class="n">zi</span> <span class="o">=</span> <span class="n">zi</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">Xi</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+    <span class="n">vmin</span> <span class="o">=</span> <span class="n">zi</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+    <span class="n">vmax</span> <span class="o">=</span> <span class="n">zi</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+    <span class="n">collec_poly</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span>
+        <span class="n">Xi</span><span class="p">,</span> <span class="n">Yi</span><span class="p">,</span> <span class="n">zi</span><span class="p">,</span> <span class="n">partitions</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span>
+    <span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="n">gdf</span> <span class="o">=</span> <span class="n">collec_to_gdf</span><span class="p">(</span><span class="n">collec_poly</span><span class="p">)</span>
+    <span class="c1"># new min max vales in term of index of colors</span>
+    <span class="n">vmax2</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">cmapIX</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+    <span class="n">vmin2</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">cmapIX</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+
+    <span class="c1"># intersection with shape_df</span>
+    <span class="n">inter</span> <span class="o">=</span> <span class="n">geopandas</span><span class="o">.</span><span class="n">overlay</span><span class="p">(</span><span class="n">shape_df</span><span class="p">,</span> <span class="n">gdf</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;intersection&#39;</span><span class="p">)</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">inter</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="n">column</span> <span class="o">=</span> <span class="s1">&#39;cmapIX&#39;</span><span class="p">,</span>
+        <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span>
+        <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">40</span><span class="p">),</span>
+        <span class="n">vmax</span> <span class="o">=</span> <span class="n">vmax2</span><span class="p">,</span>
+        <span class="n">vmin</span> <span class="o">=</span> <span class="n">vmin2</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">shape_df</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">ax</span><span class="p">,</span>
+        <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;none&#39;</span><span class="p">,</span> 
+        <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span>
+        <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">40</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="c1"># getting geodataframe of the train points</span>
+    <span class="k">if</span> <span class="n">plot_train_points</span><span class="p">:</span>
+        <span class="n">geometry</span> <span class="o">=</span> <span class="p">[</span><span class="n">Point</span><span class="p">(</span><span class="n">xy</span><span class="p">)</span> <span class="k">for</span> <span class="n">xy</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">long</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="n">lat</span><span class="p">])]</span>
+        <span class="n">geodf</span> <span class="o">=</span> <span class="n">geopandas</span><span class="o">.</span><span class="n">GeoDataFrame</span><span class="p">(</span>
+            <span class="n">df</span><span class="p">,</span> <span class="n">crs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;init&#39;</span><span class="p">:</span> <span class="s1">&#39;epsg:4269&#39;</span><span class="p">},</span>
+            <span class="n">geometry</span><span class="o">=</span><span class="n">geometry</span>
+        <span class="p">)</span>
+
+        <span class="c1"># finding the intersection and plotting</span>
+        <span class="kn">from</span> <span class="nn">geopandas.tools</span> <span class="kn">import</span> <span class="n">sjoin</span>
+        <span class="n">inter2</span> <span class="o">=</span> <span class="n">sjoin</span><span class="p">(</span><span class="n">geodf</span><span class="p">,</span> <span class="n">shape_df</span><span class="p">)</span>
+        <span class="n">inter2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="n">ax</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">Tcolor</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Train points&quot;</span><span class="p">,</span>
+            <span class="n">markersize</span><span class="o">=</span><span class="n">markersize</span>
+        <span class="p">)</span>
+        
+    <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_figure</span><span class="p">()</span>
+    <span class="n">cax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_axes</span><span class="p">([</span><span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">])</span>
+    <span class="n">sm</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">ScalarMappable</span><span class="p">(</span>
+        <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span> 
+        <span class="n">norm</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">Normalize</span><span class="p">(</span><span class="n">vmin</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">)</span>
+        <span class="p">)</span>
+    <span class="n">sm</span><span class="o">.</span><span class="n">_A</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+    <span class="n">bounds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span><span class="p">,</span> <span class="n">partitions</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span>
+        <span class="n">sm</span><span class="p">,</span> <span class="n">cax</span><span class="o">=</span><span class="n">cax</span><span class="p">,</span> <span class="n">ticks</span><span class="o">=</span><span class="n">bounds</span><span class="p">,</span>
+        <span class="n">boundaries</span><span class="o">=</span><span class="n">bounds</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%1.1E</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ax</span></div>
+
+
+<span class="c1"># =============================================================================</span>
+<span class="c1"># from geopandas import GeoDataFrame</span>
+<span class="c1"># import pandas as pd</span>
+<span class="c1"># import matplotlib.pyplot as plt</span>
+<span class="c1"># from vayu import interpolPlot</span>
+
+<span class="c1"># shapeFile = &quot;re/tl_2017_us_state.shp&quot;</span>
+<span class="c1"># long = &quot;Longitude&quot;</span>
+<span class="c1"># lat = &quot;Latitude&quot;</span>
+<span class="c1"># pollutant = &quot;Arithmetic Mean&quot;</span>
+<span class="c1"># df = pd.read_csv(&quot;re/daily_44201_2018.csv&quot;)</span>
+<span class="c1"># shape_df = GeoDataFrame.from_file(shapeFile)</span>
+<span class="c1"># shape_df.drop(shape_df.index[[34, 35, 36, 40, 41, 49, 31]], inplace=True)</span>
+<span class="c1"># interpolPlot(df, shape_df, long, lat, pollutant)</span>
+<span class="c1"># plt.show()</span>
+<span class="c1"># =============================================================================</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Sustainability Lab @ IIT Gandhinagar.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

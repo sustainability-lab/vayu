@@ -1,5 +1,8 @@
-Welcome to vayu's first page!
-================================
+Getting Started
+===============
+
+Installation
+----------------
 
 One can install this toolkit by the following command and you are done.
 
@@ -8,6 +11,19 @@ One can install this toolkit by the following command and you are done.
     pip install vayu
 
 
-Examples
-=========
+Documentations
+----------------
 
+.. toctree::
+	:caption: Modules:
+
+	modules
+
+
+Examples
+----------
+
+.. toctree::
+	:caption: Jupyter notebooks.
+
+	examples

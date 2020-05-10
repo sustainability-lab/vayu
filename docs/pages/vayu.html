@@ -1,0 +1,599 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>vayu package &#8212; vayu 0.0.134 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0.134',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Nothing to see here. 404." href="examples.html" />
+    <link rel="prev" title="vayu" href="modules.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="vayu-package">
+<h1>vayu package<a class="headerlink" href="#vayu-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-vayu.TheilSen">
+<span id="vayu-theilsen-module"></span><h2>vayu.TheilSen module<a class="headerlink" href="#module-vayu.TheilSen" title="Permalink to this headline">¶</a></h2>
+<p>Created on Fri Jul 26 01:59:09 2019</p>
+<p>&#64;author: Man Vinayaka</p>
+<dl class="function">
+<dt id="vayu.TheilSen.TheilSen">
+<code class="descclassname">vayu.TheilSen.</code><code class="descname">TheilSen</code><span class="sig-paren">(</span><em>df</em>, <em>pollutant</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vayu/TheilSen.html#TheilSen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vayu.TheilSen.TheilSen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots a connected scatter plot of the average value of
+the pollutant every month of every year. Then plots a
+line of best fit through the plot showing the user
+the overall trend of the pollutant through the years.</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>df: data frame</dt>
+<dd>minimally containing date and at least one other
+pollutant</dd>
+<dt>pollutant: type string</dt>
+<dd>A pollutant name correspoinding to 
+a variable in a data frame, ex: ‘pm25’</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+</div>
+<div class="section" id="module-vayu.calendarPlot">
+<span id="vayu-calendarplot-module"></span><h2>vayu.calendarPlot module<a class="headerlink" href="#module-vayu.calendarPlot" title="Permalink to this headline">¶</a></h2>
+<p>Created on Wed Jun  5 15:52:41 2019</p>
+<p>&#64;author: Man Vinayaka</p>
+<dl class="function">
+<dt id="vayu.calendarPlot.calendarPlot">
+<code class="descclassname">vayu.calendarPlot.</code><code class="descname">calendarPlot</code><span class="sig-paren">(</span><em>df</em>, <em>pollutant</em>, <em>year</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vayu/calendarPlot.html#calendarPlot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vayu.calendarPlot.calendarPlot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots a heatmap on a calendar layout based 
+on the intensity of the pollutant per day.
+Each day contains an arrow indicating both 
+wind direction as well as wind speed</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>df: data frame</dt>
+<dd>minimally containing date and at least one other
+numeric variable</dd>
+<dt>pollutant: type string</dt>
+<dd>A pollutant name correspoinding to 
+a variable in a data frame, ex: ‘pm25’</dd>
+<dt>year: type string</dt>
+<dd>Year to plot, ex ‘2003’</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+</div>
+<div class="section" id="module-vayu.googleMaps">
+<span id="vayu-googlemaps-module"></span><h2>vayu.googleMaps module<a class="headerlink" href="#module-vayu.googleMaps" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="vayu.googleMaps.googleMaps">
+<code class="descclassname">vayu.googleMaps.</code><code class="descname">googleMaps</code><span class="sig-paren">(</span><em>df</em>, <em>lat</em>, <em>long</em>, <em>pollutant</em>, <em>dataLoc</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vayu/googleMaps.html#googleMaps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vayu.googleMaps.googleMaps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots a folium plot of longitude and latitude points
+provided with information about each point when clicked 
+on</p>
+<blockquote>
+<div><blockquote>
+<div><dl class="docutils">
+<dt>df: data frame</dt>
+<dd>minimally containing date and values of pollutant, city,</dd>
+</dl>
+</div></blockquote>
+<dl class="docutils">
+<dt>longitude, latitude, and AQI</dt>
+<dd><dl class="first last docutils">
+<dt>lat: type string</dt>
+<dd>Name of column in df of where latitude points are</dd>
+</dl>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="docutils">
+<dt>long: type string</dt>
+<dd>Name of column in df of where longitude points are</dd>
+<dt>pollutant: type string</dt>
+<dd>Name of pollutant</dd>
+<dt>dataLoc: type string</dt>
+<dd>Name of df column where pollutanat values are stored</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="vayu-interactivechoroplethplot-module">
+<h2>vayu.interactiveChoroplethPlot module<a class="headerlink" href="#vayu-interactivechoroplethplot-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-vayu.interpolPlot">
+<span id="vayu-interpolplot-module"></span><h2>vayu.interpolPlot module<a class="headerlink" href="#module-vayu.interpolPlot" title="Permalink to this headline">¶</a></h2>
+<p>Created on Thu Jul 25 143303 2019</p>
+<p>&#64;author Man Vinayaka</p>
+<dl class="function">
+<dt id="vayu.interpolPlot.interpolPlot">
+<code class="descclassname">vayu.interpolPlot.</code><code class="descname">interpolPlot</code><span class="sig-paren">(</span><em>df</em>, <em>shape_df</em>, <em>long</em>, <em>lat</em>, <em>pollutant</em>, <em>resolution=100</em>, <em>partitions=15</em>, <em>cmap='inferno'</em>, <em>Tcolor='red'</em>, <em>markersize=3</em>, <em>plot_train_points=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vayu/interpolPlot.html#interpolPlot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vayu.interpolPlot.interpolPlot" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-vayu.linearRelation">
+<span id="vayu-linearrelation-module"></span><h2>vayu.linearRelation module<a class="headerlink" href="#module-vayu.linearRelation" title="Permalink to this headline">¶</a></h2>
+<p>Created on Tue Jul 23 11:03:47 2019</p>
+<p>&#64;author: Man Vinayaka</p>
+<dl class="function">
+<dt id="vayu.linearRelation.linearRelation">
+<code class="descclassname">vayu.linearRelation.</code><code class="descname">linearRelation</code><span class="sig-paren">(</span><em>df</em>, <em>pol1</em>, <em>pol2</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vayu/linearRelation.html#linearRelation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vayu.linearRelation.linearRelation" title="Permalink to this definition">¶</a></dt>
+<dd><p>This plot given two pollutants will graph the linear 
+relationship. The df given will be converted to the slope
+between the pollutants.</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>df: data frame</dt>
+<dd>minimally containing date and two pollutants</dd>
+<dt>pol1: type string</dt>
+<dd>First pollutant that when plotted would appear
+on the x-axis of a relationship, ex: ‘nox’</dd>
+<dt>pol2: type string</dt>
+<dd>Second pollutant that when plotted would appear
+on the y-axis of a relationship, ex: ‘pm10’</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+</div>
+<div class="section" id="vayu-polarfreq-module">
+<h2>vayu.polarFreq module<a class="headerlink" href="#vayu-polarfreq-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-vayu.scatterPlot">
+<span id="vayu-scatterplot-module"></span><h2>vayu.scatterPlot module<a class="headerlink" href="#module-vayu.scatterPlot" title="Permalink to this headline">¶</a></h2>
+<p>Spyder Editor</p>
+<dl class="function">
+<dt id="vayu.scatterPlot.scatterPlot">
+<code class="descclassname">vayu.scatterPlot.</code><code class="descname">scatterPlot</code><span class="sig-paren">(</span><em>df</em>, <em>x</em>, <em>y</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vayu/scatterPlot.html#scatterPlot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vayu.scatterPlot.scatterPlot" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>df: data frame </dt>
+<dd>data frame containing at least 
+2 numeric variables to plot</dd>
+<dt>x: type string</dt>
+<dd>name of x variable to plot</dd>
+<dt>y: type string</dt>
+<dd>name of y variable to plot</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-vayu.selectByDate">
+<span id="vayu-selectbydate-module"></span><h2>vayu.selectByDate module<a class="headerlink" href="#module-vayu.selectByDate" title="Permalink to this headline">¶</a></h2>
+<p>Created on Sun Jul 21 19:40:26 2019</p>
+<p>&#64;author: Man Vinayaka</p>
+<dl class="function">
+<dt id="vayu.selectByDate.selectByDate">
+<code class="descclassname">vayu.selectByDate.</code><code class="descname">selectByDate</code><span class="sig-paren">(</span><em>df</em>, <em>year</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vayu/selectByDate.html#selectByDate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vayu.selectByDate.selectByDate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Utility function to cut given dataframe by the year 
+and find the average value of each day</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>df: data frame</dt>
+<dd>a data frame containing a date field</dd>
+<dt>year: type string</dt>
+<dd>a year to select to cut data</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+</div>
+<div class="section" id="vayu-skeleton-module">
+<h2>vayu.skeleton module<a class="headerlink" href="#vayu-skeleton-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-vayu.smoothTrend">
+<span id="vayu-smoothtrend-module"></span><h2>vayu.smoothTrend module<a class="headerlink" href="#module-vayu.smoothTrend" title="Permalink to this headline">¶</a></h2>
+<p>Created on Fri Jul 26 02:20:37 2019</p>
+<p>&#64;author: Man Vinayaka</p>
+<dl class="function">
+<dt id="vayu.smoothTrend.smoothTrend">
+<code class="descclassname">vayu.smoothTrend.</code><code class="descname">smoothTrend</code><span class="sig-paren">(</span><em>df</em>, <em>pollutant</em>, <em>Type</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vayu/smoothTrend.html#smoothTrend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vayu.smoothTrend.smoothTrend" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots a connected scatter plot of the average value of
+the pollutant every month of every year. Then plots a
+smooth line of best fit through the plot showing the user
+the overall trend of the pollutant through the years.</p>
+<dl class="docutils">
+<dt>df: data frame</dt>
+<dd>minimally containing date and at least one other
+pollutant</dd>
+<dt>pollutant: type string</dt>
+<dd>A pollutant name correspoinding to 
+a variable in a data frame, ex: ‘pm25’</dd>
+<dt>Type: type int</dt>
+<dd>Value can be either 1 or 2
+1: normal trend line
+2: bootstrap uncertainties</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-vayu.summaryPlot">
+<span id="vayu-summaryplot-module"></span><h2>vayu.summaryPlot module<a class="headerlink" href="#module-vayu.summaryPlot" title="Permalink to this headline">¶</a></h2>
+<p>Created on Mon Jul 22 12:48:26 2019</p>
+<p>&#64;author: Man Vinayaka</p>
+<dl class="function">
+<dt id="vayu.summaryPlot.summaryPlot">
+<code class="descclassname">vayu.summaryPlot.</code><code class="descname">summaryPlot</code><span class="sig-paren">(</span><em>df</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vayu/summaryPlot.html#summaryPlot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vayu.summaryPlot.summaryPlot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots import summary of data frame given. Plots line plots
+and histograms for each polutant as well as statiscs such as 
+mean,max,min,median, and 95th percentile</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>df: data frame</dt>
+<dd>data frame to be summarised. Must contain a date field
+and at least one other parameter</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+</div>
+<div class="section" id="module-vayu.timeInteractiveScatterPlot">
+<span id="vayu-timeinteractivescatterplot-module"></span><h2>vayu.timeInteractiveScatterPlot module<a class="headerlink" href="#module-vayu.timeInteractiveScatterPlot" title="Permalink to this headline">¶</a></h2>
+<p>time_slider_map.ipynb</p>
+<p>Automatically generated by Colaboratory.</p>
+<dl class="docutils">
+<dt>Original file is located at</dt>
+<dd><a class="reference external" href="https://colab.research.google.com/drive/1Hro5ohvydqeiP33iBoUQz9b8p_nRN0YF">https://colab.research.google.com/drive/1Hro5ohvydqeiP33iBoUQz9b8p_nRN0YF</a></dd>
+</dl>
+<dl class="function">
+<dt id="vayu.timeInteractiveScatterPlot.timeInteractiveScatterPlot">
+<code class="descclassname">vayu.timeInteractiveScatterPlot.</code><code class="descname">timeInteractiveScatterPlot</code><span class="sig-paren">(</span><em>df, date_time_col_name, location_col_name, value_col_name, latitude_col_name, longitude_col_name, start_date, end_date, pollutant_ID, width=800, height=660, location=[22, 82], zoom_start=4.5, control_scale=True, tiles='Stamen Terrain', min_lat=6, max_lat=105, min_lon=68, max_lon=97, period='PT1M', date_options='YYYY-MM-DD HH:mm'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vayu/timeInteractiveScatterPlot.html#timeInteractiveScatterPlot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vayu.timeInteractiveScatterPlot.timeInteractiveScatterPlot" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Plots a time interactive scatter plot </dt>
+<dd>of a given pollutant for given duration 
+of time.</dd>
+</dl>
+<dl class="docutils">
+<dt>df: data frame </dt>
+<dd>minimally containing time stamps, location, 
+pollutant value, latitude and longitude</dd>
+<dt>date_time_col_name <span class="classifier-delimiter">:</span> <span class="classifier">type string</span></dt>
+<dd>name of column in df having time stamps</dd>
+<dt>location_col_name <span class="classifier-delimiter">:</span> <span class="classifier">type string</span></dt>
+<dd>name of column in df having station name</dd>
+<dt>value_col_name: type string</dt>
+<dd>name of column in df having value of pollutant</dd>
+<dt>latitude_col_name <span class="classifier-delimiter">:</span> <span class="classifier">type string</span></dt>
+<dd>name of column in df having latitute</dd>
+<dt>longitude_col_name <span class="classifier-delimiter">:</span> <span class="classifier">type string</span></dt>
+<dd>name of column in df having longitude</dd>
+<dt>start_date: type string</dt>
+<dd>time stamp corresponding to startdate,
+ex : ‘2019-08-01 00:00:00+05:30’</dd>
+<dt>end_date <span class="classifier-delimiter">:</span> <span class="classifier">type string</span></dt>
+<dd>time stamp corresponding to end date,
+ex : ‘2019-08-05 00:00:00+05:30’</dd>
+<dt>pollutant_ID: type integer</dt>
+<dd>A pollutant ID correspoinding to 
+a pollutant, ex: 1 for PM2.5</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-vayu.timePlot">
+<span id="vayu-timeplot-module"></span><h2>vayu.timePlot module<a class="headerlink" href="#module-vayu.timePlot" title="Permalink to this headline">¶</a></h2>
+<p>Created on Sun Jul 21 21:50:55 2019</p>
+<p>&#64;author: Man Vinayaka</p>
+<dl class="function">
+<dt id="vayu.timePlot.timePlot">
+<code class="descclassname">vayu.timePlot.</code><code class="descname">timePlot</code><span class="sig-paren">(</span><em>df</em>, <em>year</em>, <em>month</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vayu/timePlot.html#timePlot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vayu.timePlot.timePlot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot time series of ws,nox,o3,pm25,pm10 given a month and year</p>
+<dl class="docutils">
+<dt>df: data frame</dt>
+<dd>a data frame of time series. Must have a date field
+and at least one variable to plot</dd>
+<dt>year: type string</dt>
+<dd>year of which data will be cut</dd>
+<dt>month: type int</dt>
+<dd>month of what plot will be graphed</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-vayu.timeProp">
+<span id="vayu-timeprop-module"></span><h2>vayu.timeProp module<a class="headerlink" href="#module-vayu.timeProp" title="Permalink to this headline">¶</a></h2>
+<p>Created on Mon Jul 22 08:21:55 2019</p>
+<p>&#64;author: Man Vinayaka</p>
+<dl class="function">
+<dt id="vayu.timeProp.timeProp">
+<code class="descclassname">vayu.timeProp.</code><code class="descname">timeProp</code><span class="sig-paren">(</span><em>df</em>, <em>year</em>, <em>pollutant</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vayu/timeProp.html#timeProp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vayu.timeProp.timeProp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot a stacked bar graph of all data in the df
+based on frequency of wind direction in compass
+directions. Takes the average of every 3 days
+in each bar. The hight of the bar is value of 
+the pollutant that 3 day period. The bars are 
+binned proportionaly based on the overall value of the 
+pollutant</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>df: data frame</dt>
+<dd>data frame which has the fields of date and the pollutant
+to be graphed</dd>
+<dt>year: type string</dt>
+<dd>The year of which the data will be cut</dd>
+<dt>pollutant: type string</dt>
+<dd>The pollutant of which to plot</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+</div>
+<div class="section" id="module-vayu.timeVariation">
+<span id="vayu-timevariation-module"></span><h2>vayu.timeVariation module<a class="headerlink" href="#module-vayu.timeVariation" title="Permalink to this headline">¶</a></h2>
+<p>Created on Mon Jul 22 20:50:49 2019</p>
+<p>&#64;author: Man Vinayaka</p>
+<dl class="function">
+<dt id="vayu.timeVariation.timeVariation">
+<code class="descclassname">vayu.timeVariation.</code><code class="descname">timeVariation</code><span class="sig-paren">(</span><em>df</em>, <em>pollutant</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vayu/timeVariation.html#timeVariation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vayu.timeVariation.timeVariation" title="Permalink to this definition">¶</a></dt>
+<dd><p>4 seperate plots are plotted:</p>
+<ol class="arabic">
+<li><dl class="first docutils">
+<dt>the average pollutant level per day by each hour for each day of the </dt>
+<dd><p class="first last">week across all of the data</p>
+</dd>
+</dl>
+</li>
+<li><p class="first">the average pollutant level by each hour, across all data</p>
+</li>
+<li><p class="first">the average pollutant level by each month of the year for across data</p>
+</li>
+<li><p class="first">the average pollutant level per day of the week across all data</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>df: data frame</dt>
+<dd><p class="first last">data frame of hourly data. 
+Must include a date field and at least one variable to plot</p>
+</dd>
+<dt>pollutant: type string</dt>
+<dd><p class="first last">Name of variable to plot</p>
+</dd>
+</dl>
+</div></blockquote>
+</li>
+</ol>
+</dd></dl>
+
+</div>
+<div class="section" id="module-vayu.trendLevel">
+<span id="vayu-trendlevel-module"></span><h2>vayu.trendLevel module<a class="headerlink" href="#module-vayu.trendLevel" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="vayu.trendLevel.trendLevel">
+<code class="descclassname">vayu.trendLevel.</code><code class="descname">trendLevel</code><span class="sig-paren">(</span><em>df</em>, <em>pollutant</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vayu/trendLevel.html#trendLevel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vayu.trendLevel.trendLevel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot that shows the overall pollutant trend for every year in the 
+df. It takes the average hour value of each month and plots a heatmap
+showing what timesof the year there is a high concentration of the 
+pollutant.</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>df: data frame</dt>
+<dd>data frame of complete data</dd>
+<dt>pollutant: type string</dt>
+<dd>Name of the data series in df to produce plot</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+</div>
+<div class="section" id="vayu-utils-module">
+<h2>vayu.utils module<a class="headerlink" href="#vayu-utils-module" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-vayu.windRosePy">
+<span id="vayu-windrosepy-module"></span><h2>vayu.windRosePy module<a class="headerlink" href="#module-vayu.windRosePy" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="vayu.windRosePy.WindroseAxes">
+<em class="property">class </em><code class="descclassname">vayu.windRosePy.</code><code class="descname">WindroseAxes</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vayu/windRosePy.html#WindroseAxes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vayu.windRosePy.WindroseAxes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">matplotlib.projections.polar.PolarAxes</span></code></p>
+<p>Create a windrose axes</p>
+<dl class="method">
+<dt id="vayu.windRosePy.WindroseAxes.bar">
+<code class="descname">bar</code><span class="sig-paren">(</span><em>direction</em>, <em>var</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vayu/windRosePy.html#WindroseAxes.bar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vayu.windRosePy.WindroseAxes.bar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot a windrose in bar mode. For each var bins and for each sector,
+a colored bar will be draw on the axes.
+Parameters
+———-
+direction : 1D array</p>
+<blockquote>
+<div>directions the wind blows from, North centred</div></blockquote>
+<dl class="docutils">
+<dt>var <span class="classifier-delimiter">:</span> <span class="classifier">1D array</span></dt>
+<dd>values of the variable to compute. Typically the wind speeds.</dd>
+</dl>
+<dl class="docutils">
+<dt>nsector <span class="classifier-delimiter">:</span> <span class="classifier">integer, optional</span></dt>
+<dd>number of sectors used to compute the windrose table. If not set,
+nsectors=12, then each sector will be 360/12=22.5°, and the
+resulting computed table will be aligned with the cardinals points.</dd>
+<dt>bins <span class="classifier-delimiter">:</span> <span class="classifier">1D array or integer, optional</span></dt>
+<dd>number of bins, or a sequence of bins variable. If not set, bins=6
+between min(<cite>var</cite>) and max(<cite>var</cite>).</dd>
+<dt>blowto <span class="classifier-delimiter">:</span> <span class="classifier">bool, optional.</span></dt>
+<dd>if True, the windrose will be pi rotated, to show where the wind
+blow to (usefull for pollutant rose).</dd>
+<dt>colors <span class="classifier-delimiter">:</span> <span class="classifier">string or tuple, optional</span></dt>
+<dd>one string color (‘k’ or ‘black’), in this case all bins will be
+plotted in this color; a tuple of matplotlib color args (string,
+float, rgb, etc), different levels will be plotted
+in different colors in the order specified.</dd>
+<dt>cmap <span class="classifier-delimiter">:</span> <span class="classifier">a cm Colormap instance from <code class="xref py py-obj docutils literal"><span class="pre">matplotlib.cm</span></code>, optional.</span></dt>
+<dd>if cmap == None and colors == None, a default Colormap is used.</dd>
+<dt>edgecolor <span class="classifier-delimiter">:</span> <span class="classifier">string, optional</span></dt>
+<dd>The string color each edge box will be plotted.
+Default : no edgecolor</dd>
+<dt>opening <span class="classifier-delimiter">:</span> <span class="classifier">float, optional</span></dt>
+<dd>between 0.0 and 1.0, to control the space between each sector (1.0
+for no space)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="vayu.windRosePy.WindroseAxes.cla">
+<code class="descname">cla</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vayu/windRosePy.html#WindroseAxes.cla"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vayu.windRosePy.WindroseAxes.cla" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clear the current axes</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="vayu.windRosePy.WindroseAxes.from_ax">
+<em class="property">static </em><code class="descname">from_ax</code><span class="sig-paren">(</span><em>ax=None</em>, <em>fig=None</em>, <em>rmax=None</em>, <em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vayu/windRosePy.html#WindroseAxes.from_ax"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vayu.windRosePy.WindroseAxes.from_ax" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a WindroseAxes object for the figure <cite>fig</cite>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="vayu.windRosePy.WindroseAxes.legend">
+<code class="descname">legend</code><span class="sig-paren">(</span><em>loc='lower left'</em>, <em>decimal_places=1</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vayu/windRosePy.html#WindroseAxes.legend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vayu.windRosePy.WindroseAxes.legend" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the legend location and her properties.
+Parameters
+———-
+loc : int, string or pair of floats, default: ‘lower left’</p>
+<blockquote>
+<div>see <code class="xref py py-obj docutils literal"><span class="pre">matplotlib.pyplot.legend</span></code>.</div></blockquote>
+<dl class="docutils">
+<dt>decimal_places <span class="classifier-delimiter">:</span> <span class="classifier">int, default 1</span></dt>
+<dd>The decimal places of the formated legend</dd>
+</dl>
+<dl class="docutils">
+<dt>isaxes <span class="classifier-delimiter">:</span> <span class="classifier">boolean, default True</span></dt>
+<dd>whether this is an axes legend</dd>
+<dt>prop <span class="classifier-delimiter">:</span> <span class="classifier">FontProperties(size=’smaller’)</span></dt>
+<dd>the font property</dd>
+<dt>borderpad <span class="classifier-delimiter">:</span> <span class="classifier">float</span></dt>
+<dd>the fractional whitespace inside the legend border</dd>
+<dt>shadow <span class="classifier-delimiter">:</span> <span class="classifier">boolean</span></dt>
+<dd>if True, draw a shadow behind legend</dd>
+<dt>labelspacing <span class="classifier-delimiter">:</span> <span class="classifier">float, 0.005</span></dt>
+<dd>the vertical space between the legend entries</dd>
+<dt>handlelenght <span class="classifier-delimiter">:</span> <span class="classifier">float, 0.05</span></dt>
+<dd>the length of the legend lines</dd>
+<dt>handletextsep <span class="classifier-delimiter">:</span> <span class="classifier">float, 0.02</span></dt>
+<dd>the space between the legend line and legend text</dd>
+<dt>borderaxespad <span class="classifier-delimiter">:</span> <span class="classifier">float, 0.02</span></dt>
+<dd>the border between the axes and legend edge</dd>
+<dt>kwarg</dt>
+<dd>Every other kwarg argument supported by
+<code class="xref py py-obj docutils literal"><span class="pre">matplotlib.pyplot.legend</span></code></dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="vayu.windRosePy.WindroseAxes.name">
+<code class="descname">name</code><em class="property"> = 'windrose'</em><a class="headerlink" href="#vayu.windRosePy.WindroseAxes.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="vayu.windRosePy.WindroseAxes.set_legend">
+<code class="descname">set_legend</code><span class="sig-paren">(</span><em>**pyplot_arguments</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vayu/windRosePy.html#WindroseAxes.set_legend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vayu.windRosePy.WindroseAxes.set_legend" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="vayu.windRosePy.WindroseAxes.set_radii_angle">
+<code class="descname">set_radii_angle</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vayu/windRosePy.html#WindroseAxes.set_radii_angle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vayu.windRosePy.WindroseAxes.set_radii_angle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the radii labels angle</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="vayu.windRosePy.histogram">
+<code class="descclassname">vayu.windRosePy.</code><code class="descname">histogram</code><span class="sig-paren">(</span><em>direction</em>, <em>var</em>, <em>bins</em>, <em>nsector</em>, <em>normed=False</em>, <em>blowto=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vayu/windRosePy.html#histogram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vayu.windRosePy.histogram" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="vayu.windRosePy.windRose">
+<code class="descclassname">vayu.windRosePy.</code><code class="descname">windRose</code><span class="sig-paren">(</span><em>df</em>, <em>pollutant</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vayu/windRosePy.html#windRose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vayu.windRosePy.windRose" title="Permalink to this definition">¶</a></dt>
+<dd><p>The plots show the proportion (here represented 
+as a percentage) of time that the wind is from 
+a certain angle and wind speed range.</p>
+<dl class="docutils">
+<dt>df: data frame</dt>
+<dd>data frame that contains wind speed
+and wind direction</dd>
+<dt>pollutant: type string</dt>
+<dd>Name of pollutant for plot to graph</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-vayu">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-vayu" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="installation.html">Getting Started</a><ul>
+  <li><a href="modules.html">vayu</a><ul>
+      <li>Previous: <a href="modules.html" title="previous chapter">vayu</a></li>
+      <li>Next: <a href="examples.html" title="next chapter">Nothing to see here. 404.</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Sustainability Lab @ IIT Gandhinagar.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.7</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="../_sources/pages/vayu.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

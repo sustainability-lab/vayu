@@ -2,11 +2,15 @@
 #
 
 # You can set these variables from the command line.
-SPHINXOPTS    =
-SPHINXBUILD   = sphinx-build
-SPHINXPROJ    = vayu
-SOURCEDIR     = .
-BUILDDIR      = _build
+SPHINXOPTS      =
+SPHINXBUILD     = sphinx-build
+SPHINXPROJ      = vayu
+SOURCEDIR       = .
+BUILDDIR        = _build
+
+APIDOCOUTDIR    = ./pages
+PROJDIR         = ../$(SPHINXPROJ)
+SPHINXAPIDOC    = sphinx-apidoc
 
 # Put it first so that "make" without argument is like "make help".
 help:
@@ -20,5 +24,6 @@ help:
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
 github:
+	@$(SPHINXAPIDOC) -o "$(APIDOCOUTDIR)" "$(PROJDIR)"
 	@make html
-	@cp -a _build/html/. ../docs
+# 	@cp -a _build/html/. ../docs
