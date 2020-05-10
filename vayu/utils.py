@@ -1,4 +1,6 @@
 class Legend:
+  '''Utility class for getting AQ standards.
+  '''
   import numpy as np
   import branca.colormap as cm
 
