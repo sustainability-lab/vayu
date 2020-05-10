@@ -1,11 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sun Jul 21 21:50:55 2019
-
-@author: Man Vinayaka
-"""
-
-
 def timePlot(df, year, month):
     """ Plot time series of ws,nox,o3,pm25,pm10 given a month and year
 		

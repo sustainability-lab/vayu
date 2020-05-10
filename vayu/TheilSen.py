@@ -1,11 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Jul 26 01:59:09 2019
-
-@author: Man Vinayaka
-"""
-
-
 def TheilSen(df, pollutant):
     """ Plots a connected scatter plot of the average value of
         the pollutant every month of every year. Then plots a

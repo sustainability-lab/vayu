@@ -1,18 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Jul 26 02:20:37 2019
-
-@author: Man Vinayaka
-"""
-
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Jul 26 01:59:09 2019
-
-@author: Man Vinayaka
-"""
-
-
 def smoothTrend(df, pollutant, Type):
     """ Plots a connected scatter plot of the average value of
         the pollutant every month of every year. Then plots a

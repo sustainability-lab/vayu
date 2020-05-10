@@ -1,11 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Jul 23 11:03:47 2019
-
-@author: Man Vinayaka
-"""
-
-
 def linearRelation(df, pol1, pol2):
     """ This plot given two pollutants will graph the linear 
         relationship. The df given will be converted to the slope
