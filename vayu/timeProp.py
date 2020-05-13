@@ -1,5 +1,6 @@
-def timeProp(df, year, pollutant, avg_days, 
-             date_time_col_name):
+def timeProp(df, year, pollutant, 
+    avg_days, date_time_col_name, 
+    sorted_bars=True):
     """
     Plot a stacked bar graph of all data in the df
     based on frequency of wind direction in compass
@@ -57,11 +58,13 @@ def timeProp(df, year, pollutant, avg_days,
     polMeanS = 0
     polMeanE = avg_days
     dfStart = 0
-    dfEnd = 24*avg_days  # 24*3 for 3 day average
+    dfEnd = 24 * avg_days  # 24*3 for 3 day average
 
     x = 0
 
-    while x < int(365/avg_days):  # example: 365 days / 3 = 121 floored. Represents number of bars total
+    while x < int(
+        365 / avg_days
+    ):  # example: 365 days / 3 = 121 floored. Represents number of bars total
         n = 0
         ne = 0
         e = 0
@@ -74,7 +77,9 @@ def timeProp(df, year, pollutant, avg_days,
         b = a["wd"]
 
         i = 0
-        while i < 24*avg_days:  # Bins the wd data into categories for stacked bar graph
+        while (
+            i < 24 * avg_days
+        ):  # Bins the wd data into categories for stacked bar graph
             if b[i] > 348.75 or b[i] < 33.75:
                 n = n + 1
             elif b[i] > 33.75 and b[i] < 78.75:
@@ -95,14 +100,14 @@ def timeProp(df, year, pollutant, avg_days,
             i = i + 1
         # calculates the 3 day proportion mean of each polutant and stores
         # it in a new list
-        n = (n / 24*avg_days) * (polArray[polMeanS:polMeanE].mean())
-        ne = (ne / 24*avg_days) * (polArray[polMeanS:polMeanE].mean())
-        e = (e / 24*avg_days) * (polArray[polMeanS:polMeanE].mean())
-        se = (se / 24*avg_days) * (polArray[polMeanS:polMeanE].mean())
-        s = (s / 24*avg_days) * (polArray[polMeanS:polMeanE].mean())
-        sw = (sw / 24*avg_days) * (polArray[polMeanS:polMeanE].mean())
-        w = (w / 24*avg_days) * (polArray[polMeanS:polMeanE].mean())
-        nw = (nw / 24*avg_days) * (polArray[polMeanS:polMeanE].mean())
+        n = (n / 24 * avg_days) * (polArray[polMeanS:polMeanE].mean())
+        ne = (ne / 24 * avg_days) * (polArray[polMeanS:polMeanE].mean())
+        e = (e / 24 * avg_days) * (polArray[polMeanS:polMeanE].mean())
+        se = (se / 24 * avg_days) * (polArray[polMeanS:polMeanE].mean())
+        s = (s / 24 * avg_days) * (polArray[polMeanS:polMeanE].mean())
+        sw = (sw / 24 * avg_days) * (polArray[polMeanS:polMeanE].mean())
+        w = (w / 24 * avg_days) * (polArray[polMeanS:polMeanE].mean())
+        nw = (nw / 24 * avg_days) * (polArray[polMeanS:polMeanE].mean())
 
         nA.append(n)
         neA.append(ne)
@@ -116,35 +121,47 @@ def timeProp(df, year, pollutant, avg_days,
         # Adds to start and end values to get through end of df
         polMeanS = polMeanS + avg_days
         polMeanE = polMeanE + avg_days
-        dfStart = dfStart + 24*avg_days
-        dfEnd = dfEnd + 24*avg_days
+        dfStart = dfStart + 24 * avg_days
+        dfEnd = dfEnd + 24 * avg_days
 
     #########################################
 
     # Plots the stacked bar graph with specific color represtations.
     # A legend is also plotted
-    X = np.arange(int(365/avg_days))
+    color_list = ["red", "blue", "green", "purple", "orange", "yellow", "brown", "pink"]
 
+    X = np.arange(int(365 / avg_days))
     data = np.array([nA, neA, eA, seA, sA, swA, wA, nwA])
 
-    color_list = ["red", "blue", "green", "purple", "orange", "yellow", "brown", "pink"]
-    X = np.arange(data.shape[1])
-    
-    for i in range(data.shape[0]):
-        plt.bar(
-            X,
-            data[i],
-            bottom=np.sum(data[:i], axis=0),
-            color=color_list[i % len(color_list)],
-        )
-    red_patch = mpatches.Patch(color="red", label="north")
-    blue_patch = mpatches.Patch(color="blue", label="north east")
-    green_patch = mpatches.Patch(color="green", label="east")
-    purple_patch = mpatches.Patch(color="purple", label="south east")
-    orange_patch = mpatches.Patch(color="orange", label="south")
-    yellow_patch = mpatches.Patch(color="yellow", label="south west")
-    brown_patch = mpatches.Patch(color="brown", label="west")
-    pink_patch = mpatches.Patch(color="pink", label="north west")
+    if sorted_bars:
+        for ix, x in enumerate(X):
+            vals = data[:, ix]  # pollutant contributions (len == 8)
+            assert len(vals) == len(color_list)
+            # sorting based on the contributions
+            col = sorted(zip(vals, color_list), key=lambda x: x[0], reverse=True)
+            for i in range(data.shape[0]):
+                plt.bar(
+                    x, col[i][0], bottom=np.sum([c[0] for c in col[:i]]), color=col[i][1],
+                )
+    else:
+        X = np.arange(data.shape[1])
+        for i in range(data.shape[0]):
+            plt.bar(
+                X,
+                data[i],
+                bottom=np.sum(data[:i], axis=0),
+                color=color_list[i % len(color_list)],
+            )
+
+    # Legend stuff.
+    red_patch = mpatches.Patch(color="red", label="North")
+    blue_patch = mpatches.Patch(color="blue", label="North East")
+    green_patch = mpatches.Patch(color="green", label="East")
+    purple_patch = mpatches.Patch(color="purple", label="South East")
+    orange_patch = mpatches.Patch(color="orange", label="South")
+    yellow_patch = mpatches.Patch(color="yellow", label="South West")
+    brown_patch = mpatches.Patch(color="brown", label="West")
+    pink_patch = mpatches.Patch(color="pink", label="North West")
     plt.legend(
         bbox_to_anchor=(1.05, 1),
         loc=2,
@@ -161,8 +178,9 @@ def timeProp(df, year, pollutant, avg_days,
         ],
     )
 
+    # Setting fonts
     plt.xticks(
-        np.arange(0, int(365/avg_days), 30/avg_days),
+        np.arange(0, int(365 / avg_days), 30 / avg_days),
         (
             "Jan",
             "Feb",
@@ -181,8 +199,9 @@ def timeProp(df, year, pollutant, avg_days,
     plt.title("Wind Direction")
     plt.xlabel("Contribution weighted by Mean")
     plt.ylabel("Pollutant (µg/m³)")
-    plt.rcParams["figure.figsize"]= 20,6
+    plt.rcParams["figure.figsize"] = 20, 6
     plt.show()
+
 
 # =============================================================================
 # mydata = pd.read_csv('mydata.csv')

@@ -31,19 +31,19 @@ def calendarPlot(df, pollutant, year, country, **kwargs):
     from numpy import array
     from .utils import Legend
 
-    cvals  = Legend.country_pollutants[country][pollutant]['bin_edges']
-    colors = Legend.country_pollutants[country][pollutant]['color_scale']
+    cvals = Legend.country_pollutants[country][pollutant]["bin_edges"]
+    colors = Legend.country_pollutants[country][pollutant]["color_scale"]
 
-    norm = plt.Normalize(min(cvals),max(cvals))
-    tuples = list(zip(map(norm,cvals), colors))
+    norm = plt.Normalize(min(cvals), max(cvals))
+    tuples = list(zip(map(norm, cvals), colors))
     cmap = mpl.colors.LinearSegmentedColormap.from_list("", tuples)
 
     def calendar_array(dates, data):
         """ creates the calendar array returning i,j giving
             positional values in the array
-        """        
-        i, j = zip(*[d.isocalendar()[1:] for d in dates])        
-        
+        """
+        i, j = zip(*[d.isocalendar()[1:] for d in dates])
+
         i = np.array(i) - min(i)
         j = np.array(j) - 1
         ni = max(i) + 1
@@ -56,7 +56,7 @@ def calendarPlot(df, pollutant, year, country, **kwargs):
         """ Sets heatmap information
         """
         i, j, calendar = calendar_array(dates, data)
-        im = ax.imshow(calendar, interpolation="none", cmap= cmap)
+        im = ax.imshow(calendar, interpolation="none", cmap=cmap)
         label_days(ax, dates, i, j, calendar)
 
     def label_days(ax, dates, i, j, calendar):
@@ -159,7 +159,7 @@ def calendarPlot(df, pollutant, year, country, **kwargs):
     #    Colorbar plotting
     # =============================================================================
     grid = plt.GridSpec(4, 4, wspace=2, hspace=0.3)
-    
+
     cbar_ax = plt.subplot(grid[:, 3])
     cb1 = mpl.colorbar.ColorbarBase(
         cbar_ax, cmap=cmap, norm=norm, orientation="vertical"
