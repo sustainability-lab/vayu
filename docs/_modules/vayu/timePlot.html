@@ -31,18 +31,22 @@
           <div class="body" role="main">
             
   <h1>Source code for vayu.timePlot</h1><div class="highlight"><pre>
-<div class="viewcode-block" id="timePlot"><a class="viewcode-back" href="../../pages/vayu.html#vayu.timePlot.timePlot">[docs]</a><span></span><span class="k">def</span> <span class="nf">timePlot</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Plot time series of ws,nox,o3,pm25,pm10 given a month and year</span>
-<span class="sd">		</span>
-<span class="sd">		Parameters</span>
-<span class="sd">		----------</span>
-<span class="sd">		df: data frame</span>
-<span class="sd">			a data frame of time series. Must have a date field</span>
-<span class="sd">			and at least one variable to plot</span>
-<span class="sd">		year: type string</span>
-<span class="sd">			year of which data will be cut</span>
-<span class="sd">		month: type int</span>
-<span class="sd">			month of what plot will be graphed</span>
+<div class="viewcode-block" id="timePlot"><a class="viewcode-back" href="../../pages/vayu.html#vayu.timePlot.timePlot">[docs]</a><span></span><span class="k">def</span> <span class="nf">timePlot</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> 
+    <span class="n">pollutants</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;ws&quot;</span><span class="p">,</span> <span class="s2">&quot;nox&quot;</span><span class="p">,</span> <span class="s2">&quot;o3&quot;</span><span class="p">,</span> <span class="s2">&quot;pm25&quot;</span><span class="p">,</span> <span class="s2">&quot;pm10&quot;</span><span class="p">]):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plot time series of pollutants for given month and year.</span>
+<span class="sd">        </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    df: data frame</span>
+<span class="sd">        a data frame of time series. Must have a date field</span>
+<span class="sd">        and at least one variable to plot</span>
+<span class="sd">    year: str</span>
+<span class="sd">        year of which data will be cut</span>
+<span class="sd">    month: int</span>
+<span class="sd">        month of what plot will be graphed</span>
+<span class="sd">    pollutants: list</span>
+<span class="sd">        column names of pollutatnts to compare</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
     <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
@@ -58,50 +62,30 @@
     <span class="n">df_n</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">dayofweek</span>
     <span class="n">df_n_1</span> <span class="o">=</span> <span class="n">df_n</span><span class="p">[</span><span class="n">df_n</span><span class="o">.</span><span class="n">month</span> <span class="o">==</span> <span class="n">month</span><span class="p">]</span>
     <span class="c1"># New lists that have the value of the pollutant in the month specified</span>
-    <span class="n">ws</span> <span class="o">=</span> <span class="n">df_n_1</span><span class="p">[</span><span class="s2">&quot;ws&quot;</span><span class="p">]</span>
-    <span class="n">nox</span> <span class="o">=</span> <span class="n">df_n_1</span><span class="p">[</span><span class="s2">&quot;nox&quot;</span><span class="p">]</span>
-    <span class="n">o3</span> <span class="o">=</span> <span class="n">df_n_1</span><span class="p">[</span><span class="s2">&quot;o3&quot;</span><span class="p">]</span>
-    <span class="n">pm25</span> <span class="o">=</span> <span class="n">df_n_1</span><span class="p">[</span><span class="s2">&quot;pm25&quot;</span><span class="p">]</span>
-    <span class="n">pm10</span> <span class="o">=</span> <span class="n">df_n_1</span><span class="p">[</span><span class="s2">&quot;pm10&quot;</span><span class="p">]</span>
+
+    <span class="n">color_list</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="s2">&quot;purple&quot;</span><span class="p">,</span> <span class="s2">&quot;orange&quot;</span><span class="p">]</span>
 
     <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-    <span class="c1"># series of 5 plots in one large plot that contains the</span>
+    <span class="c1"># series of `len(pollutants)` plots in one large plot that contains the</span>
     <span class="c1"># time series of the polutants</span>
 
-    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">511</span><span class="p">)</span>
-    <span class="n">a</span> <span class="o">=</span> <span class="n">nox</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">get_xaxis</span><span class="p">()</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">a</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_label_position</span><span class="p">(</span><span class="s2">&quot;right&quot;</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;nox&quot;</span><span class="p">)</span>
+    <span class="n">axs</span> <span class="o">=</span> <span class="p">[]</span>
 
-    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">512</span><span class="p">)</span>
-    <span class="n">a</span> <span class="o">=</span> <span class="n">o3</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">get_xaxis</span><span class="p">()</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">a</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_label_position</span><span class="p">(</span><span class="s2">&quot;right&quot;</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;o3&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">ix</span><span class="p">,</span> <span class="n">pollutant</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">pollutants</span><span class="p">):</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="n">df_n_1</span><span class="p">[</span><span class="n">pollutant</span><span class="p">]</span>
+        <span class="n">color</span> <span class="o">=</span> <span class="n">color_list</span><span class="p">[</span><span class="n">ix</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">color_list</span><span class="p">)]</span>
 
-    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">513</span><span class="p">)</span>
-    <span class="n">a</span> <span class="o">=</span> <span class="n">pm25</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">get_xaxis</span><span class="p">()</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">a</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_label_position</span><span class="p">(</span><span class="s2">&quot;right&quot;</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;pm25&quot;</span><span class="p">)</span>
+        <span class="c1"># plotting</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;{len(pollutants)}1</span><span class="si">{ix}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+        <span class="n">a</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">get_xaxis</span><span class="p">()</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">a</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_label_position</span><span class="p">(</span><span class="s2">&quot;right&quot;</span><span class="p">)</span>
+        <span class="n">axs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">pollutant</span><span class="p">)</span>
 
-    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">514</span><span class="p">)</span>
-    <span class="n">a</span> <span class="o">=</span> <span class="n">pm10</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;purple&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">get_xaxis</span><span class="p">()</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">a</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_label_position</span><span class="p">(</span><span class="s2">&quot;right&quot;</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;pm10&quot;</span><span class="p">)</span>
-
-    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">515</span><span class="p">)</span>
-    <span class="n">a</span> <span class="o">=</span> <span class="n">ws</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;orange&quot;</span><span class="p">)</span>
-    <span class="n">a</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_label_position</span><span class="p">(</span><span class="s2">&quot;right&quot;</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;ws&quot;</span><span class="p">)</span></div>
-
-
-<span class="c1"># =============================================================================</span>
-<span class="c1"># mydata = pd.read_csv(&#39;mydata.csv&#39;)</span>
-<span class="c1"># timePlot(mydata,&#39;2003&#39;,8)</span>
-<span class="c1"># =============================================================================</span>
+    <span class="c1"># making dates visible.</span>
+    <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">get_xaxis</span><span class="p">()</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">axs</span></div>
 </pre></div>
 
           </div>

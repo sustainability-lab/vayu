@@ -51,6 +51,7 @@
     <span class="kn">import</span> <span class="nn">matplotlib.patches</span> <span class="k">as</span> <span class="nn">mpatches</span>
     <span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
     <span class="kn">from</span> <span class="nn">matplotlib.pyplot</span> <span class="k">import</span> <span class="n">figure</span>
+
     <span class="n">pm10_s</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">pm10_m</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">pm10_h</span> <span class="o">=</span> <span class="mi">0</span>
@@ -69,7 +70,6 @@
     <span class="n">no2_s</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">no2_m</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">no2_h</span> <span class="o">=</span> <span class="mi">0</span>
-  
 
     <span class="k">class</span> <span class="nc">color</span><span class="p">:</span>
         <span class="c1"># Allows for bolded and underlined text</span>
@@ -85,74 +85,67 @@
     <span class="n">df_all</span> <span class="o">=</span> <span class="n">df_all</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s2">&quot;ffill&quot;</span><span class="p">)</span>
 
     <span class="n">dataPoints</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;pm25&quot;</span><span class="p">,</span> <span class="s2">&quot;co&quot;</span><span class="p">,</span> <span class="s2">&quot;so2&quot;</span><span class="p">,</span> <span class="s2">&quot;pm10&quot;</span><span class="p">,</span> <span class="s2">&quot;o3&quot;</span><span class="p">,</span> <span class="s2">&quot;no2&quot;</span><span class="p">,</span> <span class="s2">&quot;nox&quot;</span><span class="p">,</span> <span class="s2">&quot;wd&quot;</span><span class="p">,</span> <span class="s2">&quot;ws&quot;</span><span class="p">]</span>
-    
+
     <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">df_all</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
-      <span class="k">if</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">column</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;pm10&quot;</span><span class="p">):</span>
-        <span class="n">df_pm10</span> <span class="o">=</span> <span class="n">df_all</span><span class="p">[</span><span class="s2">&quot;pm10&quot;</span><span class="p">]</span>
-        <span class="k">for</span> <span class="p">(</span><span class="n">_</span><span class="p">,</span><span class="n">data</span><span class="p">)</span> <span class="ow">in</span> <span class="n">df_pm10</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span> 
-          <span class="k">if</span><span class="p">(</span><span class="n">data</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="p">):</span>
-            <span class="n">pm10_s</span> <span class="o">+=</span> <span class="mi">1</span>
-          <span class="k">elif</span><span class="p">(</span><span class="n">data</span><span class="o">&gt;</span> <span class="mi">100</span> <span class="ow">and</span> <span class="n">data</span><span class="o">&lt;</span> <span class="mi">250</span><span class="p">):</span>
-            <span class="n">pm10_m</span> <span class="o">+=</span> <span class="mi">1</span>
-          <span class="k">elif</span><span class="p">(</span><span class="n">data</span><span class="o">&gt;</span><span class="mi">250</span><span class="p">):</span>
-            <span class="n">pm10_h</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">column</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;pm10&quot;</span><span class="p">:</span>
+            <span class="n">df_pm10</span> <span class="o">=</span> <span class="n">df_all</span><span class="p">[</span><span class="s2">&quot;pm10&quot;</span><span class="p">]</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span> <span class="ow">in</span> <span class="n">df_pm10</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">data</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="p">:</span>
+                    <span class="n">pm10_s</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">elif</span> <span class="n">data</span> <span class="o">&gt;</span> <span class="mi">100</span> <span class="ow">and</span> <span class="n">data</span> <span class="o">&lt;</span> <span class="mi">250</span><span class="p">:</span>
+                    <span class="n">pm10_m</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">elif</span> <span class="n">data</span> <span class="o">&gt;</span> <span class="mi">250</span><span class="p">:</span>
+                    <span class="n">pm10_h</span> <span class="o">+=</span> <span class="mi">1</span>
 
-      
-      <span class="k">if</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">column</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;pm25&quot;</span><span class="p">):</span>
-        <span class="n">df_pm25</span> <span class="o">=</span> <span class="n">df_all</span><span class="p">[</span><span class="s2">&quot;pm25&quot;</span><span class="p">]</span>
-        <span class="k">for</span> <span class="p">(</span><span class="n">_</span><span class="p">,</span><span class="n">data</span><span class="p">)</span> <span class="ow">in</span> <span class="n">df_pm25</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
-          <span class="k">if</span><span class="p">(</span><span class="n">data</span> <span class="o">&lt;</span> <span class="mi">60</span><span class="p">):</span>
-            <span class="n">pm25_s</span> <span class="o">+=</span> <span class="mi">1</span>
-          <span class="k">elif</span><span class="p">(</span><span class="n">data</span><span class="o">&gt;</span> <span class="mi">60</span> <span class="ow">and</span> <span class="n">data</span><span class="o">&lt;</span> <span class="mi">90</span><span class="p">):</span>
-            <span class="n">pm25_m</span> <span class="o">+=</span> <span class="mi">1</span>
-          <span class="k">elif</span><span class="p">(</span><span class="n">data</span><span class="o">&gt;</span><span class="mi">100</span><span class="p">):</span>
-            <span class="n">pm25_h</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">column</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;pm25&quot;</span><span class="p">:</span>
+            <span class="n">df_pm25</span> <span class="o">=</span> <span class="n">df_all</span><span class="p">[</span><span class="s2">&quot;pm25&quot;</span><span class="p">]</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span> <span class="ow">in</span> <span class="n">df_pm25</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">data</span> <span class="o">&lt;</span> <span class="mi">60</span><span class="p">:</span>
+                    <span class="n">pm25_s</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">elif</span> <span class="n">data</span> <span class="o">&gt;</span> <span class="mi">60</span> <span class="ow">and</span> <span class="n">data</span> <span class="o">&lt;</span> <span class="mi">90</span><span class="p">:</span>
+                    <span class="n">pm25_m</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">elif</span> <span class="n">data</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span>
+                    <span class="n">pm25_h</span> <span class="o">+=</span> <span class="mi">1</span>
 
+        <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">column</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;co&quot;</span><span class="p">:</span>
+            <span class="n">df_co</span> <span class="o">=</span> <span class="n">df_all</span><span class="p">[</span><span class="s2">&quot;co&quot;</span><span class="p">]</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span> <span class="ow">in</span> <span class="n">df_co</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">data</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="n">co_s</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">elif</span> <span class="n">data</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">data</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">:</span>
+                    <span class="n">co_m</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">elif</span> <span class="n">data</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">:</span>
+                    <span class="n">co_h</span> <span class="o">+=</span> <span class="mi">1</span>
 
-      <span class="k">if</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">column</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;co&quot;</span><span class="p">):</span> 
-        <span class="n">df_co</span> <span class="o">=</span> <span class="n">df_all</span><span class="p">[</span><span class="s2">&quot;co&quot;</span><span class="p">]</span>
-        <span class="k">for</span> <span class="p">(</span><span class="n">_</span><span class="p">,</span><span class="n">data</span><span class="p">)</span> <span class="ow">in</span> <span class="n">df_co</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
-          <span class="k">if</span><span class="p">(</span><span class="n">data</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">):</span>
-            <span class="n">co_s</span> <span class="o">+=</span> <span class="mi">1</span>
-          <span class="k">elif</span><span class="p">(</span><span class="n">data</span><span class="o">&gt;</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">data</span><span class="o">&lt;</span> <span class="mi">10</span><span class="p">):</span>
-            <span class="n">co_m</span> <span class="o">+=</span> <span class="mi">1</span>
-          <span class="k">elif</span><span class="p">(</span><span class="n">data</span><span class="o">&gt;</span><span class="mi">10</span><span class="p">):</span>
-            <span class="n">co_h</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">column</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;so2&quot;</span><span class="p">:</span>
+            <span class="n">df_so2</span> <span class="o">=</span> <span class="n">df_all</span><span class="p">[</span><span class="s2">&quot;so2&quot;</span><span class="p">]</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span> <span class="ow">in</span> <span class="n">df_so2</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">data</span> <span class="o">&lt;</span> <span class="mi">80</span><span class="p">:</span>
+                    <span class="n">so2_s</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">elif</span> <span class="n">data</span> <span class="o">&gt;</span> <span class="mi">80</span> <span class="ow">and</span> <span class="n">data</span> <span class="o">&lt;</span> <span class="mi">380</span><span class="p">:</span>
+                    <span class="n">so2_m</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">elif</span> <span class="n">data</span> <span class="o">&gt;</span> <span class="mi">380</span><span class="p">:</span>
+                    <span class="n">so2_h</span> <span class="o">+=</span> <span class="mi">1</span>
 
+        <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">column</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;o3&quot;</span><span class="p">:</span>
+            <span class="n">df_o3</span> <span class="o">=</span> <span class="n">df_all</span><span class="p">[</span><span class="s2">&quot;o3&quot;</span><span class="p">]</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span> <span class="ow">in</span> <span class="n">df_o3</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">data</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="p">:</span>
+                    <span class="n">o3_s</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">elif</span> <span class="n">data</span> <span class="o">&gt;</span> <span class="mi">100</span> <span class="ow">and</span> <span class="n">data</span> <span class="o">&lt;</span> <span class="mi">168</span><span class="p">:</span>
+                    <span class="n">o3_m</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">elif</span> <span class="n">data</span> <span class="o">&gt;</span> <span class="mi">168</span><span class="p">:</span>
+                    <span class="n">o3_h</span> <span class="o">+=</span> <span class="mi">1</span>
 
-      <span class="k">if</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">column</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;so2&quot;</span><span class="p">):</span>        
-        <span class="n">df_so2</span> <span class="o">=</span> <span class="n">df_all</span><span class="p">[</span><span class="s2">&quot;so2&quot;</span><span class="p">]</span>
-        <span class="k">for</span> <span class="p">(</span><span class="n">_</span><span class="p">,</span><span class="n">data</span><span class="p">)</span> <span class="ow">in</span> <span class="n">df_so2</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
-          <span class="k">if</span><span class="p">(</span><span class="n">data</span> <span class="o">&lt;</span> <span class="mi">80</span><span class="p">):</span>
-            <span class="n">so2_s</span> <span class="o">+=</span> <span class="mi">1</span>
-          <span class="k">elif</span><span class="p">(</span><span class="n">data</span><span class="o">&gt;</span> <span class="mi">80</span> <span class="ow">and</span> <span class="n">data</span><span class="o">&lt;</span> <span class="mi">380</span><span class="p">):</span>
-            <span class="n">so2_m</span> <span class="o">+=</span> <span class="mi">1</span>
-          <span class="k">elif</span><span class="p">(</span><span class="n">data</span><span class="o">&gt;</span><span class="mi">380</span><span class="p">):</span>
-            <span class="n">so2_h</span> <span class="o">+=</span> <span class="mi">1</span>
-      
-
-      <span class="k">if</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">column</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;o3&quot;</span><span class="p">):</span>
-        <span class="n">df_o3</span> <span class="o">=</span> <span class="n">df_all</span><span class="p">[</span><span class="s2">&quot;o3&quot;</span><span class="p">]</span>
-        <span class="k">for</span> <span class="p">(</span><span class="n">_</span><span class="p">,</span><span class="n">data</span><span class="p">)</span> <span class="ow">in</span> <span class="n">df_o3</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
-          <span class="k">if</span><span class="p">(</span><span class="n">data</span> <span class="o">&lt;</span> <span class="mi">100</span><span class="p">):</span>
-            <span class="n">o3_s</span> <span class="o">+=</span> <span class="mi">1</span>
-          <span class="k">elif</span><span class="p">(</span><span class="n">data</span><span class="o">&gt;</span> <span class="mi">100</span> <span class="ow">and</span> <span class="n">data</span><span class="o">&lt;</span> <span class="mi">168</span><span class="p">):</span>
-            <span class="n">o3_m</span> <span class="o">+=</span> <span class="mi">1</span>
-          <span class="k">elif</span><span class="p">(</span><span class="n">data</span><span class="o">&gt;</span><span class="mi">168</span><span class="p">):</span>
-            <span class="n">o3_h</span> <span class="o">+=</span> <span class="mi">1</span>
-      
-
-      <span class="k">if</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">column</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;no2&quot;</span><span class="p">):</span>
-        <span class="n">df_no2</span> <span class="o">=</span> <span class="n">df_all</span><span class="p">[</span><span class="s2">&quot;no2&quot;</span><span class="p">]</span>
-        <span class="k">for</span> <span class="p">(</span><span class="n">_</span><span class="p">,</span><span class="n">data</span><span class="p">)</span> <span class="ow">in</span> <span class="n">df_no2</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
-          <span class="k">if</span><span class="p">(</span><span class="n">data</span> <span class="o">&lt;</span> <span class="mi">80</span><span class="p">):</span>
-            <span class="n">no2_s</span> <span class="o">+=</span> <span class="mi">1</span>
-          <span class="k">elif</span><span class="p">(</span><span class="n">data</span><span class="o">&gt;</span> <span class="mi">80</span> <span class="ow">and</span> <span class="n">data</span><span class="o">&lt;</span> <span class="mi">180</span><span class="p">):</span>
-            <span class="n">no2_m</span> <span class="o">+=</span> <span class="mi">1</span>
-          <span class="k">elif</span><span class="p">(</span><span class="n">data</span><span class="o">&gt;</span><span class="mi">180</span><span class="p">):</span>
-            <span class="n">no2_h</span> <span class="o">+=</span> <span class="mi">1</span>
-      
-                
+        <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">column</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;no2&quot;</span><span class="p">:</span>
+            <span class="n">df_no2</span> <span class="o">=</span> <span class="n">df_all</span><span class="p">[</span><span class="s2">&quot;no2&quot;</span><span class="p">]</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span> <span class="ow">in</span> <span class="n">df_no2</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">data</span> <span class="o">&lt;</span> <span class="mi">80</span><span class="p">:</span>
+                    <span class="n">no2_s</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">elif</span> <span class="n">data</span> <span class="o">&gt;</span> <span class="mi">80</span> <span class="ow">and</span> <span class="n">data</span> <span class="o">&lt;</span> <span class="mi">180</span><span class="p">:</span>
+                    <span class="n">no2_m</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">elif</span> <span class="n">data</span> <span class="o">&gt;</span> <span class="mi">180</span><span class="p">:</span>
+                    <span class="n">no2_h</span> <span class="o">+=</span> <span class="mi">1</span>
 
     <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">sub</span> <span class="o">=</span> <span class="mi">1</span>
@@ -167,40 +160,45 @@
         <span class="n">a</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">get_xaxis</span><span class="p">()</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">a</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_label_position</span><span class="p">(</span><span class="s2">&quot;left&quot;</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">dataPoints</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">bbox</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;whitesmoke&quot;</span><span class="p">))</span>
-        
+
         <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">sub</span><span class="p">)</span>
 
         <span class="n">sub</span> <span class="o">=</span> <span class="n">sub</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">df_all</span><span class="p">[</span><span class="n">dataPoints</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span> <span class="n">bins</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">)</span>
 
-        <span class="n">ax1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="n">sub</span><span class="p">)</span>
+        <span class="n">ax1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">sub</span><span class="p">)</span>
 
-        <span class="c1">#fig1,ax1 = plt.subplots()</span>
+        <span class="c1"># fig1,ax1 = plt.subplots()</span>
 
-        <span class="n">sub</span> <span class="o">=</span> <span class="n">sub</span> <span class="o">+</span><span class="mi">1</span>
+        <span class="n">sub</span> <span class="o">=</span> <span class="n">sub</span> <span class="o">+</span> <span class="mi">1</span>
 
-        <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Safe&#39;</span><span class="p">,</span> <span class="s1">&#39;Moderate&#39;</span><span class="p">,</span> <span class="s1">&#39;High&#39;</span><span class="p">]</span>
-        <span class="k">if</span><span class="p">(</span><span class="n">dataPoints</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;pm10&quot;</span><span class="p">):</span>
-          <span class="n">sizes</span> <span class="o">=</span> <span class="p">[</span><span class="n">pm10_s</span><span class="p">,</span><span class="n">pm10_m</span><span class="p">,</span> <span class="n">pm10_h</span><span class="p">]</span>
-        <span class="k">elif</span><span class="p">(</span><span class="n">dataPoints</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;pm25&quot;</span><span class="p">):</span>
-          <span class="n">sizes</span> <span class="o">=</span> <span class="p">[</span><span class="n">pm25_s</span><span class="p">,</span><span class="n">pm25_m</span><span class="p">,</span> <span class="n">pm25_h</span><span class="p">]</span>
-        <span class="k">elif</span><span class="p">(</span><span class="n">dataPoints</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;so2&quot;</span><span class="p">):</span>
-          <span class="n">sizes</span> <span class="o">=</span> <span class="p">[</span><span class="n">so2_s</span><span class="p">,</span><span class="n">so2_m</span><span class="p">,</span> <span class="n">so2_h</span><span class="p">]</span>
-        <span class="k">elif</span><span class="p">(</span><span class="n">dataPoints</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;co&quot;</span><span class="p">):</span>
-          <span class="n">sizes</span> <span class="o">=</span> <span class="p">[</span><span class="n">co_s</span><span class="p">,</span><span class="n">co_m</span><span class="p">,</span> <span class="n">co_h</span><span class="p">]</span>
-        <span class="k">elif</span><span class="p">(</span><span class="n">dataPoints</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;o3&quot;</span><span class="p">):</span>
-          <span class="n">sizes</span> <span class="o">=</span> <span class="p">[</span><span class="n">o3_s</span><span class="p">,</span><span class="n">o3_m</span><span class="p">,</span> <span class="n">o3_h</span><span class="p">]</span>
-        <span class="k">elif</span><span class="p">(</span><span class="n">dataPoints</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;no2&quot;</span><span class="p">):</span>
-          <span class="n">sizes</span> <span class="o">=</span> <span class="p">[</span><span class="n">no2_s</span><span class="p">,</span><span class="n">no2_m</span><span class="p">,</span><span class="n">no2_h</span><span class="p">]</span>
-        
-        <span class="n">explode</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">ax1</span><span class="o">.</span><span class="n">pie</span><span class="p">(</span><span class="n">sizes</span><span class="p">,</span> <span class="n">explode</span> <span class="o">=</span> <span class="n">explode</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">autopct</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%1.1f%%</span><span class="s1">&#39;</span><span class="p">,</span>
-        <span class="n">shadow</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">startangle</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
-        <span class="n">ax1</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
-        
+        <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Safe&quot;</span><span class="p">,</span> <span class="s2">&quot;Moderate&quot;</span><span class="p">,</span> <span class="s2">&quot;High&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">dataPoints</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;pm10&quot;</span><span class="p">:</span>
+            <span class="n">sizes</span> <span class="o">=</span> <span class="p">[</span><span class="n">pm10_s</span><span class="p">,</span> <span class="n">pm10_m</span><span class="p">,</span> <span class="n">pm10_h</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">dataPoints</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;pm25&quot;</span><span class="p">:</span>
+            <span class="n">sizes</span> <span class="o">=</span> <span class="p">[</span><span class="n">pm25_s</span><span class="p">,</span> <span class="n">pm25_m</span><span class="p">,</span> <span class="n">pm25_h</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">dataPoints</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;so2&quot;</span><span class="p">:</span>
+            <span class="n">sizes</span> <span class="o">=</span> <span class="p">[</span><span class="n">so2_s</span><span class="p">,</span> <span class="n">so2_m</span><span class="p">,</span> <span class="n">so2_h</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">dataPoints</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;co&quot;</span><span class="p">:</span>
+            <span class="n">sizes</span> <span class="o">=</span> <span class="p">[</span><span class="n">co_s</span><span class="p">,</span> <span class="n">co_m</span><span class="p">,</span> <span class="n">co_h</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">dataPoints</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;o3&quot;</span><span class="p">:</span>
+            <span class="n">sizes</span> <span class="o">=</span> <span class="p">[</span><span class="n">o3_s</span><span class="p">,</span> <span class="n">o3_m</span><span class="p">,</span> <span class="n">o3_h</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">dataPoints</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;no2&quot;</span><span class="p">:</span>
+            <span class="n">sizes</span> <span class="o">=</span> <span class="p">[</span><span class="n">no2_s</span><span class="p">,</span> <span class="n">no2_m</span><span class="p">,</span> <span class="n">no2_h</span><span class="p">]</span>
 
-        <span class="n">sizes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
-  
+        <span class="n">explode</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">pie</span><span class="p">(</span>
+            <span class="n">sizes</span><span class="p">,</span>
+            <span class="n">explode</span><span class="o">=</span><span class="n">explode</span><span class="p">,</span>
+            <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span>
+            <span class="n">autopct</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%1.1f%%</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">shadow</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">startangle</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">ax1</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;equal&quot;</span><span class="p">)</span>
+
+        <span class="n">sizes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+
         <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
     <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">9</span><span class="p">:</span>
@@ -221,6 +219,7 @@
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;median = &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">medianVal</span><span class="p">))</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;95th percentile = &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">percentile</span><span class="p">))</span>
         <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span></div>
+
 
 <span class="c1"># =============================================================================</span>
 <span class="c1"># df = pd.read_csv(&#39;mydata.csv&#39;)</span>
