@@ -8,7 +8,7 @@ def interpolPlot(
     resolution=100,
     partitions=15,
     cmap="inferno",
-    Tcolor="red",
+    Tcolor="k",
     markersize=3,
     plot_train_points=False,
     extrapolate=True,
@@ -26,40 +26,40 @@ def interpolPlot(
     shape_df: geo pandas data frame 
        minimally containing DISTRICT    and geometry
 
-    long: type string
+    long: str
         name of column in df having longitudes
 
-    lat: type string
+    lat: str
         name of column in df having latitudes
 
-    pollutant: type string
+    pollutant: str
         name of column in df having pollutant values.
 
-    Interpolator: sklean type estimator
+    Interpolator: sklean estimator
         Interpolator to be used to interpolate values.
         eg. Lasso from sklearn.linear_models
 
-    resolution: type int
+    resolution: int
         Resolution at which to interpolate. Bigger number 
         means more granularity.
 
-    partitions: type int
+    partitions: int
         Levels in the contour created.
 
-    cmap: type string or type matplotlib.colors.ListedColormap
+    cmap: str or matplotlib.colors.ListedColormap
         cmap to be used while creating contours
 
-    Tcolor: type string
+    Tcolor: str
         Color to be used while plotting training points.
 
-    markersize: type float
+    markersize: float
         Training Point markersize. 
         (Also varies with the amount of pollution found)            
 
-    plot_train_points: type bool
+    plot_train_points: bool
         If True, plots, the training points used to interpolate.
 
-    extrapolate: type bool
+    extrapolate: bool
         If False, limits interpolation within bounds of the
         training points used.
     """
@@ -188,23 +188,6 @@ def interpolPlot(
     ax.legend()
 
     bounds = np.linspace(vmin, vmax, partitions)
-    fig.colorbar(sm, cax=cax, ticks=bounds, boundaries=bounds, format="%1.1E")
+    fig.colorbar(sm, cax=cax, ticks=bounds, 
+        boundaries=bounds, format="%.2f")
     return ax
-
-
-# =============================================================================
-# from geopandas import GeoDataFrame
-# import pandas as pd
-# import matplotlib.pyplot as plt
-# from vayu import interpolPlot
-
-# shapeFile = "re/tl_2017_us_state.shp"
-# long = "Longitude"
-# lat = "Latitude"
-# pollutant = "Arithmetic Mean"
-# df = pd.read_csv("re/daily_44201_2018.csv")
-# shape_df = GeoDataFrame.from_file(shapeFile)
-# shape_df.drop(shape_df.index[[34, 35, 36, 40, 41, 49, 31]], inplace=True)
-# interpolPlot(df, shape_df, long, lat, pollutant)
-# plt.show()
-# =============================================================================

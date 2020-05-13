@@ -1,15 +1,19 @@
-def timePlot(df, year, month):
-    """ Plot time series of ws,nox,o3,pm25,pm10 given a month and year
-		
-		Parameters
-		----------
-		df: data frame
-			a data frame of time series. Must have a date field
-			and at least one variable to plot
-		year: type string
-			year of which data will be cut
-		month: type int
-			month of what plot will be graphed
+def timePlot(df, year, month, 
+    pollutants=["ws", "nox", "o3", "pm25", "pm10"]):
+    """
+    Plot time series of pollutants for given month and year.
+        
+    Parameters
+    ----------
+    df: data frame
+        a data frame of time series. Must have a date field
+        and at least one variable to plot
+    year: str
+        year of which data will be cut
+    month: int
+        month of what plot will be graphed
+    pollutants: list
+        column names of pollutatnts to compare
     """
     import numpy as np
     import pandas as pd
@@ -25,47 +29,27 @@ def timePlot(df, year, month):
     df_n.index.dayofweek
     df_n_1 = df_n[df_n.month == month]
     # New lists that have the value of the pollutant in the month specified
-    ws = df_n_1["ws"]
-    nox = df_n_1["nox"]
-    o3 = df_n_1["o3"]
-    pm25 = df_n_1["pm25"]
-    pm10 = df_n_1["pm10"]
+
+    color_list = ["red", "blue", "green", "purple", "orange"]
 
     plt.figure(1)
-    # series of 5 plots in one large plot that contains the
+    # series of `len(pollutants)` plots in one large plot that contains the
     # time series of the polutants
 
-    plt.subplot(511)
-    a = nox.plot.line(color="red")
-    a.axes.get_xaxis().set_visible(False)
-    a.yaxis.set_label_position("right")
-    plt.ylabel("nox")
+    axs = []
 
-    plt.subplot(512)
-    a = o3.plot.line(color="blue")
-    a.axes.get_xaxis().set_visible(False)
-    a.yaxis.set_label_position("right")
-    plt.ylabel("o3")
+    for ix, pollutant in enumerate(pollutants):
+        values = df_n_1[pollutant]
+        color = color_list[ix % len(color_list)]
 
-    plt.subplot(513)
-    a = pm25.plot.line(color="green")
-    a.axes.get_xaxis().set_visible(False)
-    a.yaxis.set_label_position("right")
-    plt.ylabel("pm25")
+        # plotting
+        plt.subplot(f"{len(pollutants)}1{ix}")
+        a = values.plot.line(color=color)
+        a.axes.get_xaxis().set_visible(False)
+        a.yaxis.set_label_position("right")
+        axs.append(a)
+        plt.ylabel(pollutant)
 
-    plt.subplot(514)
-    a = pm10.plot.line(color="purple")
-    a.axes.get_xaxis().set_visible(False)
-    a.yaxis.set_label_position("right")
-    plt.ylabel("pm10")
-
-    plt.subplot(515)
-    a = ws.plot.line(color="orange")
-    a.yaxis.set_label_position("right")
-    plt.ylabel("ws")
-
-
-# =============================================================================
-# mydata = pd.read_csv('mydata.csv')
-# timePlot(mydata,'2003',8)
-# =============================================================================
+    # making dates visible.
+    axs[0].axes.get_xaxis().set_visible(True)
+    return axs
