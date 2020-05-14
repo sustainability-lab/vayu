@@ -53,15 +53,15 @@ def linearRelation(df, pol1, pol2):
         df_new = df_new.fillna(method="ffill")
         df_new["month"] = df_new.index.month
         # df_new.index.dayofweek
-        nox = df_new[pol1].mean()
-        so2 = df_new[pol2].mean()
-        values.append(so2 / nox)
+        pol_1 = df_new[pol1].mean()
+        pol_2 = df_new[pol2].mean()
+        values.append(pol_2 / pol_1)
         i = i + 1
     df_1 = pd.DataFrame(values)
     df_1.columns = ["div"]
-    # print(df_1)
-    """ Creats a df for the first polutant that 
-        contains thea average value for every month
+    
+    """ Creates a df for the first polutant that 
+        contains the average value for every month
         of every year given
     """
     var1 = []
@@ -85,8 +85,8 @@ def linearRelation(df, pol1, pol2):
             var1.append(mean_var1)
             x = x + 1
 
-    """ Creats a df for the second polutant that 
-        contains thea average value for every month
+    """ Creates a df for the second polutant that 
+        contains the average value for every month
         of every year given
     """
     i = 0
@@ -107,6 +107,7 @@ def linearRelation(df, pol1, pol2):
             mean_var2 = a[pol2].mean()
             var2.append(mean_var2)
             x = x + 1
+
     """ Finds the slope of the new dataframe
     """
     res = [i / j for i, j in zip(var2, var1)]
@@ -130,25 +131,29 @@ def linearRelation(df, pol1, pol2):
         two pollutants given for every year. That plot is then superimposed 
         with a scatter plot of the average value of every month of every year
     """
+
     fig = plt.figure()
     ax = fig.add_subplot(111, label="1")
     ax2 = fig.add_subplot(111, label="2", frame_on=False)
 
-    ax.set_ylim(bottom=0.015, top=0.040)
-    ax.plot(df_1, color="red")
+    ax.plot(df_1, color="red", label = "average slope between " + pol1 + " & " + pol2)
     ax.set_xlabel("Year", color="red")
-    ax.set_ylabel(pol2 + "/" + pol1, color="red")
+    ax.set_ylabel("Pollutant ratio " + pol2 + "/" + pol1, color="red")
     ax.tick_params(axis="x", colors="red")
     ax.tick_params(axis="y", colors="red")
-
-    ax2.scatter(scatterY, res, color="blue")
+    ax.set_xticklabels(unique_years)
+  
+    ax2.scatter(scatterY, res, color="blue", label = "average value of (" + pol2 + 
+                "/" + pol1 + ") for every month of year")
     ax2.xaxis.tick_top()
     ax2.yaxis.tick_right()
     ax2.xaxis.set_label_position("top")
     ax2.yaxis.set_label_position("right")
     ax2.tick_params(axis="x", colors="blue")
     ax2.tick_params(axis="y", colors="blue")
-
+    
+    fig.legend(loc="upper right", bbox_to_anchor=(1.1,1.1))
+    
     plt.show()
 
 
