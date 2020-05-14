@@ -109,13 +109,13 @@ class WindroseAxes(PolarAxes):
         self.set_rmax(rmax=self.rmax + calm_count)
         self.set_radii_angle(angle=self.radii_angle)
 
-    def legend(self, loc="lower left", decimal_places=1, **kwargs):
+    def legend(self, pollutantName, loc="upper right", decimal_places=1, **kwargs):
         """
         Sets the legend location and her properties.
         
         Parameters
         ----------
-        loc : int, string or pair of floats, default: 'lower left'
+        loc : int, string or pair of floats, default: 'upper right'
             see :obj:`matplotlib.pyplot.legend`.
         decimal_places : int, default 1
             The decimal places of the formated legend
@@ -146,6 +146,10 @@ class WindroseAxes(PolarAxes):
 
         def get_handles():
             handles = list()
+            handles.append(
+                mpl.patches.Rectangle(
+                        (0, 0), 0.2, 0.2, facecolor='none', edgecolor='none'
+                    ))
             for p in self.patches_list:
                 if isinstance(p, mpl.patches.Polygon) or isinstance(
                     p, mpl.patches.Rectangle
@@ -162,7 +166,7 @@ class WindroseAxes(PolarAxes):
                 )
             return handles
 
-        def get_labels(decimal_places=1):
+        def get_labels(pollutantName, decimal_places=1):
             _decimal_places = str(decimal_places)
 
             fmt = "[%." + _decimal_places + "f " + ": %0." + _decimal_places + "f"
@@ -183,6 +187,7 @@ class WindroseAxes(PolarAxes):
 
         handles = get_handles()
         labels = get_labels(decimal_places)
+        labels = [f"Pollution levels ({pollutantName})"] + labels
         self.legend_ = mpl.legend.Legend(self, handles, labels, loc, **kwargs)
         return self.legend_
 
@@ -446,27 +451,13 @@ def windRose(df, pollutant):
         pollutant: type string
             Name of pollutant for plot to graph
     """
-    pm10 = df.pm10
-    o3 = df.o3
-    ws = df.ws
-    wd = df.wd
-    nox = df.nox
-    no2 = df.no2
-    pm25 = df.pm25
-    if pollutant == "pm25":
-        pollutant = pm25
-    elif pollutant == "pm10":
-        pollutant = pm10
-    elif pollutant == "nox":
-        pollutant = nox
-    elif pollutant == "no2":
-        pollutant = no2
+    pollutantSeries = df[pollutant]
 
     ax = WindroseAxes.from_ax()
     wd = df.wd
     ax.bar(
         wd,
-        pollutant,
+        pollutantSeries,
         normed=True,
         opening=0.8,
         edgecolor="white",
@@ -474,7 +465,9 @@ def windRose(df, pollutant):
         cmap=plt.cm.jet,
     )
     mean_values = True
-    ax.set_legend()
+    ax.set_legend(pollutantName = pollutant)
+    ax.set_title("Distribution of Pollution Levels w.r.t. Wind Direction")
+    return ax
 
 
 # =============================================================================
