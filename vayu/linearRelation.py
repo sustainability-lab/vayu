@@ -1,5 +1,7 @@
 def linearRelation(df, pol1, pol2):
-    """
+    """Plots the slope `m` by fitting a linear model between
+    pol1 and plo2, i.e., plo1
+
     This plot given two pollutants will graph the linear 
     relationship. The df given will be converted to the slope
     between the pollutants. 
@@ -54,6 +56,11 @@ def linearRelation(df, pol1, pol2):
         df_new["month"] = df_new.index.month
         # df_new.index.dayofweek
         pol_1 = df_new[pol1].mean()
+        # this might not be entirely correct.
+        # TODO: we want to take the average of the slope.
+        # [Not take the average and find the slope]
+        # Additionally, we would like to have the option of
+        # changing the granularity.
         pol_2 = df_new[pol2].mean()
         values.append(pol_2 / pol_1)
         i = i + 1
@@ -136,9 +143,9 @@ def linearRelation(df, pol1, pol2):
     ax = fig.add_subplot(111, label="1")
     ax2 = fig.add_subplot(111, label="2", frame_on=False)
 
-    ax.plot(df_1, color="red", label = "average slope between " + pol1 + " & " + pol2)
+    ax.plot(df_1, color="red", label = f"average slope between {pol1} & {pol2}")
     ax.set_xlabel("Year", color="red")
-    ax.set_ylabel("Pollutant ratio " + pol2 + "/" + pol1, color="red")
+    ax.set_ylabel(f"Pollutant ratio ({pol2}/{pol1})", color="red")
     ax.tick_params(axis="x", colors="red")
     ax.tick_params(axis="y", colors="red")
     ax.set_xticklabels(unique_years)
