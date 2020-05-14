@@ -1,32 +1,17 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Jul 26 02:20:37 2019
-
-@author: Man Vinayaka
-"""
-
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Jul 26 01:59:09 2019
-
-@author: Man Vinayaka
-"""
-
-
 def smoothTrend(df, pollutant, Type):
     """ Plots a connected scatter plot of the average value of
         the pollutant every month of every year. Then plots a
         smooth line of best fit through the plot showing the user
         the overall trend of the pollutant through the years.
-		
-		Parameters
-		----------
-		df: data frame
-			minimally containing date and at least one other
-			pollutant 
-		pollutant: type string
-			A pollutant name correspoinding to 
-			a variable in a data frame, ex: 'pm25'
+
+        Parameters
+        ----------
+        df: data frame
+            minimally containing date and at least one other
+            pollutant 
+        pollutant: type string
+            A pollutant name correspoinding to 
+            a variable in a data frame, ex: 'pm25'
         Type: type int
             Value can be either 1 or 2
             1: normal trend line

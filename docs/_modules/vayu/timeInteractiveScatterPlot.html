@@ -1,0 +1,307 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>vayu.timeInteractiveScatterPlot &#8212; vayu 0.0.134 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for vayu.timeInteractiveScatterPlot</h1><div class="highlight"><pre>
+<div class="viewcode-block" id="timeInteractiveScatterPlot"><a class="viewcode-back" href="../../pages/vayu.html#vayu.timeInteractiveScatterPlot.timeInteractiveScatterPlot">[docs]</a><span></span><span class="k">def</span> <span class="nf">timeInteractiveScatterPlot</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">,</span>
+    <span class="n">date_time_col_name</span><span class="p">,</span>
+    <span class="n">location_col_name</span><span class="p">,</span>
+    <span class="n">value_col_name</span><span class="p">,</span>
+    <span class="n">latitude_col_name</span><span class="p">,</span>
+    <span class="n">longitude_col_name</span><span class="p">,</span>
+    <span class="n">start_date</span><span class="p">,</span>
+    <span class="n">end_date</span><span class="p">,</span>
+    <span class="n">pollutant_ID</span><span class="p">,</span>
+    <span class="n">width</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span>
+    <span class="n">height</span><span class="o">=</span><span class="mi">660</span><span class="p">,</span>
+    <span class="n">location</span><span class="o">=</span><span class="p">[</span><span class="mi">22</span><span class="p">,</span> <span class="mi">82</span><span class="p">],</span>
+    <span class="n">zoom_start</span><span class="o">=</span><span class="mf">4.5</span><span class="p">,</span>
+    <span class="n">control_scale</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">tiles</span><span class="o">=</span><span class="s2">&quot;Stamen Terrain&quot;</span><span class="p">,</span>
+    <span class="n">min_lat</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+    <span class="n">max_lat</span><span class="o">=</span><span class="mi">105</span><span class="p">,</span>
+    <span class="n">min_lon</span><span class="o">=</span><span class="mi">68</span><span class="p">,</span>
+    <span class="n">max_lon</span><span class="o">=</span><span class="mi">97</span><span class="p">,</span>
+    <span class="n">period</span><span class="o">=</span><span class="s2">&quot;PT1M&quot;</span><span class="p">,</span>
+    <span class="n">date_options</span><span class="o">=</span><span class="s2">&quot;YYYY-MM-DD HH:mm&quot;</span><span class="p">,</span>
+<span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot; Plots a time interactive scatter plot </span>
+<span class="sd">      of a given pollutant for given duration </span>
+<span class="sd">      of time.</span>
+
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  df: data frame </span>
+<span class="sd">      minimally containing time stamps, location, </span>
+<span class="sd">      pollutant value, latitude and longitude</span>
+
+<span class="sd">  date_time_col_name : type string</span>
+<span class="sd">                       name of column in df having time stamps</span>
+
+<span class="sd">  location_col_name : type string</span>
+<span class="sd">                      name of column in df having station name</span>
+
+<span class="sd">  value_col_name: type string</span>
+<span class="sd">                  name of column in df having value of pollutant</span>
+
+<span class="sd">  latitude_col_name : type string</span>
+<span class="sd">                      name of column in df having latitute</span>
+
+<span class="sd">  longitude_col_name : type string</span>
+<span class="sd">                       name of column in df having longitude</span>
+<span class="sd">                  </span>
+<span class="sd">  start_date: type string</span>
+<span class="sd">             time stamp corresponding to startdate,</span>
+<span class="sd">             ex : &#39;2019-08-01 00:00:00+05:30&#39;</span>
+
+<span class="sd">  end_date : type string</span>
+<span class="sd">             time stamp corresponding to end date,</span>
+<span class="sd">             ex : &#39;2019-08-05 00:00:00+05:30&#39;</span>
+
+<span class="sd">  pollutant_ID: type integer</span>
+<span class="sd">              A pollutant ID correspoinding to </span>
+<span class="sd">              a pollutant, ex: 1 for PM2.5</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+    <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+    <span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+    <span class="kn">import</span> <span class="nn">folium</span>
+    <span class="kn">from</span> <span class="nn">folium.plugins</span> <span class="k">import</span> <span class="n">TimestampedGeoJson</span>
+    <span class="kn">import</span> <span class="nn">branca.colormap</span> <span class="k">as</span> <span class="nn">cm</span>
+    <span class="kn">import</span> <span class="nn">json</span>
+
+    <span class="n">pollutants</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="mi">1</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;notation&quot;</span><span class="p">:</span> <span class="s2">&quot;PM2.5&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Particulate matter &lt; 10 µm&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;bin_edges&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mi">200</span><span class="p">]),</span>
+        <span class="p">},</span>
+        <span class="mi">2</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;notation&quot;</span><span class="p">:</span> <span class="s2">&quot;SO2&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Sulphur dioxide&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;bin_edges&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">15</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">45</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">125</span><span class="p">,</span> <span class="mi">165</span><span class="p">,</span> <span class="mi">250</span><span class="p">]),</span>
+        <span class="p">},</span>
+        <span class="mi">3</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;notation&quot;</span><span class="p">:</span> <span class="s2">&quot;PM10&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Particulate matter &lt; 10 µm&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;bin_edges&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mi">200</span><span class="p">]),</span>
+        <span class="p">},</span>
+        <span class="mi">4</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;notation&quot;</span><span class="p">:</span> <span class="s2">&quot;O3&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Ozone&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;bin_edges&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">30</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">110</span><span class="p">,</span> <span class="mi">145</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="mi">240</span><span class="p">,</span> <span class="mi">360</span><span class="p">]),</span>
+        <span class="p">},</span>
+        <span class="mi">5</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;notation&quot;</span><span class="p">:</span> <span class="s2">&quot;NO2&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Nitrogen dioxide&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;bin_edges&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">25</span><span class="p">,</span> <span class="mi">45</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">110</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">270</span><span class="p">,</span> <span class="mi">400</span><span class="p">]),</span>
+        <span class="p">},</span>
+        <span class="mi">6</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;notation&quot;</span><span class="p">:</span> <span class="s2">&quot;CO&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Carbon monoxide&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;bin_edges&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.4</span><span class="p">,</span> <span class="mf">2.1</span><span class="p">,</span> <span class="mf">2.8</span><span class="p">,</span> <span class="mf">3.6</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">,</span> <span class="mf">5.2</span><span class="p">,</span> <span class="mf">6.6</span><span class="p">,</span> <span class="mf">8.4</span><span class="p">,</span> <span class="mf">13.7</span><span class="p">]),</span>
+        <span class="p">},</span>
+    <span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">color_coding</span><span class="p">(</span><span class="n">poll</span><span class="p">,</span> <span class="n">bin_edges</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Maps polluatnt value to the bins</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">digitize</span><span class="p">(</span><span class="n">poll</span><span class="p">,</span> <span class="n">bin_edges</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">color_scale</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">prepare_data</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns a df for selected time range</span>
+<span class="sd">        indexed by location and time stamp.</span>
+<span class="sd">        Adds a color column according to the pollutant value.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Preparing the data frame...&quot;</span><span class="p">)</span>
+        <span class="n">df</span><span class="p">[</span><span class="n">date_time_col_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">date_time_col_name</span><span class="p">])</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span>
+            <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">date_time_col_name</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">start_date</span><span class="p">)</span>
+            <span class="o">&amp;</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">date_time_col_name</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">end_date</span><span class="p">)</span>
+        <span class="p">]</span>
+
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">keys</span><span class="o">=</span><span class="p">[</span><span class="n">location_col_name</span><span class="p">,</span> <span class="n">date_time_col_name</span><span class="p">])</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
+
+        <span class="n">df</span><span class="p">[</span><span class="n">value_col_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="mi">0</span><span class="p">)[</span><span class="n">value_col_name</span><span class="p">]</span><span class="o">.</span><span class="n">bfill</span><span class="p">()</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">df</span><span class="p">[</span><span class="s2">&quot;color&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">value_col_name</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+            <span class="n">color_coding</span><span class="p">,</span> <span class="n">bin_edges</span><span class="o">=</span><span class="n">pollutants</span><span class="p">[</span><span class="n">pollutant_ID</span><span class="p">][</span><span class="s2">&quot;bin_edges&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">df</span>
+
+    <span class="k">def</span> <span class="nf">create_geojson_features</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Creates a Geo JSON</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Creating Geo JSON...&quot;</span><span class="p">)</span>
+        <span class="n">features</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+            <span class="n">feature</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Feature&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;geometry&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Point&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;coordinates&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">row</span><span class="p">[</span><span class="n">longitude_col_name</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="n">latitude_col_name</span><span class="p">]],</span>
+                <span class="p">},</span>
+                <span class="s2">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;popup&quot;</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="n">location_col_name</span><span class="p">]</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span>
+                    <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+                    <span class="o">+</span> <span class="n">pollutants</span><span class="p">[</span><span class="n">pollutant_ID</span><span class="p">][</span><span class="s2">&quot;notation&quot;</span><span class="p">]</span>
+                    <span class="o">+</span> <span class="s2">&quot; &quot;</span>
+                    <span class="o">+</span> <span class="n">row</span><span class="p">[</span><span class="n">value_col_name</span><span class="p">]</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span>
+                    <span class="o">+</span> <span class="s2">&quot; µg/m³&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="n">date_time_col_name</span><span class="p">]</span><span class="o">.</span><span class="fm">__str__</span><span class="p">(),</span>
+                    <span class="s2">&quot;style&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;color&quot;</span><span class="p">]},</span>
+                    <span class="s2">&quot;icon&quot;</span><span class="p">:</span> <span class="s2">&quot;circle&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;iconstyle&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;fillColor&quot;</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;color&quot;</span><span class="p">],</span>
+                        <span class="s2">&quot;fillOpacity&quot;</span><span class="p">:</span> <span class="mf">0.8</span><span class="p">,</span>
+                        <span class="s2">&quot;stroke&quot;</span><span class="p">:</span> <span class="s2">&quot;true&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;radius&quot;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span>
+                    <span class="p">},</span>
+                <span class="p">},</span>
+            <span class="p">}</span>
+            <span class="n">features</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">features</span>
+
+    <span class="k">def</span> <span class="nf">make_map</span><span class="p">(</span><span class="n">features</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns a HTML file with time interactive scatter plot</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Plotting the map...&quot;</span><span class="p">)</span>
+        <span class="n">pollution_map</span> <span class="o">=</span> <span class="n">folium</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span>
+            <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span>
+            <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span>
+            <span class="n">location</span><span class="o">=</span><span class="n">location</span><span class="p">,</span>
+            <span class="n">zoom_start</span><span class="o">=</span><span class="n">zoom_start</span><span class="p">,</span>
+            <span class="n">control_scale</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">tiles</span><span class="o">=</span><span class="n">tiles</span><span class="p">,</span>
+            <span class="n">min_lat</span><span class="o">=</span><span class="n">min_lat</span><span class="p">,</span>
+            <span class="n">max_lat</span><span class="o">=</span><span class="n">max_lat</span><span class="p">,</span>
+            <span class="n">min_lon</span><span class="o">=</span><span class="n">min_lon</span><span class="p">,</span>
+            <span class="n">max_lon</span><span class="o">=</span><span class="n">max_lon</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">colormap</span><span class="o">.</span><span class="n">add_to</span><span class="p">(</span><span class="n">pollution_map</span><span class="p">)</span>
+
+        <span class="n">TimestampedGeoJson</span><span class="p">(</span>
+            <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;FeatureCollection&quot;</span><span class="p">,</span> <span class="s2">&quot;features&quot;</span><span class="p">:</span> <span class="n">features</span><span class="p">},</span>
+            <span class="n">period</span><span class="o">=</span><span class="n">period</span><span class="p">,</span>
+            <span class="n">add_last_point</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">auto_play</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">loop</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">max_speed</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">loop_button</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">date_options</span><span class="o">=</span><span class="n">date_options</span><span class="p">,</span>
+            <span class="n">time_slider_drag_update</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">add_to</span><span class="p">(</span><span class="n">pollution_map</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Saved the map.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">pollution_map</span>
+
+    <span class="c1"># =============================================================================</span>
+    <span class="c1">#     Creates a colormap for legend.</span>
+    <span class="c1"># =============================================================================</span>
+    <span class="n">color_scale</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="s2">&quot;#053061&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;#2166ac&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;#4393c3&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;#92c5de&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;#d1e5f0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;#fddbc7&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;#f4a582&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;#d6604d&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;#b2182b&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;#67001f&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
+    <span class="n">colormap</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">LinearColormap</span><span class="p">(</span><span class="n">colors</span><span class="o">=</span><span class="n">color_scale</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+    <span class="n">colormap</span> <span class="o">=</span> <span class="n">colormap</span><span class="o">.</span><span class="n">to_step</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">pollutants</span><span class="p">[</span><span class="n">pollutant_ID</span><span class="p">][</span><span class="s2">&quot;bin_edges&quot;</span><span class="p">])</span>
+    <span class="n">colormap</span><span class="o">.</span><span class="n">caption</span> <span class="o">=</span> <span class="n">pollutants</span><span class="p">[</span><span class="n">pollutant_ID</span><span class="p">][</span><span class="s2">&quot;notation&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot; gradient scale&quot;</span>
+
+    <span class="c1"># =============================================================================</span>
+    <span class="c1">#     Prepares the data frame.</span>
+    <span class="c1">#     Creates a Geo JSON to be added to map.</span>
+    <span class="c1"># =============================================================================</span>
+    <span class="n">clean_df</span> <span class="o">=</span> <span class="n">prepare_data</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+    <span class="n">clean_df</span> <span class="o">=</span> <span class="n">clean_df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+
+    <span class="n">features</span> <span class="o">=</span> <span class="n">create_geojson_features</span><span class="p">(</span><span class="n">clean_df</span><span class="p">)</span>
+    <span class="n">map_</span> <span class="o">=</span> <span class="n">make_map</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">map_</span></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Sustainability Lab @ IIT Gandhinagar.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

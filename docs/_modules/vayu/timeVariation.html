@@ -1,0 +1,226 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>vayu.timeVariation &#8212; vayu 0.0.134 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for vayu.timeVariation</h1><div class="highlight"><pre>
+<div class="viewcode-block" id="timeVariation"><a class="viewcode-back" href="../../pages/vayu.html#vayu.timeVariation.timeVariation">[docs]</a><span></span><span class="k">def</span> <span class="nf">timeVariation</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">pollutant</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">    Plots four plots:</span>
+<span class="sd">    - The average pollutant level per day by </span>
+<span class="sd">    each hour for each day of the week across all of the data</span>
+<span class="sd">    - The average pollutant level by each hour, </span>
+<span class="sd">    across all data</span>
+<span class="sd">    - The average pollutant level by each month of the</span>
+<span class="sd">    year for across data</span>
+<span class="sd">    - The average pollutant level per day of the week </span>
+<span class="sd">    across all data</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    df: pandas.DataFrame</span>
+<span class="sd">      data frame of hourly data. </span>
+<span class="sd">      Must include a date field and at least one variable to plot</span>
+<span class="sd">    pollutant: str</span>
+<span class="sd">      Name of variable to plot</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">datetime</span> <span class="k">as</span> <span class="nn">dt</span>
+    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+    <span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+    <span class="kn">from</span> <span class="nn">numpy</span> <span class="k">import</span> <span class="n">array</span>
+
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">date</span><span class="p">)</span>
+
+    <span class="n">df_days</span> <span class="o">=</span> <span class="n">df</span>
+    <span class="n">df_days</span><span class="p">[</span><span class="s2">&quot;day&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_days</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">day_name</span><span class="p">()</span>
+    <span class="n">df_days</span> <span class="o">=</span> <span class="n">df_days</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">keys</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;day&quot;</span><span class="p">])</span>
+    <span class="n">df_days</span> <span class="o">=</span> <span class="n">df_days</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">&quot;day&quot;</span><span class="p">])</span>
+
+    <span class="n">dayWeek</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;Monday&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Tuesday&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Wednesday&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Thursday&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Friday&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Saturday&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Sunday&quot;</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="n">pollutant</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;pm10&quot;</span><span class="p">,</span> <span class="s2">&quot;no2&quot;</span><span class="p">,</span> <span class="s2">&quot;pm25&quot;</span><span class="p">,</span> <span class="s2">&quot;so2&quot;</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dayWeek</span><span class="p">)):</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+
+        <span class="n">df_day</span> <span class="o">=</span> <span class="n">df_days</span><span class="o">.</span><span class="n">get_group</span><span class="p">(</span><span class="n">dayWeek</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">df_day</span><span class="p">[</span><span class="s2">&quot;hour&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_day</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">hour</span>
+
+        <span class="n">df_day_m</span> <span class="o">=</span> <span class="n">df_day</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;hour&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="n">df_day_m</span> <span class="o">=</span> <span class="n">df_day_m</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+
+        <span class="n">df_day_s</span> <span class="o">=</span> <span class="n">df_day</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;hour&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+        <span class="n">df_day_s</span> <span class="o">=</span> <span class="n">df_day_s</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pollutant</span><span class="p">)):</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df_day_m</span><span class="p">[</span><span class="s2">&quot;hour&quot;</span><span class="p">],</span> <span class="n">df_day_m</span><span class="p">[</span><span class="n">pollutant</span><span class="p">[</span><span class="n">k</span><span class="p">]],</span> <span class="n">label</span><span class="o">=</span><span class="n">pollutant</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span>
+                <span class="n">df_day_s</span><span class="p">[</span><span class="s2">&quot;hour&quot;</span><span class="p">],</span>
+                <span class="n">df_day_m</span><span class="p">[</span><span class="n">pollutant</span><span class="p">[</span><span class="n">k</span><span class="p">]]</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">df_day_s</span><span class="p">[</span><span class="n">pollutant</span><span class="p">[</span><span class="n">k</span><span class="p">]],</span>
+                <span class="n">df_day_m</span><span class="p">[</span><span class="n">pollutant</span><span class="p">[</span><span class="n">k</span><span class="p">]]</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">df_day_s</span><span class="p">[</span><span class="n">pollutant</span><span class="p">[</span><span class="n">k</span><span class="p">]],</span>
+                <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">dayWeek</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">35</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">df_hour</span> <span class="o">=</span> <span class="n">df</span>
+    <span class="n">df_hour</span><span class="p">[</span><span class="s2">&quot;hour&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_hour</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">hour</span>
+
+    <span class="n">df_hour_m</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;hour&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="n">df_hour_m</span> <span class="o">=</span> <span class="n">df_hour_m</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+
+    <span class="n">df_hour_s</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;hour&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+    <span class="n">df_hour_s</span> <span class="o">=</span> <span class="n">df_hour_s</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pollutant</span><span class="p">)):</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df_hour_m</span><span class="p">[</span><span class="s2">&quot;hour&quot;</span><span class="p">],</span> <span class="n">df_hour_m</span><span class="p">[</span><span class="n">pollutant</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span> <span class="n">label</span><span class="o">=</span><span class="n">pollutant</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span>
+            <span class="n">df_hour_s</span><span class="p">[</span><span class="s2">&quot;hour&quot;</span><span class="p">],</span>
+            <span class="n">df_hour_m</span><span class="p">[</span><span class="n">pollutant</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">df_hour_s</span><span class="p">[</span><span class="n">pollutant</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span>
+            <span class="n">df_hour_m</span><span class="p">[</span><span class="n">pollutant</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">df_hour_s</span><span class="p">[</span><span class="n">pollutant</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span>
+            <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Hour&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">df_month</span> <span class="o">=</span> <span class="n">df</span>
+    <span class="n">df_month</span><span class="p">[</span><span class="s2">&quot;month&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_month</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">month</span>
+
+    <span class="n">df_month_m</span> <span class="o">=</span> <span class="n">df_month</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;month&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="n">df_month_m</span> <span class="o">=</span> <span class="n">df_month_m</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+
+    <span class="n">df_month_s</span> <span class="o">=</span> <span class="n">df_month</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;month&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+    <span class="n">df_month_s</span> <span class="o">=</span> <span class="n">df_month_s</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pollutant</span><span class="p">)):</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df_month_m</span><span class="p">[</span><span class="s2">&quot;month&quot;</span><span class="p">],</span> <span class="n">df_month_m</span><span class="p">[</span><span class="n">pollutant</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span> <span class="n">label</span><span class="o">=</span><span class="n">pollutant</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span>
+            <span class="n">df_month_s</span><span class="p">[</span><span class="s2">&quot;month&quot;</span><span class="p">],</span>
+            <span class="n">df_month_m</span><span class="p">[</span><span class="n">pollutant</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">df_month_s</span><span class="p">[</span><span class="n">pollutant</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span>
+            <span class="n">df_month_m</span><span class="p">[</span><span class="n">pollutant</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">df_month_s</span><span class="p">[</span><span class="n">pollutant</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span>
+            <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Month&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">df_weekday</span> <span class="o">=</span> <span class="n">df</span>
+    <span class="n">df_weekday</span><span class="p">[</span><span class="s2">&quot;weekday&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_weekday</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">weekday</span>
+
+    <span class="n">df_weekday_m</span> <span class="o">=</span> <span class="n">df_weekday</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;weekday&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="n">df_weekday_m</span> <span class="o">=</span> <span class="n">df_weekday_m</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+
+    <span class="n">df_weekday_s</span> <span class="o">=</span> <span class="n">df_weekday</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;weekday&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+    <span class="n">df_weekday_s</span> <span class="o">=</span> <span class="n">df_weekday_s</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pollutant</span><span class="p">)):</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+            <span class="n">df_weekday_m</span><span class="p">[</span><span class="s2">&quot;weekday&quot;</span><span class="p">],</span> <span class="n">df_weekday_m</span><span class="p">[</span><span class="n">pollutant</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span> <span class="n">label</span><span class="o">=</span><span class="n">pollutant</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span>
+            <span class="n">df_weekday_s</span><span class="p">[</span><span class="s2">&quot;weekday&quot;</span><span class="p">],</span>
+            <span class="n">df_weekday_m</span><span class="p">[</span><span class="n">pollutant</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">df_weekday_s</span><span class="p">[</span><span class="n">pollutant</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span>
+            <span class="n">df_weekday_m</span><span class="p">[</span><span class="n">pollutant</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">df_weekday_s</span><span class="p">[</span><span class="n">pollutant</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span>
+            <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;WeekDay&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span></div>
+
+
+<span class="c1"># =============================================================================</span>
+<span class="c1"># df = pd.read_csv(&quot;mydata.csv&quot;)</span>
+<span class="c1"># timeVariation(df,[&#39;pm10&#39;])</span>
+<span class="c1"># =============================================================================</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Sustainability Lab @ IIT Gandhinagar.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

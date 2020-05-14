@@ -1,0 +1,286 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>vayu.timeProp &#8212; vayu 0.0.134 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for vayu.timeProp</h1><div class="highlight"><pre>
+<div class="viewcode-block" id="timeProp"><a class="viewcode-back" href="../../pages/vayu.html#vayu.timeProp.timeProp">[docs]</a><span></span><span class="k">def</span> <span class="nf">timeProp</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">year</span><span class="p">,</span> <span class="n">pollutant</span><span class="p">,</span> 
+    <span class="n">avg_days</span><span class="p">,</span> <span class="n">date_time_col_name</span><span class="p">,</span> 
+    <span class="n">sorted_bars</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plot a stacked bar graph of all data in the df</span>
+<span class="sd">    based on frequency of wind direction in compass</span>
+<span class="sd">    directions. Takes the average of every 3 days</span>
+<span class="sd">    in each bar. The hight of the bar is value of </span>
+<span class="sd">    the pollutant that 3 day period. The bars are </span>
+<span class="sd">    binned proportionaly based on the overall value of the </span>
+<span class="sd">    pollutant </span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    df: data frame</span>
+<span class="sd">        data frame which has the fields of date and the pollutant</span>
+<span class="sd">        to be graphed</span>
+<span class="sd">    year: type string</span>
+<span class="sd">        The year of which the data will be cut</span>
+<span class="sd">    pollutant: type string</span>
+<span class="sd">        The pollutant of which to plot</span>
+<span class="sd">    avg_days: type integer</span>
+<span class="sd">      number of days to take the average of (controlling </span>
+<span class="sd">      granularity of the X-axis)</span>
+<span class="sd">    date_time_col_name: type string</span>
+<span class="sd">      df column name containing date-time stamps  </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">datetime</span> <span class="k">as</span> <span class="nn">dt</span>
+    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+    <span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+    <span class="kn">from</span> <span class="nn">numpy</span> <span class="k">import</span> <span class="n">array</span>
+    <span class="kn">import</span> <span class="nn">matplotlib.patches</span> <span class="k">as</span> <span class="nn">mpatches</span>
+
+    <span class="c1"># =============================================================================</span>
+    <span class="c1">#     Cuts data into the year specified and averages the</span>
+    <span class="c1">#     values of each day</span>
+    <span class="c1"># =============================================================================</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">date_time_col_name</span><span class="p">])</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">date_time_col_name</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">df_year</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">year</span><span class="p">]</span>
+    <span class="n">df_year</span> <span class="o">=</span> <span class="n">df_year</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s2">&quot;ffill&quot;</span><span class="p">)</span>
+    <span class="n">df_year</span><span class="p">[</span><span class="s2">&quot;month&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_year</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">month</span>
+
+    <span class="c1"># New df containing only the values of the pollutant specified</span>
+    <span class="n">polArray</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">year</span><span class="p">]</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="s2">&quot;1D&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="n">polArray</span> <span class="o">=</span> <span class="n">df_year</span><span class="p">[</span><span class="n">pollutant</span><span class="p">]</span>
+
+    <span class="n">nA</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">neA</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">eA</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">seA</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">sA</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">swA</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">wA</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">nwA</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">polMeanS</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">polMeanE</span> <span class="o">=</span> <span class="n">avg_days</span>
+    <span class="n">dfStart</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">dfEnd</span> <span class="o">=</span> <span class="mi">24</span> <span class="o">*</span> <span class="n">avg_days</span>  <span class="c1"># 24*3 for 3 day average</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">while</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="nb">int</span><span class="p">(</span>
+        <span class="mi">365</span> <span class="o">/</span> <span class="n">avg_days</span>
+    <span class="p">):</span>  <span class="c1"># example: 365 days / 3 = 121 floored. Represents number of bars total</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ne</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">se</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">sw</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">nw</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">df_year</span><span class="p">[</span><span class="n">dfStart</span><span class="p">:</span><span class="n">dfEnd</span><span class="p">]</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="s2">&quot;wd&quot;</span><span class="p">]</span>
+
+        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="p">(</span>
+            <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">24</span> <span class="o">*</span> <span class="n">avg_days</span>
+        <span class="p">):</span>  <span class="c1"># Bins the wd data into categories for stacked bar graph</span>
+            <span class="k">if</span> <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">348.75</span> <span class="ow">or</span> <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">33.75</span><span class="p">:</span>
+                <span class="n">n</span> <span class="o">=</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="k">elif</span> <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">33.75</span> <span class="ow">and</span> <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">78.75</span><span class="p">:</span>
+                <span class="n">ne</span> <span class="o">=</span> <span class="n">ne</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="k">elif</span> <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">78.75</span> <span class="ow">and</span> <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">123.75</span><span class="p">:</span>
+                <span class="n">e</span> <span class="o">=</span> <span class="n">e</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="k">elif</span> <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">123.75</span> <span class="ow">and</span> <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">168.75</span><span class="p">:</span>
+                <span class="n">se</span> <span class="o">=</span> <span class="n">se</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="k">elif</span> <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">168.75</span> <span class="ow">and</span> <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">213.75</span><span class="p">:</span>
+                <span class="n">s</span> <span class="o">=</span> <span class="n">s</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="k">elif</span> <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">213.75</span> <span class="ow">and</span> <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">258.75</span><span class="p">:</span>
+                <span class="n">sw</span> <span class="o">=</span> <span class="n">sw</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="k">elif</span> <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">258.75</span> <span class="ow">and</span> <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">303.75</span><span class="p">:</span>
+                <span class="n">w</span> <span class="o">=</span> <span class="n">w</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="k">elif</span> <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">303.75</span> <span class="ow">and</span> <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">348.75</span><span class="p">:</span>
+                <span class="n">nw</span> <span class="o">=</span> <span class="n">nw</span> <span class="o">+</span> <span class="mi">1</span>
+
+            <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="c1"># calculates the 3 day proportion mean of each polutant and stores</span>
+        <span class="c1"># it in a new list</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="p">(</span><span class="n">n</span> <span class="o">/</span> <span class="mi">24</span> <span class="o">*</span> <span class="n">avg_days</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">polArray</span><span class="p">[</span><span class="n">polMeanS</span><span class="p">:</span><span class="n">polMeanE</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+        <span class="n">ne</span> <span class="o">=</span> <span class="p">(</span><span class="n">ne</span> <span class="o">/</span> <span class="mi">24</span> <span class="o">*</span> <span class="n">avg_days</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">polArray</span><span class="p">[</span><span class="n">polMeanS</span><span class="p">:</span><span class="n">polMeanE</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="p">(</span><span class="n">e</span> <span class="o">/</span> <span class="mi">24</span> <span class="o">*</span> <span class="n">avg_days</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">polArray</span><span class="p">[</span><span class="n">polMeanS</span><span class="p">:</span><span class="n">polMeanE</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+        <span class="n">se</span> <span class="o">=</span> <span class="p">(</span><span class="n">se</span> <span class="o">/</span> <span class="mi">24</span> <span class="o">*</span> <span class="n">avg_days</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">polArray</span><span class="p">[</span><span class="n">polMeanS</span><span class="p">:</span><span class="n">polMeanE</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="p">(</span><span class="n">s</span> <span class="o">/</span> <span class="mi">24</span> <span class="o">*</span> <span class="n">avg_days</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">polArray</span><span class="p">[</span><span class="n">polMeanS</span><span class="p">:</span><span class="n">polMeanE</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+        <span class="n">sw</span> <span class="o">=</span> <span class="p">(</span><span class="n">sw</span> <span class="o">/</span> <span class="mi">24</span> <span class="o">*</span> <span class="n">avg_days</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">polArray</span><span class="p">[</span><span class="n">polMeanS</span><span class="p">:</span><span class="n">polMeanE</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="p">(</span><span class="n">w</span> <span class="o">/</span> <span class="mi">24</span> <span class="o">*</span> <span class="n">avg_days</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">polArray</span><span class="p">[</span><span class="n">polMeanS</span><span class="p">:</span><span class="n">polMeanE</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+        <span class="n">nw</span> <span class="o">=</span> <span class="p">(</span><span class="n">nw</span> <span class="o">/</span> <span class="mi">24</span> <span class="o">*</span> <span class="n">avg_days</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">polArray</span><span class="p">[</span><span class="n">polMeanS</span><span class="p">:</span><span class="n">polMeanE</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+
+        <span class="n">nA</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="n">neA</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ne</span><span class="p">)</span>
+        <span class="n">eA</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="n">seA</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">se</span><span class="p">)</span>
+        <span class="n">sA</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">swA</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sw</span><span class="p">)</span>
+        <span class="n">wA</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="n">nwA</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nw</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="c1"># Adds to start and end values to get through end of df</span>
+        <span class="n">polMeanS</span> <span class="o">=</span> <span class="n">polMeanS</span> <span class="o">+</span> <span class="n">avg_days</span>
+        <span class="n">polMeanE</span> <span class="o">=</span> <span class="n">polMeanE</span> <span class="o">+</span> <span class="n">avg_days</span>
+        <span class="n">dfStart</span> <span class="o">=</span> <span class="n">dfStart</span> <span class="o">+</span> <span class="mi">24</span> <span class="o">*</span> <span class="n">avg_days</span>
+        <span class="n">dfEnd</span> <span class="o">=</span> <span class="n">dfEnd</span> <span class="o">+</span> <span class="mi">24</span> <span class="o">*</span> <span class="n">avg_days</span>
+
+    <span class="c1">#########################################</span>
+
+    <span class="c1"># Plots the stacked bar graph with specific color represtations.</span>
+    <span class="c1"># A legend is also plotted</span>
+    <span class="n">color_list</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="s2">&quot;purple&quot;</span><span class="p">,</span> <span class="s2">&quot;orange&quot;</span><span class="p">,</span> <span class="s2">&quot;yellow&quot;</span><span class="p">,</span> <span class="s2">&quot;brown&quot;</span><span class="p">,</span> <span class="s2">&quot;pink&quot;</span><span class="p">]</span>
+
+    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">365</span> <span class="o">/</span> <span class="n">avg_days</span><span class="p">))</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">nA</span><span class="p">,</span> <span class="n">neA</span><span class="p">,</span> <span class="n">eA</span><span class="p">,</span> <span class="n">seA</span><span class="p">,</span> <span class="n">sA</span><span class="p">,</span> <span class="n">swA</span><span class="p">,</span> <span class="n">wA</span><span class="p">,</span> <span class="n">nwA</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">sorted_bars</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">ix</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">X</span><span class="p">):</span>
+            <span class="n">vals</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="n">ix</span><span class="p">]</span>  <span class="c1"># pollutant contributions (len == 8)</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">vals</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">color_list</span><span class="p">)</span>
+            <span class="c1"># sorting based on the contributions</span>
+            <span class="n">col</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="n">color_list</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span>
+                    <span class="n">x</span><span class="p">,</span> <span class="n">col</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">bottom</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">([</span><span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">col</span><span class="p">[:</span><span class="n">i</span><span class="p">]]),</span> <span class="n">color</span><span class="o">=</span><span class="n">col</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span>
+                <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span>
+                <span class="n">X</span><span class="p">,</span>
+                <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                <span class="n">bottom</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">data</span><span class="p">[:</span><span class="n">i</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+                <span class="n">color</span><span class="o">=</span><span class="n">color_list</span><span class="p">[</span><span class="n">i</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">color_list</span><span class="p">)],</span>
+            <span class="p">)</span>
+
+    <span class="c1"># Legend stuff.</span>
+    <span class="n">red_patch</span> <span class="o">=</span> <span class="n">mpatches</span><span class="o">.</span><span class="n">Patch</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;North&quot;</span><span class="p">)</span>
+    <span class="n">blue_patch</span> <span class="o">=</span> <span class="n">mpatches</span><span class="o">.</span><span class="n">Patch</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;North East&quot;</span><span class="p">)</span>
+    <span class="n">green_patch</span> <span class="o">=</span> <span class="n">mpatches</span><span class="o">.</span><span class="n">Patch</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;East&quot;</span><span class="p">)</span>
+    <span class="n">purple_patch</span> <span class="o">=</span> <span class="n">mpatches</span><span class="o">.</span><span class="n">Patch</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;purple&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;South East&quot;</span><span class="p">)</span>
+    <span class="n">orange_patch</span> <span class="o">=</span> <span class="n">mpatches</span><span class="o">.</span><span class="n">Patch</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;orange&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;South&quot;</span><span class="p">)</span>
+    <span class="n">yellow_patch</span> <span class="o">=</span> <span class="n">mpatches</span><span class="o">.</span><span class="n">Patch</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;yellow&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;South West&quot;</span><span class="p">)</span>
+    <span class="n">brown_patch</span> <span class="o">=</span> <span class="n">mpatches</span><span class="o">.</span><span class="n">Patch</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;brown&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;West&quot;</span><span class="p">)</span>
+    <span class="n">pink_patch</span> <span class="o">=</span> <span class="n">mpatches</span><span class="o">.</span><span class="n">Patch</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;pink&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;North West&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span>
+        <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">1.05</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="n">loc</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">borderaxespad</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">handles</span><span class="o">=</span><span class="p">[</span>
+            <span class="n">red_patch</span><span class="p">,</span>
+            <span class="n">blue_patch</span><span class="p">,</span>
+            <span class="n">green_patch</span><span class="p">,</span>
+            <span class="n">purple_patch</span><span class="p">,</span>
+            <span class="n">orange_patch</span><span class="p">,</span>
+            <span class="n">yellow_patch</span><span class="p">,</span>
+            <span class="n">brown_patch</span><span class="p">,</span>
+            <span class="n">pink_patch</span><span class="p">,</span>
+        <span class="p">],</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Setting fonts</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="mi">365</span> <span class="o">/</span> <span class="n">avg_days</span><span class="p">),</span> <span class="mi">30</span> <span class="o">/</span> <span class="n">avg_days</span><span class="p">),</span>
+        <span class="p">(</span>
+            <span class="s2">&quot;Jan&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Feb&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Mar&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Apr&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;May&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Jun&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Jul&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Aug&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Sep&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Oct&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Nov&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Dec&quot;</span><span class="p">,</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Wind Direction&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Contribution weighted by Mean&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Pollutant (µg/m³)&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">&quot;figure.figsize&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">6</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+
+<span class="c1"># =============================================================================</span>
+<span class="c1"># mydata = pd.read_csv(&#39;mydata.csv&#39;)</span>
+<span class="c1"># timeProp(mydata,&#39;2003&#39;,&#39;so2&#39;)</span>
+<span class="c1"># =============================================================================</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Sustainability Lab @ IIT Gandhinagar.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,25 +1,20 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Jul 26 01:59:09 2019
-
-@author: Man Vinayaka
-"""
-
-
 def TheilSen(df, pollutant):
-    """ Plots a connected scatter plot of the average value of
-        the pollutant every month of every year. Then plots a
-        line of best fit through the plot showing the user
-        the overall trend of the pollutant through the years.
-		
-		Parameters
-		----------
-		df: data frame
-			minimally containing date and at least one other
-			pollutant 
-		pollutant: type string
-			A pollutant name correspoinding to 
-			a variable in a data frame, ex: 'pm25'
+    """Connected scatter plot.
+
+    Plots a connected scatter plot of the average value of
+    the pollutant every month of every year. Then plots a
+    line of best fit through the plot showing the user
+    the overall trend of the pollutant through the years.
+    
+    Parameters
+    ----------
+    df: data frame
+        minimally containing date and at least one other
+        pollutant 
+    pollutant: type string
+        A pollutant name correspoinding to 
+        a variable in a data frame, ex: 'pm25'
+
     """
     import datetime as dt
     import matplotlib.pyplot as plt

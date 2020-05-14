@@ -18,8 +18,7 @@ CALM_CIRCLE_ALPHA = 0.4
 
 
 class WindroseAxes(PolarAxes):
-    """
-    Create a windrose axes
+    """Create a windrose axes
     """
 
     name = "windrose"
@@ -113,12 +112,14 @@ class WindroseAxes(PolarAxes):
     def legend(self, loc="lower left", decimal_places=1, **kwargs):
         """
         Sets the legend location and her properties.
+        
         Parameters
         ----------
         loc : int, string or pair of floats, default: 'lower left'
             see :obj:`matplotlib.pyplot.legend`.
         decimal_places : int, default 1
             The decimal places of the formated legend
+        
         Other Parameters
         ----------------
         isaxes : boolean, default True
@@ -140,6 +141,7 @@ class WindroseAxes(PolarAxes):
         kwarg
             Every other kwarg argument supported by
             :obj:`matplotlib.pyplot.legend`
+
         """
 
         def get_handles():

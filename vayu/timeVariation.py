@@ -1,27 +1,23 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Jul 22 20:50:49 2019
-
-@author: Man Vinayaka
-"""
-
-
 def timeVariation(df, pollutant):
-    """ 4 seperate plots are plotted:
-        
-        1) the average pollutant level per day by each hour for each day of the 
-            week across all of the data
-        2) the average pollutant level by each hour, across all data
-        3) the average pollutant level by each month of the year for across data
-        4) the average pollutant level per day of the week across all data
-		
-		Parameters
-		----------
-		df: data frame
-			data frame of hourly data. 
-			Must include a date field and at least one variable to plot
-		pollutant: type string
-			Name of variable to plot
+    """ 
+    Plots four plots:
+    - The average pollutant level per day by 
+    each hour for each day of the week across all of the data
+    - The average pollutant level by each hour, 
+    across all data
+    - The average pollutant level by each month of the
+    year for across data
+    - The average pollutant level per day of the week 
+    across all data
+    
+    Parameters
+    ----------
+    df: pandas.DataFrame
+      data frame of hourly data. 
+      Must include a date field and at least one variable to plot
+    pollutant: str
+      Name of variable to plot
+
     """
     import datetime as dt
     import matplotlib.pyplot as plt
@@ -29,6 +25,13 @@ def timeVariation(df, pollutant):
     import numpy as np
     import pandas as pd
     from numpy import array
+
+    df["date"] = pd.to_datetime(df.date)
+
+    df_days = df
+    df_days["day"] = df_days["date"].dt.day_name()
+    df_days = df_days.set_index(keys=["day"])
+    df_days = df_days.groupby(["day"])
 
     dayWeek = [
         "Monday",
@@ -39,122 +42,108 @@ def timeVariation(df, pollutant):
         "Saturday",
         "Sunday",
     ]
+    pollutant = ["pm10", "no2", "pm25", "so2"]
 
-    # Adds month,day, and hour columns in df for futher pandas manipulation
-
-    df.index = pd.to_datetime(df.date)
-    df = df.drop("date", axis=1)
-    df_new = df
-    df_new = df_new.fillna(method="ffill")
-    df_new["month"] = df_new.index.month
-    df_new["day"] = df_new.index.dayofweek
-    df_new["hour"] = df_new.index.hour
-
-    x = 0
-    sub = 1
-    # for plot 1
-    while x < 7:
-        monday = []
-        a = df_new[df_new.day == x]
-        i = 0
-        plt.figure(1, figsize=(50, 3))
-
-        while i < 24:
-            b = a[a.hour == i]
-            c = b[pollutant].mean()
-            i = i + 1
-            monday.append(c)
-        df_1 = pd.DataFrame(monday)
-        df_1.columns = [pollutant]
-        # plt.figure(1)
-        plt.subplot(1, 7, sub)
-        plt.subplots_adjust(wspace=0.2)
-        sub = sub + 1
-        a = df_1[pollutant].plot.line(color="#ff9999")
-        # a.axes.get_xaxis().set_visible(False)
-        a.yaxis.set_label_position("left")
-        plt.ylabel(pollutant)
-        plt.xlabel("hours")
-        plt.ylim((20, 70))
-        plt.xlim((0, 23))
-        plt.title(dayWeek[x])
+    for i in range(len(dayWeek)):
+        plt.figure(1, figsize=(40, 5))
+        plt.subplot(1, 7, i + 1)
         plt.grid()
 
-        x = x + 1
-    # plot 2
-    a = df_new
-    hourly = []
-    i = 0
-    plt.figure(2, figsize=(30, 3))
-    while i < 24:
-        b = a[a.hour == i]
-        c = b[pollutant].mean()
-        i = i + 1
-        hourly.append(c)
-    df_1 = pd.DataFrame(hourly)
-    df_1.columns = [pollutant]
+        df_day = df_days.get_group(dayWeek[i])
+        df_day["hour"] = df_day["date"].dt.hour
+
+        df_day_m = df_day.groupby("hour").mean()
+        df_day_m = df_day_m.reset_index()
+
+        df_day_s = df_day.groupby("hour").std()
+        df_day_s = df_day_s.reset_index()
+
+        for k in range(len(pollutant)):
+            plt.plot(df_day_m["hour"], df_day_m[pollutant[k]], label=pollutant[k])
+            plt.fill_between(
+                df_day_s["hour"],
+                df_day_m[pollutant[k]] - 0.5 * df_day_s[pollutant[k]],
+                df_day_m[pollutant[k]] + 0.5 * df_day_s[pollutant[k]],
+                alpha=0.2,
+            )
+            plt.xlabel(dayWeek[i])
+            plt.legend()
+
+    plt.figure(2, figsize=(35, 5))
     plt.subplot(1, 3, 1)
-    a = df_1[pollutant].plot.line(color="#ff9999")
-    a.yaxis.set_label_position("left")
-    plt.ylabel(pollutant)
-    plt.xlabel("hour")
-    plt.ylim((20, 45))
-    plt.xlim((0, 23))
+
+    df_hour = df
+    df_hour["hour"] = df_hour["date"].dt.hour
+
+    df_hour_m = df.groupby("hour").mean()
+    df_hour_m = df_hour_m.reset_index()
+
+    df_hour_s = df.groupby("hour").std()
+    df_hour_s = df_hour_s.reset_index()
+
     plt.grid()
 
-    # plot 3
-    a = df_new.fillna(method="ffill")
-    monthly = []
-    i = 0
-    plt.figure(2, figsize=(30, 3))
-    while i < 12:
-        b = a[a.month == i]
-        c = b[pollutant].mean()
-        i = i + 1
-        monthly.append(c)
-    df_1 = pd.DataFrame(monthly)
-    df_1.columns = [pollutant]
+    for i in range(len(pollutant)):
+        plt.plot(df_hour_m["hour"], df_hour_m[pollutant[i]], label=pollutant[i])
+        plt.fill_between(
+            df_hour_s["hour"],
+            df_hour_m[pollutant[i]] - 0.5 * df_hour_s[pollutant[i]],
+            df_hour_m[pollutant[i]] + 0.5 * df_hour_s[pollutant[i]],
+            alpha=0.2,
+        )
+        plt.xlabel("Hour")
+        plt.legend()
+
     plt.subplot(1, 3, 2)
-    a = df_1[pollutant].plot.line(color="#ff9999")
-    a.yaxis.set_label_position("left")
-    plt.ylabel(pollutant)
-    plt.xlabel("month")
-    plt.ylim((30, 40))
-    plt.xlim((0, 12))
+    df_month = df
+    df_month["month"] = df_month["date"].dt.month
+
+    df_month_m = df_month.groupby("month").mean()
+    df_month_m = df_month_m.reset_index()
+
+    df_month_s = df_month.groupby("month").std()
+    df_month_s = df_month_s.reset_index()
+
     plt.grid()
 
-    # plot 4
-    x = 0
-    weekday = []
-    while x < 7:
-        monday = []
-        a = df_new[df_new.day == x]
-        i = 0
-        plt.figure(2, figsize=(30, 3))
+    for i in range(len(pollutant)):
+        plt.plot(df_month_m["month"], df_month_m[pollutant[i]], label=pollutant[i])
+        plt.fill_between(
+            df_month_s["month"],
+            df_month_m[pollutant[i]] - 0.5 * df_month_s[pollutant[i]],
+            df_month_m[pollutant[i]] + 0.5 * df_month_s[pollutant[i]],
+            alpha=0.2,
+        )
+        plt.xlabel("Month")
+        plt.legend()
 
-        while i < 24:
-            b = a[a.hour == i]
-            c = b[pollutant].mean()
-            i = i + 1
-            monday.append(c)
-        df_1 = pd.DataFrame(monday)
-        df_1.columns = [pollutant]
-        weekday.append(df_1.mean())
-        x = x + 1
-    # print(weekday)
-    weekday = pd.DataFrame(weekday)
-    weekday.columns = [pollutant]
     plt.subplot(1, 3, 3)
-    a = weekday[pollutant].plot.line(color="#ff9999")
-    a.yaxis.set_label_position("left")
-    plt.ylabel(pollutant)
-    plt.xlabel("weekday")
-    plt.ylim((26, 40))
-    plt.xlim((0, 6))
+    df_weekday = df
+    df_weekday["weekday"] = df_weekday["date"].dt.weekday
+
+    df_weekday_m = df_weekday.groupby("weekday").mean()
+    df_weekday_m = df_weekday_m.reset_index()
+
+    df_weekday_s = df_weekday.groupby("weekday").std()
+    df_weekday_s = df_weekday_s.reset_index()
+
     plt.grid()
+
+    for i in range(len(pollutant)):
+        plt.plot(
+            df_weekday_m["weekday"], df_weekday_m[pollutant[i]], label=pollutant[i]
+        )
+        plt.fill_between(
+            df_weekday_s["weekday"],
+            df_weekday_m[pollutant[i]] - 0.5 * df_weekday_s[pollutant[i]],
+            df_weekday_m[pollutant[i]] + 0.5 * df_weekday_s[pollutant[i]],
+            alpha=0.2,
+        )
+        plt.xlabel("WeekDay")
+        plt.legend()
 
 
 # =============================================================================
 # df = pd.read_csv("mydata.csv")
-# timeVariation(df,'pm10')
+# timeVariation(df,['pm10'])
 # =============================================================================

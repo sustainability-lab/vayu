@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Spyder Editor
-
-"""
-
-
 def scatterPlot(df, x, y, **kwargs):
     """
     Parameters

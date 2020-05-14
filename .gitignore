@@ -8,10 +8,10 @@
 *.orig
 *.log
 *.pot
-__pycache__/*
+*__pycache__/
 .cache/*
 .*.swp
-*/.ipynb_checkpoints/*
+*.ipynb_checkpoints/
 
 # Project files
 .ropeproject
@@ -49,5 +49,8 @@ MANIFEST
 .venv*/
 .env
 .vscode
-re
+examples/data/shapeFiles/*
+*daily_44201_2018.csv
+Report/*
+temporary/*
 te.py

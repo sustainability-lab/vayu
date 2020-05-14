@@ -1,0 +1,560 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>vayu.windRosePy &#8212; vayu 0.0.134 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for vayu.windRosePy</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">locale</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">docstring</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">from</span> <span class="nn">matplotlib.projections.polar</span> <span class="k">import</span> <span class="n">PolarAxes</span>
+<span class="kn">from</span> <span class="nn">numpy.lib.twodim_base</span> <span class="k">import</span> <span class="n">histogram2d</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="n">ZBASE</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1000</span>  <span class="c1"># The starting zorder for all drawing, negative to have the grid on</span>
+<span class="n">VAR_DEFAULT</span> <span class="o">=</span> <span class="s2">&quot;speed&quot;</span>
+<span class="n">DIR_DEFAULT</span> <span class="o">=</span> <span class="s2">&quot;direction&quot;</span>
+<span class="n">FIGSIZE_DEFAULT</span> <span class="o">=</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+<span class="n">DPI_DEFAULT</span> <span class="o">=</span> <span class="mi">80</span>
+<span class="n">CALM_CIRCLE_COLOR</span> <span class="o">=</span> <span class="s2">&quot;red&quot;</span>
+<span class="n">CALM_CIRCLE_ALPHA</span> <span class="o">=</span> <span class="mf">0.4</span>
+
+
+<div class="viewcode-block" id="WindroseAxes"><a class="viewcode-back" href="../../pages/vayu.html#vayu.windRosePy.WindroseAxes">[docs]</a><span class="k">class</span> <span class="nc">WindroseAxes</span><span class="p">(</span><span class="n">PolarAxes</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create a windrose axes</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;windrose&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See Axes base class for args and kwargs documentation</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Uncomment to have the possibility to change the resolution directly</span>
+        <span class="c1"># when the instance is created</span>
+        <span class="c1"># self.RESOLUTION = kwargs.pop(&#39;resolution&#39;, 100)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rmax</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;rmax&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">PolarAxes</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">&quot;equal&quot;</span><span class="p">,</span> <span class="n">adjustable</span><span class="o">=</span><span class="s2">&quot;box&quot;</span><span class="p">,</span> <span class="n">anchor</span><span class="o">=</span><span class="s2">&quot;C&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">radii_angle</span> <span class="o">=</span> <span class="mf">67.5</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cla</span><span class="p">()</span>
+
+<div class="viewcode-block" id="WindroseAxes.from_ax"><a class="viewcode-back" href="../../pages/vayu.html#vayu.windRosePy.WindroseAxes.from_ax">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_ax</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fig</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a WindroseAxes object for the figure `fig`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">fig</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span>
+                    <span class="n">figsize</span><span class="o">=</span><span class="n">FIGSIZE_DEFAULT</span><span class="p">,</span>
+                    <span class="n">dpi</span><span class="o">=</span><span class="n">DPI_DEFAULT</span><span class="p">,</span>
+                    <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">,</span>
+                    <span class="n">edgecolor</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="n">rect</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">]</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="n">WindroseAxes</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">rect</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">rmax</span><span class="o">=</span><span class="n">rmax</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="n">fig</span><span class="o">.</span><span class="n">add_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">ax</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ax</span></div>
+
+<div class="viewcode-block" id="WindroseAxes.cla"><a class="viewcode-back" href="../../pages/vayu.html#vayu.windRosePy.WindroseAxes.cla">[docs]</a>    <span class="k">def</span> <span class="nf">cla</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Clear the current axes</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">PolarAxes</span><span class="o">.</span><span class="n">cla</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">theta_angles</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">360</span><span class="p">,</span> <span class="mi">45</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">theta_labels</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;E&quot;</span><span class="p">,</span> <span class="s2">&quot;N-E&quot;</span><span class="p">,</span> <span class="s2">&quot;N&quot;</span><span class="p">,</span> <span class="s2">&quot;N-W&quot;</span><span class="p">,</span> <span class="s2">&quot;W&quot;</span><span class="p">,</span> <span class="s2">&quot;S-W&quot;</span><span class="p">,</span> <span class="s2">&quot;S&quot;</span><span class="p">,</span> <span class="s2">&quot;S-E&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_thetagrids</span><span class="p">(</span><span class="n">angles</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">theta_angles</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">theta_labels</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_info</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;dir&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(),</span> <span class="s2">&quot;bins&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(),</span> <span class="s2">&quot;table&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">()}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">patches_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">calm_count</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+    <span class="k">def</span> <span class="nf">_colors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cmap</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a list of n colors based on the colormap cmap</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">cmap</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">n</span><span class="p">)]</span>
+
+<div class="viewcode-block" id="WindroseAxes.set_radii_angle"><a class="viewcode-back" href="../../pages/vayu.html#vayu.windRosePy.WindroseAxes.set_radii_angle">[docs]</a>    <span class="k">def</span> <span class="nf">set_radii_angle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the radii labels angle</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;labels&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">angle</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;angle&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">angle</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">angle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">radii_angle</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">radii_angle</span> <span class="o">=</span> <span class="n">angle</span>
+        <span class="n">N</span> <span class="o">=</span> <span class="mi">5</span>
+        <span class="n">rmax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_rmax</span><span class="p">()</span>
+        <span class="n">radii</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">rmax</span><span class="p">,</span> <span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">rmax</span> <span class="o">%</span> <span class="n">N</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">fmt</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">fmt</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%.1f</span><span class="s2">&quot;</span>
+        <span class="n">radii_labels</span> <span class="o">=</span> <span class="p">[</span><span class="n">fmt</span> <span class="o">%</span> <span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">radii</span><span class="p">]</span>
+        <span class="c1"># radii_labels[0] = &quot;&quot;  # Removing label 0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_rgrids</span><span class="p">(</span>
+            <span class="n">radii</span><span class="o">=</span><span class="n">radii</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">labels</span><span class="o">=</span><span class="n">radii_labels</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">angle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">radii_angle</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+        <span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">rmax</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">rmax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_info</span><span class="p">[</span><span class="s2">&quot;table&quot;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+        <span class="n">calm_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calm_count</span> <span class="ow">or</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_rmax</span><span class="p">(</span><span class="n">rmax</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rmax</span> <span class="o">+</span> <span class="n">calm_count</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_radii_angle</span><span class="p">(</span><span class="n">angle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">radii_angle</span><span class="p">)</span>
+
+<div class="viewcode-block" id="WindroseAxes.legend"><a class="viewcode-back" href="../../pages/vayu.html#vayu.windRosePy.WindroseAxes.legend">[docs]</a>    <span class="k">def</span> <span class="nf">legend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;lower left&quot;</span><span class="p">,</span> <span class="n">decimal_places</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets the legend location and her properties.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        loc : int, string or pair of floats, default: &#39;lower left&#39;</span>
+<span class="sd">            see :obj:`matplotlib.pyplot.legend`.</span>
+<span class="sd">        decimal_places : int, default 1</span>
+<span class="sd">            The decimal places of the formated legend</span>
+<span class="sd">        </span>
+<span class="sd">        Other Parameters</span>
+<span class="sd">        ----------------</span>
+<span class="sd">        isaxes : boolean, default True</span>
+<span class="sd">            whether this is an axes legend</span>
+<span class="sd">        prop : FontProperties(size=&#39;smaller&#39;)</span>
+<span class="sd">            the font property</span>
+<span class="sd">        borderpad : float</span>
+<span class="sd">            the fractional whitespace inside the legend border</span>
+<span class="sd">        shadow : boolean</span>
+<span class="sd">            if True, draw a shadow behind legend</span>
+<span class="sd">        labelspacing : float, 0.005</span>
+<span class="sd">            the vertical space between the legend entries</span>
+<span class="sd">        handlelenght : float, 0.05</span>
+<span class="sd">            the length of the legend lines</span>
+<span class="sd">        handletextsep : float, 0.02</span>
+<span class="sd">            the space between the legend line and legend text</span>
+<span class="sd">        borderaxespad : float, 0.02</span>
+<span class="sd">            the border between the axes and legend edge</span>
+<span class="sd">        kwarg</span>
+<span class="sd">            Every other kwarg argument supported by</span>
+<span class="sd">            :obj:`matplotlib.pyplot.legend`</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">def</span> <span class="nf">get_handles</span><span class="p">():</span>
+            <span class="n">handles</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">patches_list</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">mpl</span><span class="o">.</span><span class="n">patches</span><span class="o">.</span><span class="n">Polygon</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span>
+                    <span class="n">p</span><span class="p">,</span> <span class="n">mpl</span><span class="o">.</span><span class="n">patches</span><span class="o">.</span><span class="n">Rectangle</span>
+                <span class="p">):</span>
+                    <span class="n">color</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">get_facecolor</span><span class="p">()</span>
+                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">mpl</span><span class="o">.</span><span class="n">lines</span><span class="o">.</span><span class="n">Line2D</span><span class="p">):</span>
+                    <span class="n">color</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">get_color</span><span class="p">()</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;Can&#39;t handle patches&quot;</span><span class="p">)</span>
+                <span class="n">handles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="n">mpl</span><span class="o">.</span><span class="n">patches</span><span class="o">.</span><span class="n">Rectangle</span><span class="p">(</span>
+                        <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s2">&quot;black&quot;</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+            <span class="k">return</span> <span class="n">handles</span>
+
+        <span class="k">def</span> <span class="nf">get_labels</span><span class="p">(</span><span class="n">decimal_places</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">_decimal_places</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">decimal_places</span><span class="p">)</span>
+
+            <span class="n">fmt</span> <span class="o">=</span> <span class="s2">&quot;[%.&quot;</span> <span class="o">+</span> <span class="n">_decimal_places</span> <span class="o">+</span> <span class="s2">&quot;f &quot;</span> <span class="o">+</span> <span class="s2">&quot;: %0.&quot;</span> <span class="o">+</span> <span class="n">_decimal_places</span> <span class="o">+</span> <span class="s2">&quot;f&quot;</span>
+
+            <span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_info</span><span class="p">[</span><span class="s2">&quot;bins&quot;</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">locale</span><span class="o">.</span><span class="n">getlocale</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;fr_FR&quot;</span><span class="p">]:</span>
+                <span class="n">fmt</span> <span class="o">+=</span> <span class="s2">&quot;[&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">fmt</span> <span class="o">+=</span> <span class="s2">&quot;)&quot;</span>
+
+            <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="n">fmt</span> <span class="o">%</span> <span class="p">(</span><span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">labels</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)]</span>
+            <span class="k">return</span> <span class="n">labels</span>
+
+        <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;labels&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;handles&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="c1"># decimal_places = kwargs.pop(&#39;decimal_places&#39;, 1)</span>
+
+        <span class="n">handles</span> <span class="o">=</span> <span class="n">get_handles</span><span class="p">()</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="n">get_labels</span><span class="p">(</span><span class="n">decimal_places</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">legend_</span> <span class="o">=</span> <span class="n">mpl</span><span class="o">.</span><span class="n">legend</span><span class="o">.</span><span class="n">Legend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handles</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">legend_</span></div>
+
+<div class="viewcode-block" id="WindroseAxes.set_legend"><a class="viewcode-back" href="../../pages/vayu.html#vayu.windRosePy.WindroseAxes.set_legend">[docs]</a>    <span class="k">def</span> <span class="nf">set_legend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">pyplot_arguments</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s2">&quot;borderaxespad&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">pyplot_arguments</span><span class="p">:</span>
+            <span class="n">pyplot_arguments</span><span class="p">[</span><span class="s2">&quot;borderaxespad&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.10</span>
+        <span class="n">legend</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="o">**</span><span class="n">pyplot_arguments</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">setp</span><span class="p">(</span><span class="n">legend</span><span class="o">.</span><span class="n">get_texts</span><span class="p">(),</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">legend</span></div>
+
+    <span class="k">def</span> <span class="nf">_init_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">direction</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Internal method used by all plotting commands</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        direction : 1D array,</span>
+<span class="sd">            directions the wind blows from, North centred</span>
+<span class="sd">        var : 1D array,</span>
+<span class="sd">            values of the variable to compute. Typically the wind speeds</span>
+<span class="sd">        Other Parameters</span>
+<span class="sd">        ----------------</span>
+<span class="sd">        normed : boolean, default False</span>
+<span class="sd">        blowto : boolean, default False</span>
+<span class="sd">        colors : str or list of str, default None</span>
+<span class="sd">            The colors of the plot.</span>
+<span class="sd">        cmap : color map, default `jet`</span>
+<span class="sd">            A :obj:`matplotlib.cm` colormap for the plot.</span>
+<span class="sd">            Warning! It overrides `colors`.</span>
+<span class="sd">        weibull_factors :</span>
+<span class="sd">        mean_values :</span>
+<span class="sd">        frequency :</span>
+<span class="sd">        kwarg</span>
+<span class="sd">            Any argument accepted by :obj:`matplotlib.pyplot.plot`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># if weibull factors are entered overwrite direction and var</span>
+        <span class="k">if</span> <span class="s2">&quot;weibull_factors&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="ow">or</span> <span class="s2">&quot;mean_values&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;weibull_factors&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span> <span class="ow">and</span> <span class="s2">&quot;mean_values&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;cannot specify both weibull_factors and mean_values&quot;</span><span class="p">)</span>
+            <span class="n">statistic_type</span> <span class="o">=</span> <span class="s2">&quot;unset&quot;</span>
+            <span class="k">if</span> <span class="s2">&quot;weibull_factors&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+                <span class="n">statistic_type</span> <span class="o">=</span> <span class="s2">&quot;weibull&quot;</span>
+                <span class="n">val</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;weibull_factors&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="s2">&quot;mean_values&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+                <span class="n">statistic_type</span> <span class="o">=</span> <span class="s2">&quot;mean&quot;</span>
+                <span class="n">val</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;mean_values&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">val</span><span class="p">:</span>
+                <span class="k">if</span> <span class="s2">&quot;frequency&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                        <span class="s2">&quot;specify &#39;frequency&#39; argument for statistical input&quot;</span>
+                    <span class="p">)</span>
+                <span class="n">windFrequencies</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;frequency&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">windFrequencies</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">direction</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">direction</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">var</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">windFrequencies</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">direction</span><span class="p">):</span>
+                        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;len(frequency) != len(direction)&quot;</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">direction</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">var</span><span class="p">):</span>
+                        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;len(frequency) != len(direction)&quot;</span><span class="p">)</span>
+                <span class="n">windSpeeds</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">windDirections</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">dbin</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">direction</span><span class="p">)):</span>
+                    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">windFrequencies</span><span class="p">[</span><span class="n">dbin</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10000</span><span class="p">)):</span>
+                        <span class="k">if</span> <span class="n">statistic_type</span> <span class="o">==</span> <span class="s2">&quot;weibull&quot;</span><span class="p">:</span>
+                            <span class="n">windSpeeds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                                <span class="n">random</span><span class="o">.</span><span class="n">weibullvariate</span><span class="p">(</span><span class="n">var</span><span class="p">[</span><span class="n">dbin</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">var</span><span class="p">[</span><span class="n">dbin</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+                            <span class="p">)</span>
+                        <span class="k">elif</span> <span class="n">statistic_type</span> <span class="o">==</span> <span class="s2">&quot;mean&quot;</span><span class="p">:</span>
+                            <span class="n">windSpeeds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                                <span class="n">random</span><span class="o">.</span><span class="n">weibullvariate</span><span class="p">(</span><span class="n">var</span><span class="p">[</span><span class="n">dbin</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+                            <span class="p">)</span>
+                        <span class="n">windDirections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">direction</span><span class="p">[</span><span class="n">dbin</span><span class="p">])</span>
+                <span class="n">var</span><span class="p">,</span> <span class="n">direction</span> <span class="o">=</span> <span class="n">windSpeeds</span><span class="p">,</span> <span class="n">windDirections</span>
+
+        <span class="c1"># self.cla()</span>
+        <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;zorder&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="c1"># Init of the bins array if not set</span>
+        <span class="n">bins</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;bins&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">bins</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">var</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">var</span><span class="p">),</span> <span class="mi">6</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">bins</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">var</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">var</span><span class="p">),</span> <span class="n">bins</span><span class="p">)</span>
+        <span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">bins</span><span class="p">)</span>
+        <span class="n">nbins</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">bins</span><span class="p">)</span>
+
+        <span class="c1"># Number of sectors</span>
+        <span class="n">nsector</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;nsector&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">nsector</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">nsector</span> <span class="o">=</span> <span class="mi">12</span>
+
+        <span class="c1"># Sets the colors table based on the colormap or the &quot;colors&quot; argument</span>
+        <span class="n">colors</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;colors&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">cmap</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;cmap&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">colors</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">colors</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="n">colors</span><span class="p">]</span> <span class="o">*</span> <span class="n">nbins</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">colors</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">colors</span><span class="p">)</span> <span class="o">!=</span> <span class="n">nbins</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;colors and bins must have same length&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">cmap</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">cmap</span> <span class="o">=</span> <span class="n">mpl</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">jet</span>
+            <span class="n">colors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_colors</span><span class="p">(</span><span class="n">cmap</span><span class="p">,</span> <span class="n">nbins</span><span class="p">)</span>
+
+        <span class="c1"># Building the angles list</span>
+        <span class="n">angles</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="n">nsector</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span>
+
+        <span class="n">normed</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;normed&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="n">blowto</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;blowto&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+
+        <span class="c1"># Calm condition</span>
+        <span class="n">calm_limit</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;calm_limit&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">calm_limit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">var</span> <span class="o">&gt;</span> <span class="n">calm_limit</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">calm_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">var</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">normed</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">calm_count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calm_count</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
+            <span class="n">var</span> <span class="o">=</span> <span class="n">var</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+            <span class="n">direction</span> <span class="o">=</span> <span class="n">direction</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+
+        <span class="c1"># Set the global information dictionnary</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_info</span><span class="p">[</span><span class="s2">&quot;dir&quot;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_info</span><span class="p">[</span><span class="s2">&quot;bins&quot;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_info</span><span class="p">[</span><span class="s2">&quot;table&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">histogram</span><span class="p">(</span>
+            <span class="n">direction</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="n">bins</span><span class="p">,</span> <span class="n">nsector</span><span class="p">,</span> <span class="n">normed</span><span class="p">,</span> <span class="n">blowto</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">bins</span><span class="p">,</span> <span class="n">nbins</span><span class="p">,</span> <span class="n">nsector</span><span class="p">,</span> <span class="n">colors</span><span class="p">,</span> <span class="n">angles</span><span class="p">,</span> <span class="n">kwargs</span>
+
+    <span class="k">def</span> <span class="nf">_calm_circle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Draw the calm centered circle</span>
+<span class="sd">        and return the initial offset for plots methods</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">calm_count</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">calm_count</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">circle</span> <span class="o">=</span> <span class="n">mpl</span><span class="o">.</span><span class="n">patches</span><span class="o">.</span><span class="n">Circle</span><span class="p">(</span>
+                <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">calm_count</span><span class="p">,</span>
+                <span class="n">transform</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">transData</span><span class="o">.</span><span class="n">_b</span><span class="p">,</span>
+                <span class="n">color</span><span class="o">=</span><span class="n">CALM_CIRCLE_COLOR</span><span class="p">,</span>
+                <span class="n">alpha</span><span class="o">=</span><span class="n">CALM_CIRCLE_ALPHA</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_artist</span><span class="p">(</span><span class="n">circle</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">calm_count</span> <span class="ow">or</span> <span class="mi">0</span>
+
+<div class="viewcode-block" id="WindroseAxes.bar"><a class="viewcode-back" href="../../pages/vayu.html#vayu.windRosePy.WindroseAxes.bar">[docs]</a>    <span class="k">def</span> <span class="nf">bar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">direction</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot a windrose in bar mode. For each var bins and for each sector,</span>
+<span class="sd">        a colored bar will be draw on the axes.</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        direction : 1D array</span>
+<span class="sd">            directions the wind blows from, North centred</span>
+<span class="sd">        var : 1D array</span>
+<span class="sd">            values of the variable to compute. Typically the wind speeds.</span>
+<span class="sd">        Other Parameters</span>
+<span class="sd">        ----------------</span>
+<span class="sd">        nsector : integer, optional</span>
+<span class="sd">            number of sectors used to compute the windrose table. If not set,</span>
+<span class="sd">            nsectors=12, then each sector will be 360/12=22.5°, and the</span>
+<span class="sd">            resulting computed table will be aligned with the cardinals points.</span>
+<span class="sd">        bins : 1D array or integer, optional</span>
+<span class="sd">            number of bins, or a sequence of bins variable. If not set, bins=6</span>
+<span class="sd">            between min(`var`) and max(`var`).</span>
+<span class="sd">        blowto : bool, optional.</span>
+<span class="sd">            if True, the windrose will be pi rotated, to show where the wind</span>
+<span class="sd">            blow to (usefull for pollutant rose).</span>
+<span class="sd">        colors : string or tuple, optional</span>
+<span class="sd">            one string color (&#39;k&#39; or &#39;black&#39;), in this case all bins will be</span>
+<span class="sd">            plotted in this color; a tuple of matplotlib color args (string,</span>
+<span class="sd">            float, rgb, etc), different levels will be plotted</span>
+<span class="sd">            in different colors in the order specified.</span>
+<span class="sd">        cmap : a cm Colormap instance from :obj:`matplotlib.cm`, optional.</span>
+<span class="sd">            if cmap == None and colors == None, a default Colormap is used.</span>
+<span class="sd">        edgecolor : string, optional</span>
+<span class="sd">            The string color each edge box will be plotted.</span>
+<span class="sd">            Default : no edgecolor</span>
+<span class="sd">        opening : float, optional</span>
+<span class="sd">            between 0.0 and 1.0, to control the space between each sector (1.0</span>
+<span class="sd">            for no space)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">bins</span><span class="p">,</span> <span class="n">nbins</span><span class="p">,</span> <span class="n">nsector</span><span class="p">,</span> <span class="n">colors</span><span class="p">,</span> <span class="n">angles</span><span class="p">,</span> <span class="n">kwargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_init_plot</span><span class="p">(</span>
+            <span class="n">direction</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+        <span class="p">)</span>
+        <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;facecolor&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">edgecolor</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;edgecolor&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">edgecolor</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">edgecolor</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;edgecolor must be a string color&quot;</span><span class="p">)</span>
+        <span class="n">opening</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;opening&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">opening</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">opening</span> <span class="o">=</span> <span class="mf">0.8</span>
+        <span class="n">dtheta</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="n">nsector</span>
+        <span class="n">opening</span> <span class="o">=</span> <span class="n">dtheta</span> <span class="o">*</span> <span class="n">opening</span>
+
+        <span class="n">offs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_calm_circle</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nsector</span><span class="p">):</span>
+            <span class="n">offset</span> <span class="o">=</span> <span class="n">offs</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nbins</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">offset</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_info</span><span class="p">[</span><span class="s2">&quot;table&quot;</span><span class="p">][</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+                <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_info</span><span class="p">[</span><span class="s2">&quot;table&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+                <span class="n">zorder</span> <span class="o">=</span> <span class="n">ZBASE</span> <span class="o">+</span> <span class="n">nbins</span> <span class="o">-</span> <span class="n">i</span>
+                <span class="n">patch</span> <span class="o">=</span> <span class="n">mpl</span><span class="o">.</span><span class="n">patches</span><span class="o">.</span><span class="n">Rectangle</span><span class="p">(</span>
+                    <span class="p">(</span><span class="n">angles</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">-</span> <span class="n">opening</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">offset</span><span class="p">),</span>
+                    <span class="n">opening</span><span class="p">,</span>
+                    <span class="n">val</span><span class="p">,</span>
+                    <span class="n">facecolor</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                    <span class="n">edgecolor</span><span class="o">=</span><span class="n">edgecolor</span><span class="p">,</span>
+                    <span class="n">zorder</span><span class="o">=</span><span class="n">zorder</span><span class="p">,</span>
+                    <span class="o">**</span><span class="n">kwargs</span>
+                <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">patch</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">j</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">patches_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">patch</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="histogram"><a class="viewcode-back" href="../../pages/vayu.html#vayu.windRosePy.histogram">[docs]</a><span class="k">def</span> <span class="nf">histogram</span><span class="p">(</span><span class="n">direction</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="n">bins</span><span class="p">,</span> <span class="n">nsector</span><span class="p">,</span> <span class="n">normed</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">blowto</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">var</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">direction</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;var and direction must have same length&quot;</span><span class="p">)</span>
+
+    <span class="n">angle</span> <span class="o">=</span> <span class="mf">360.0</span> <span class="o">/</span> <span class="n">nsector</span>
+
+    <span class="n">dir_bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="n">angle</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">360.0</span> <span class="o">+</span> <span class="n">angle</span><span class="p">,</span> <span class="n">angle</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
+    <span class="n">dir_edges</span> <span class="o">=</span> <span class="n">dir_bins</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">dir_edges</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">dir_edges</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">dir_edges</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">dir_bins</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+    <span class="n">var_bins</span> <span class="o">=</span> <span class="n">bins</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">var_bins</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">blowto</span><span class="p">:</span>
+        <span class="n">direction</span> <span class="o">=</span> <span class="n">direction</span> <span class="o">+</span> <span class="mf">180.0</span>
+        <span class="n">direction</span><span class="p">[</span><span class="n">direction</span> <span class="o">&gt;=</span> <span class="mf">360.0</span><span class="p">]</span> <span class="o">=</span> <span class="n">direction</span><span class="p">[</span><span class="n">direction</span> <span class="o">&gt;=</span> <span class="mf">360.0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">360</span>
+
+    <span class="n">table</span> <span class="o">=</span> <span class="n">histogram2d</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">var</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">direction</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="p">[</span><span class="n">var_bins</span><span class="p">,</span> <span class="n">dir_bins</span><span class="p">],</span> <span class="n">normed</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="c1"># add the last value to the first to have the table of North winds</span>
+    <span class="n">table</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">table</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">table</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="c1"># and remove the last col</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="n">table</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">normed</span><span class="p">:</span>
+        <span class="n">table</span> <span class="o">=</span> <span class="n">table</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">/</span> <span class="n">table</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">dir_edges</span><span class="p">,</span> <span class="n">var_bins</span><span class="p">,</span> <span class="n">table</span></div>
+
+
+<span class="c1"># print(mydata.head())</span>
+
+
+<div class="viewcode-block" id="windRose"><a class="viewcode-back" href="../../pages/vayu.html#vayu.windRosePy.windRose">[docs]</a><span class="k">def</span> <span class="nf">windRose</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">pollutant</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; The plots show the proportion (here represented </span>
+<span class="sd">        as a percentage) of time that the wind is from </span>
+<span class="sd">        a certain angle and wind speed range.  </span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        df: data frame</span>
+<span class="sd">            data frame that contains wind speed</span>
+<span class="sd">            and wind direction</span>
+<span class="sd">        pollutant: type string</span>
+<span class="sd">            Name of pollutant for plot to graph</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">pm10</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">pm10</span>
+    <span class="n">o3</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">o3</span>
+    <span class="n">ws</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">ws</span>
+    <span class="n">wd</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">wd</span>
+    <span class="n">nox</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">nox</span>
+    <span class="n">no2</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">no2</span>
+    <span class="n">pm25</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">pm25</span>
+    <span class="k">if</span> <span class="n">pollutant</span> <span class="o">==</span> <span class="s2">&quot;pm25&quot;</span><span class="p">:</span>
+        <span class="n">pollutant</span> <span class="o">=</span> <span class="n">pm25</span>
+    <span class="k">elif</span> <span class="n">pollutant</span> <span class="o">==</span> <span class="s2">&quot;pm10&quot;</span><span class="p">:</span>
+        <span class="n">pollutant</span> <span class="o">=</span> <span class="n">pm10</span>
+    <span class="k">elif</span> <span class="n">pollutant</span> <span class="o">==</span> <span class="s2">&quot;nox&quot;</span><span class="p">:</span>
+        <span class="n">pollutant</span> <span class="o">=</span> <span class="n">nox</span>
+    <span class="k">elif</span> <span class="n">pollutant</span> <span class="o">==</span> <span class="s2">&quot;no2&quot;</span><span class="p">:</span>
+        <span class="n">pollutant</span> <span class="o">=</span> <span class="n">no2</span>
+
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">WindroseAxes</span><span class="o">.</span><span class="n">from_ax</span><span class="p">()</span>
+    <span class="n">wd</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">wd</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span>
+        <span class="n">wd</span><span class="p">,</span>
+        <span class="n">pollutant</span><span class="p">,</span>
+        <span class="n">normed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">opening</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+        <span class="n">edgecolor</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
+        <span class="n">bins</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">398</span><span class="p">],</span>
+        <span class="n">cmap</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">jet</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">mean_values</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_legend</span><span class="p">()</span></div>
+
+
+<span class="c1"># =============================================================================</span>
+<span class="c1"># df = pd.read_csv(&#39;mydata.csv&#39;)</span>
+<span class="c1"># windRose(df,&#39;pm25&#39;)</span>
+<span class="c1"># =============================================================================</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Sustainability Lab @ IIT Gandhinagar.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.0.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

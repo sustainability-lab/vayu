@@ -1,24 +1,66 @@
 #! /usr/bin/env python
-# -*- coding: utf-8 -*-
-"""
-    Setup file for vayu.
-    Use setup.cfg to configure your project.
 
-    This file was generated with PyScaffold 3.2.1.
-    PyScaffold helps you to put up the scaffold of your new Python project.
-    Learn more under: https://pyscaffold.org/
-"""
-import sys
+import codecs
+import os
 
-from pkg_resources import VersionConflict, require
-from setuptools import setup
+from setuptools import find_packages, setup
 
-try:
-    require("setuptools>=38.3")
-except VersionConflict:
-    print("Error: version of setuptools is too old (<38.3)!")
-    sys.exit(1)
+# get __version__ from _version.py
+ver_file = os.path.join('vayu', '_version.py')
+with open(ver_file) as f:
+    exec(f.read())
 
+DISTNAME = 'vayu'
+DESCRIPTION = 'Tools for Air Quality Data Analysis.'
+with codecs.open('README.md', encoding='utf-8-sig') as f:
+    LONG_DESCRIPTION = f.read()
+MAINTAINER = 'Sustainability-Lab@IITGN'
+MAINTAINER_EMAIL = 'apoorv.agnihotri@iitgn.ac.in, deepak.narayanan@iitgn.ac.in'
+URL = 'https://sustainability-lab.github.io/vayu'
+LICENSE = 'MIT'
+DOWNLOAD_URL = 'https://sustainability-lab.github.io/vayu'
+VERSION = __version__
+INSTALL_REQUIRES = [
+    'matplotlib', 'numpy', 
+    'pandas', 'geopandas', 'scipy', 
+    'scikit-learn', 'folium', 'plotly'
+    ]
+CLASSIFIERS = ['Intended Audience :: Science/Research',
+               'Intended Audience :: Developers',
+               'License :: OSI Approved',
+               'Programming Language :: Python',
+               'Topic :: Software Development',
+               'Topic :: Scientific/Engineering',
+               'Operating System :: Microsoft :: Windows',
+               'Operating System :: POSIX',
+               'Operating System :: Unix',
+               'Operating System :: MacOS',
+               'Programming Language :: Python :: 3.6',
+               'Programming Language :: Python :: 3.7']
+EXTRAS_REQUIRE = {
+    'tests': [
+        'pytest',
+        'pytest-cov'],
+    'docs': [
+        'sphinx',
+        'sphinx-gallery',
+        'sphinx_rtd_theme',
+        'numpydoc',
+    ]
+}
 
-if __name__ == "__main__":
-    setup(use_pyscaffold=True)
+setup(name=DISTNAME,
+      maintainer=MAINTAINER,
+      maintainer_email=MAINTAINER_EMAIL,
+      description=DESCRIPTION,
+      license=LICENSE,
+      url=URL,
+      version=VERSION,
+      download_url=DOWNLOAD_URL,
+      long_description=LONG_DESCRIPTION,
+      zip_safe=False,  # the package can run out of an .egg file
+      classifiers=CLASSIFIERS,
+      packages=find_packages(),
+      install_requires=INSTALL_REQUIRES,
+      extras_require=EXTRAS_REQUIRE,
+      python_requires='>=3.6')
