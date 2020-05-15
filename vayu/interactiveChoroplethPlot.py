@@ -1,11 +1,3 @@
-# -*- coding: utf-8 -*-
-
-"""
-Created on Mon Aug 26 15:30:00 2019
-@author: Tanmay Srivastava, Prerna Khanna
-"""
-#!/usr/bin/env python
-
 def interactiveChoroplethPlot(
   gdf,
   df,
@@ -27,7 +19,7 @@ def interactiveChoroplethPlot(
   ----------
 
   gdf: geo pandas data frame 
-       minimally containing DISTRICT	and geometry
+       minimally containing DISTRICT  and geometry
 
   df: data frame 
       minimally containing time stamps and pollutant value
