@@ -51,7 +51,7 @@ MANIFEST
 .vscode
 examples/data/shapeFiles/*
 *daily_44201_2018.csv
-*TimeSliderChoropleth.html
+examples/nbs/*.html
 Report/*
 temporary/*
 te.py
