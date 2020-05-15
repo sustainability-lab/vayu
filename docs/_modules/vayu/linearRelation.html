@@ -32,7 +32,9 @@
             
   <h1>Source code for vayu.linearRelation</h1><div class="highlight"><pre>
 <div class="viewcode-block" id="linearRelation"><a class="viewcode-back" href="../../pages/vayu.html#vayu.linearRelation.linearRelation">[docs]</a><span></span><span class="k">def</span> <span class="nf">linearRelation</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">pol1</span><span class="p">,</span> <span class="n">pol2</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Plots the slope `m` by fitting a linear model between</span>
+<span class="sd">    pol1 and plo2, i.e., plo1</span>
+
 <span class="sd">    This plot given two pollutants will graph the linear </span>
 <span class="sd">    relationship. The df given will be converted to the slope</span>
 <span class="sd">    between the pollutants. </span>
@@ -86,15 +88,20 @@
         <span class="n">df_new</span> <span class="o">=</span> <span class="n">df_new</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s2">&quot;ffill&quot;</span><span class="p">)</span>
         <span class="n">df_new</span><span class="p">[</span><span class="s2">&quot;month&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_new</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">month</span>
         <span class="c1"># df_new.index.dayofweek</span>
-        <span class="n">nox</span> <span class="o">=</span> <span class="n">df_new</span><span class="p">[</span><span class="n">pol1</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
-        <span class="n">so2</span> <span class="o">=</span> <span class="n">df_new</span><span class="p">[</span><span class="n">pol2</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
-        <span class="n">values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">so2</span> <span class="o">/</span> <span class="n">nox</span><span class="p">)</span>
+        <span class="n">pol_1</span> <span class="o">=</span> <span class="n">df_new</span><span class="p">[</span><span class="n">pol1</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="c1"># this might not be entirely correct.</span>
+        <span class="c1"># TODO: we want to take the average of the slope.</span>
+        <span class="c1"># [Not take the average and find the slope]</span>
+        <span class="c1"># Additionally, we would like to have the option of</span>
+        <span class="c1"># changing the granularity.</span>
+        <span class="n">pol_2</span> <span class="o">=</span> <span class="n">df_new</span><span class="p">[</span><span class="n">pol2</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="n">values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pol_2</span> <span class="o">/</span> <span class="n">pol_1</span><span class="p">)</span>
         <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
     <span class="n">df_1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
     <span class="n">df_1</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;div&quot;</span><span class="p">]</span>
-    <span class="c1"># print(df_1)</span>
-    <span class="sd">&quot;&quot;&quot; Creats a df for the first polutant that </span>
-<span class="sd">        contains thea average value for every month</span>
+    
+    <span class="sd">&quot;&quot;&quot; Creates a df for the first polutant that </span>
+<span class="sd">        contains the average value for every month</span>
 <span class="sd">        of every year given</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">var1</span> <span class="o">=</span> <span class="p">[]</span>
@@ -118,8 +125,8 @@
             <span class="n">var1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mean_var1</span><span class="p">)</span>
             <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
 
-    <span class="sd">&quot;&quot;&quot; Creats a df for the second polutant that </span>
-<span class="sd">        contains thea average value for every month</span>
+    <span class="sd">&quot;&quot;&quot; Creates a df for the second polutant that </span>
+<span class="sd">        contains the average value for every month</span>
 <span class="sd">        of every year given</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
@@ -140,6 +147,7 @@
             <span class="n">mean_var2</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">pol2</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
             <span class="n">var2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mean_var2</span><span class="p">)</span>
             <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
+
     <span class="sd">&quot;&quot;&quot; Finds the slope of the new dataframe</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">res</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="o">/</span> <span class="n">j</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">var2</span><span class="p">,</span> <span class="n">var1</span><span class="p">)]</span>
@@ -163,25 +171,29 @@
 <span class="sd">        two pollutants given for every year. That plot is then superimposed </span>
 <span class="sd">        with a scatter plot of the average value of every month of every year</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
     <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">)</span>
     <span class="n">ax2</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;2&quot;</span><span class="p">,</span> <span class="n">frame_on</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">bottom</span><span class="o">=</span><span class="mf">0.015</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="mf">0.040</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df_1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df_1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;average slope between </span><span class="si">{pol1}</span><span class="s2"> &amp; </span><span class="si">{pol2}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Year&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">pol2</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">pol1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Pollutant ratio (</span><span class="si">{pol2}</span><span class="s2">/</span><span class="si">{pol1}</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
-
-    <span class="n">ax2</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">scatterY</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">unique_years</span><span class="p">)</span>
+  
+    <span class="n">ax2</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">scatterY</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;average value of (&quot;</span> <span class="o">+</span> <span class="n">pol2</span> <span class="o">+</span> 
+                <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">pol1</span> <span class="o">+</span> <span class="s2">&quot;) for every month of year&quot;</span><span class="p">)</span>
     <span class="n">ax2</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">tick_top</span><span class="p">()</span>
     <span class="n">ax2</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">tick_right</span><span class="p">()</span>
     <span class="n">ax2</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_label_position</span><span class="p">(</span><span class="s2">&quot;top&quot;</span><span class="p">)</span>
     <span class="n">ax2</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_label_position</span><span class="p">(</span><span class="s2">&quot;right&quot;</span><span class="p">)</span>
     <span class="n">ax2</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">)</span>
     <span class="n">ax2</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">)</span>
-
+    
+    <span class="n">fig</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper right&quot;</span><span class="p">,</span> <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">1.1</span><span class="p">,</span><span class="mf">1.1</span><span class="p">))</span>
+    
     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
 
 

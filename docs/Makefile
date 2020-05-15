@@ -33,7 +33,7 @@ clean:
 github:
 # 	@make environment
 	@make clean
-	@$(SPHINXAPIDOC) -o "$(APIDOCOUTDIR)" "$(PROJDIR)"
+	@$(SPHINXAPIDOC) -f -o "$(APIDOCOUTDIR)" "$(PROJDIR)"
 	@make html
 	@cp -a _build/html/. ../docs
 	@rm -r _build/html/

@@ -142,13 +142,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">set_rmax</span><span class="p">(</span><span class="n">rmax</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rmax</span> <span class="o">+</span> <span class="n">calm_count</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_radii_angle</span><span class="p">(</span><span class="n">angle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">radii_angle</span><span class="p">)</span>
 
-<div class="viewcode-block" id="WindroseAxes.legend"><a class="viewcode-back" href="../../pages/vayu.html#vayu.windRosePy.WindroseAxes.legend">[docs]</a>    <span class="k">def</span> <span class="nf">legend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;lower left&quot;</span><span class="p">,</span> <span class="n">decimal_places</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="WindroseAxes.legend"><a class="viewcode-back" href="../../pages/vayu.html#vayu.windRosePy.WindroseAxes.legend">[docs]</a>    <span class="k">def</span> <span class="nf">legend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pollutantName</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper right&quot;</span><span class="p">,</span> <span class="n">decimal_places</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Sets the legend location and her properties.</span>
 <span class="sd">        </span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        loc : int, string or pair of floats, default: &#39;lower left&#39;</span>
+<span class="sd">        loc : int, string or pair of floats, default: &#39;upper right&#39;</span>
 <span class="sd">            see :obj:`matplotlib.pyplot.legend`.</span>
 <span class="sd">        decimal_places : int, default 1</span>
 <span class="sd">            The decimal places of the formated legend</span>
@@ -179,6 +179,10 @@
 
         <span class="k">def</span> <span class="nf">get_handles</span><span class="p">():</span>
             <span class="n">handles</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+            <span class="n">handles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">mpl</span><span class="o">.</span><span class="n">patches</span><span class="o">.</span><span class="n">Rectangle</span><span class="p">(</span>
+                        <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span>
+                    <span class="p">))</span>
             <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">patches_list</span><span class="p">:</span>
                 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">mpl</span><span class="o">.</span><span class="n">patches</span><span class="o">.</span><span class="n">Polygon</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span>
                     <span class="n">p</span><span class="p">,</span> <span class="n">mpl</span><span class="o">.</span><span class="n">patches</span><span class="o">.</span><span class="n">Rectangle</span>
@@ -195,7 +199,7 @@
                 <span class="p">)</span>
             <span class="k">return</span> <span class="n">handles</span>
 
-        <span class="k">def</span> <span class="nf">get_labels</span><span class="p">(</span><span class="n">decimal_places</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">get_labels</span><span class="p">(</span><span class="n">pollutantName</span><span class="p">,</span> <span class="n">decimal_places</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
             <span class="n">_decimal_places</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">decimal_places</span><span class="p">)</span>
 
             <span class="n">fmt</span> <span class="o">=</span> <span class="s2">&quot;[%.&quot;</span> <span class="o">+</span> <span class="n">_decimal_places</span> <span class="o">+</span> <span class="s2">&quot;f &quot;</span> <span class="o">+</span> <span class="s2">&quot;: %0.&quot;</span> <span class="o">+</span> <span class="n">_decimal_places</span> <span class="o">+</span> <span class="s2">&quot;f&quot;</span>
@@ -216,6 +220,7 @@
 
         <span class="n">handles</span> <span class="o">=</span> <span class="n">get_handles</span><span class="p">()</span>
         <span class="n">labels</span> <span class="o">=</span> <span class="n">get_labels</span><span class="p">(</span><span class="n">decimal_places</span><span class="p">)</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="s2">&quot;Pollution levels (</span><span class="si">{pollutantName}</span><span class="s2">)&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">labels</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">legend_</span> <span class="o">=</span> <span class="n">mpl</span><span class="o">.</span><span class="n">legend</span><span class="o">.</span><span class="n">Legend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handles</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">legend_</span></div>
 
@@ -479,27 +484,13 @@
 <span class="sd">        pollutant: type string</span>
 <span class="sd">            Name of pollutant for plot to graph</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">pm10</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">pm10</span>
-    <span class="n">o3</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">o3</span>
-    <span class="n">ws</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">ws</span>
-    <span class="n">wd</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">wd</span>
-    <span class="n">nox</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">nox</span>
-    <span class="n">no2</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">no2</span>
-    <span class="n">pm25</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">pm25</span>
-    <span class="k">if</span> <span class="n">pollutant</span> <span class="o">==</span> <span class="s2">&quot;pm25&quot;</span><span class="p">:</span>
-        <span class="n">pollutant</span> <span class="o">=</span> <span class="n">pm25</span>
-    <span class="k">elif</span> <span class="n">pollutant</span> <span class="o">==</span> <span class="s2">&quot;pm10&quot;</span><span class="p">:</span>
-        <span class="n">pollutant</span> <span class="o">=</span> <span class="n">pm10</span>
-    <span class="k">elif</span> <span class="n">pollutant</span> <span class="o">==</span> <span class="s2">&quot;nox&quot;</span><span class="p">:</span>
-        <span class="n">pollutant</span> <span class="o">=</span> <span class="n">nox</span>
-    <span class="k">elif</span> <span class="n">pollutant</span> <span class="o">==</span> <span class="s2">&quot;no2&quot;</span><span class="p">:</span>
-        <span class="n">pollutant</span> <span class="o">=</span> <span class="n">no2</span>
+    <span class="n">pollutantSeries</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">pollutant</span><span class="p">]</span>
 
     <span class="n">ax</span> <span class="o">=</span> <span class="n">WindroseAxes</span><span class="o">.</span><span class="n">from_ax</span><span class="p">()</span>
     <span class="n">wd</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">wd</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span>
         <span class="n">wd</span><span class="p">,</span>
-        <span class="n">pollutant</span><span class="p">,</span>
+        <span class="n">pollutantSeries</span><span class="p">,</span>
         <span class="n">normed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">opening</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
         <span class="n">edgecolor</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
@@ -507,7 +498,9 @@
         <span class="n">cmap</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">jet</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">mean_values</span> <span class="o">=</span> <span class="kc">True</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_legend</span><span class="p">()</span></div>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_legend</span><span class="p">(</span><span class="n">pollutantName</span> <span class="o">=</span> <span class="n">pollutant</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Distribution of Pollution Levels w.r.t. Wind Direction&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ax</span></div>
 
 
 <span class="c1"># =============================================================================</span>

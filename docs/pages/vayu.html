@@ -113,9 +113,11 @@ longitude, latitude, and AQI</p></li>
 </div>
 <div class="section" id="module-vayu.interactiveChoroplethPlot">
 <span id="vayu-interactivechoroplethplot-module"></span><h2>vayu.interactiveChoroplethPlot module<a class="headerlink" href="#module-vayu.interactiveChoroplethPlot" title="Permalink to this headline">¶</a></h2>
+<p>Created on Mon Aug 26 15:30:00 2019
+&#64;author: Tanmay Srivastava, Prerna Khanna</p>
 <dl class="py function">
 <dt id="vayu.interactiveChoroplethPlot.interactiveChoroplethPlot">
-<code class="sig-prename descclassname">vayu.interactiveChoroplethPlot.</code><code class="sig-name descname">interactiveChoroplethPlot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gdf</span></em>, <em class="sig-param"><span class="n">df</span></em>, <em class="sig-param"><span class="n">date_time_col_name</span></em>, <em class="sig-param"><span class="n">value_col_name</span></em>, <em class="sig-param"><span class="n">dist_col_name</span></em>, <em class="sig-param"><span class="n">start_date</span></em>, <em class="sig-param"><span class="n">end_date</span></em>, <em class="sig-param"><span class="n">pollutant_ID</span></em>, <em class="sig-param"><span class="n">opacity</span><span class="o">=</span><span class="default_value">0.4</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vayu/interactiveChoroplethPlot.html#interactiveChoroplethPlot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vayu.interactiveChoroplethPlot.interactiveChoroplethPlot" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">vayu.interactiveChoroplethPlot.</code><code class="sig-name descname">interactiveChoroplethPlot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gdf</span></em>, <em class="sig-param"><span class="n">df</span></em>, <em class="sig-param"><span class="n">pollutant</span></em>, <em class="sig-param"><span class="n">country</span></em>, <em class="sig-param"><span class="n">date_time_col_name</span></em>, <em class="sig-param"><span class="n">value_col_name</span></em>, <em class="sig-param"><span class="n">dist_col_name</span></em>, <em class="sig-param"><span class="n">start_date</span></em>, <em class="sig-param"><span class="n">end_date</span></em>, <em class="sig-param"><span class="n">opacity</span><span class="o">=</span><span class="default_value">0.4</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vayu/interactiveChoroplethPlot.html#interactiveChoroplethPlot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vayu.interactiveChoroplethPlot.interactiveChoroplethPlot" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>Plots an Interactive Choropleth Plot</dt><dd><p>of a given pollutant for given duration
 of time.</p>
@@ -126,6 +128,8 @@ of time.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>gdf</strong> (<em>geo pandas data frame</em>) – minimally containing DISTRICT    and geometry</p></li>
 <li><p><strong>df</strong> (<em>data frame</em>) – minimally containing time stamps and pollutant value</p></li>
+<li><p><strong>pollutant</strong> (<em>type string</em>) – Name of pollutant ex: ‘pm25’</p></li>
+<li><p><strong>India</strong> (<em>type string</em>) – Name of country ex: ‘India’</p></li>
 <li><p><strong>date_time_col_name</strong> (<em>type string</em>) – name of column in df having time stamps</p></li>
 <li><p><strong>value_col_name</strong> (<em>type string</em>) – name of column in df having value of pollutant concentration</p></li>
 <li><p><strong>dist_col_name</strong> (<em>type string</em>) – name of column in df having district number</p></li>
@@ -133,8 +137,6 @@ of time.</p>
 ex : ‘2019-08-20-06:00’</p></li>
 <li><p><strong>end_date</strong> (<em>type string</em>) – time stamp corresponding to end date,
 ex : ‘2019-08-20-23:00’</p></li>
-<li><p><strong>pollutant_ID</strong> (<em>type integer</em>) – A pollutant ID correspoinding to
-a pollutant, ex: 3 for PM2.5</p></li>
 <li><p><strong>opacity</strong> (<em>type float</em>) – A float value in range 0 to 1
 1 represents maximum opacity</p></li>
 </ul>
@@ -182,7 +184,9 @@ training points used.</p></li>
 <dl class="py function">
 <dt id="vayu.linearRelation.linearRelation">
 <code class="sig-prename descclassname">vayu.linearRelation.</code><code class="sig-name descname">linearRelation</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span></em>, <em class="sig-param"><span class="n">pol1</span></em>, <em class="sig-param"><span class="n">pol2</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vayu/linearRelation.html#linearRelation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vayu.linearRelation.linearRelation" title="Permalink to this definition">¶</a></dt>
-<dd><p>This plot given two pollutants will graph the linear
+<dd><p>Plots the slope <cite>m</cite> by fitting a linear model between
+pol1 and plo2, i.e., plo1</p>
+<p>This plot given two pollutants will graph the linear
 relationship. The df given will be converted to the slope
 between the pollutants.</p>
 <dl class="field-list simple">
@@ -495,12 +499,12 @@ for no space)</p></li>
 
 <dl class="py method">
 <dt id="vayu.windRosePy.WindroseAxes.legend">
-<code class="sig-name descname">legend</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">loc</span><span class="o">=</span><span class="default_value">'lower left'</span></em>, <em class="sig-param"><span class="n">decimal_places</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vayu/windRosePy.html#WindroseAxes.legend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vayu.windRosePy.WindroseAxes.legend" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">legend</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pollutantName</span></em>, <em class="sig-param"><span class="n">loc</span><span class="o">=</span><span class="default_value">'upper right'</span></em>, <em class="sig-param"><span class="n">decimal_places</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vayu/windRosePy.html#WindroseAxes.legend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vayu.windRosePy.WindroseAxes.legend" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets the legend location and her properties.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>loc</strong> (<em>int</em><em>, </em><em>string</em><em> or </em><em>pair of floats</em><em>, </em><em>default: 'lower left'</em>) – see <code class="xref py py-obj docutils literal notranslate"><span class="pre">matplotlib.pyplot.legend</span></code>.</p></li>
+<li><p><strong>loc</strong> (<em>int</em><em>, </em><em>string</em><em> or </em><em>pair of floats</em><em>, </em><em>default: 'upper right'</em>) – see <code class="xref py py-obj docutils literal notranslate"><span class="pre">matplotlib.pyplot.legend</span></code>.</p></li>
 <li><p><strong>decimal_places</strong> (<em>int</em><em>, </em><em>default 1</em>) – The decimal places of the formated legend</p></li>
 </ul>
 </dd>

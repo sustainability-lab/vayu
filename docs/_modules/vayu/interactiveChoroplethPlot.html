@@ -31,19 +31,28 @@
           <div class="body" role="main">
             
   <h1>Source code for vayu.interactiveChoroplethPlot</h1><div class="highlight"><pre>
-<div class="viewcode-block" id="interactiveChoroplethPlot"><a class="viewcode-back" href="../../pages/vayu.html#vayu.interactiveChoroplethPlot.interactiveChoroplethPlot">[docs]</a><span></span><span class="k">def</span> <span class="nf">interactiveChoroplethPlot</span><span class="p">(</span>
-    <span class="n">gdf</span><span class="p">,</span>
-    <span class="n">df</span><span class="p">,</span>
-    <span class="n">date_time_col_name</span><span class="p">,</span>
-    <span class="n">value_col_name</span><span class="p">,</span>
-    <span class="n">dist_col_name</span><span class="p">,</span>
-    <span class="n">start_date</span><span class="p">,</span>
-    <span class="n">end_date</span><span class="p">,</span>
-    <span class="n">pollutant_ID</span><span class="p">,</span>
-    <span class="n">opacity</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span>
-<span class="p">):</span>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 
-    <span class="sd">&quot;&quot;&quot; Plots an Interactive Choropleth Plot</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Created on Mon Aug 26 15:30:00 2019</span>
+<span class="sd">@author: Tanmay Srivastava, Prerna Khanna</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1">#!/usr/bin/env python</span>
+
+<div class="viewcode-block" id="interactiveChoroplethPlot"><a class="viewcode-back" href="../../pages/vayu.html#vayu.interactiveChoroplethPlot.interactiveChoroplethPlot">[docs]</a><span class="k">def</span> <span class="nf">interactiveChoroplethPlot</span><span class="p">(</span>
+  <span class="n">gdf</span><span class="p">,</span>
+  <span class="n">df</span><span class="p">,</span>
+  <span class="n">pollutant</span><span class="p">,</span>
+  <span class="n">country</span><span class="p">,</span>
+  <span class="n">date_time_col_name</span><span class="p">,</span>
+  <span class="n">value_col_name</span><span class="p">,</span>
+  <span class="n">dist_col_name</span><span class="p">,</span>
+  <span class="n">start_date</span><span class="p">,</span>
+  <span class="n">end_date</span><span class="p">,</span>
+  <span class="n">opacity</span> <span class="o">=</span> <span class="mf">0.4</span>
+  <span class="p">):</span>
+  
+  <span class="sd">&quot;&quot;&quot; Plots an Interactive Choropleth Plot</span>
 <span class="sd">      of a given pollutant for given duration </span>
 <span class="sd">      of time.</span>
 
@@ -55,6 +64,12 @@
 
 <span class="sd">  df: data frame </span>
 <span class="sd">      minimally containing time stamps and pollutant value</span>
+
+<span class="sd">  pollutant: type string</span>
+<span class="sd">             Name of pollutant ex: &#39;pm25&#39;</span>
+<span class="sd">  </span>
+<span class="sd">  India: type string</span>
+<span class="sd">         Name of country ex: &#39;India&#39;            </span>
 
 <span class="sd">  date_time_col_name: type string</span>
 <span class="sd">                      name of column in df having time stamps</span>
@@ -72,114 +87,73 @@
 <span class="sd">  end_date: type string</span>
 <span class="sd">            time stamp corresponding to end date,</span>
 <span class="sd">            ex : &#39;2019-08-20-23:00&#39;</span>
-
-<span class="sd">  pollutant_ID: type integer</span>
-<span class="sd">              A pollutant ID correspoinding to </span>
-<span class="sd">              a pollutant, ex: 3 for PM2.5</span>
 <span class="sd">  </span>
 <span class="sd">  opacity: type float</span>
 <span class="sd">           A float value in range 0 to 1</span>
 <span class="sd">           1 represents maximum opacity           </span>
 <span class="sd">  &quot;&quot;&quot;</span>
-    <span class="kn">import</span> <span class="nn">plotly.graph_objects</span> <span class="k">as</span> <span class="nn">go</span>
-    <span class="kn">import</span> <span class="nn">plotly</span>
-    <span class="kn">from</span> <span class="nn">folium</span> <span class="k">import</span> <span class="n">IFrame</span>
-    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-    <span class="kn">import</span> <span class="nn">geopandas</span> <span class="k">as</span> <span class="nn">gpd</span>
-    <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-    <span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
-    <span class="kn">import</span> <span class="nn">folium</span>
-    <span class="kn">import</span> <span class="nn">branca.colormap</span> <span class="k">as</span> <span class="nn">cm</span>
-    <span class="kn">import</span> <span class="nn">json</span>
-    <span class="kn">from</span> <span class="nn">string</span> <span class="k">import</span> <span class="n">Template</span>
-    <span class="kn">from</span> <span class="nn">folium.plugins</span> <span class="k">import</span> <span class="n">TimeSliderChoropleth</span>
-    <span class="kn">from</span> <span class="nn">copy</span> <span class="k">import</span> <span class="n">deepcopy</span>
-    <span class="kn">import</span> <span class="nn">os</span>
+  <span class="kn">import</span> <span class="nn">plotly.graph_objects</span> <span class="k">as</span> <span class="nn">go</span>
+  <span class="kn">import</span> <span class="nn">plotly</span>
+  <span class="kn">from</span> <span class="nn">folium</span> <span class="k">import</span> <span class="n">IFrame</span>
+  <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+  <span class="kn">import</span> <span class="nn">geopandas</span> <span class="k">as</span> <span class="nn">gpd</span>
+  <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+  <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+  <span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+  <span class="kn">import</span> <span class="nn">folium</span>
+  <span class="kn">import</span> <span class="nn">branca.colormap</span> <span class="k">as</span> <span class="nn">cm</span>
+  <span class="kn">import</span> <span class="nn">json</span>
+  <span class="kn">from</span> <span class="nn">string</span> <span class="k">import</span> <span class="n">Template</span>
+  <span class="kn">from</span> <span class="nn">folium.plugins</span> <span class="k">import</span> <span class="n">TimeSliderChoropleth</span>
+  <span class="kn">from</span> <span class="nn">copy</span> <span class="k">import</span> <span class="n">deepcopy</span>
+  <span class="kn">import</span> <span class="nn">os</span>
+  <span class="kn">from</span> <span class="nn">.utils</span> <span class="k">import</span> <span class="n">Legend</span>
 
-    <span class="n">pollutants</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="mi">1</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;notation&quot;</span><span class="p">:</span> <span class="s2">&quot;SO2&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Sulphur dioxide&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;bin_edges&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">15</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">45</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">125</span><span class="p">,</span> <span class="mi">165</span><span class="p">,</span> <span class="mi">250</span><span class="p">]),</span>
-        <span class="p">},</span>
-        <span class="mi">2</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;notation&quot;</span><span class="p">:</span> <span class="s2">&quot;PM10&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Particulate matter &lt; 10 µm&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;bin_edges&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mi">200</span><span class="p">]),</span>
-        <span class="p">},</span>
-        <span class="mi">3</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;notation&quot;</span><span class="p">:</span> <span class="s2">&quot;PM2.5&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Particulate matter &lt; 2.5 µm&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;bin_edges&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">30</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">250</span><span class="p">,</span> <span class="mi">600</span><span class="p">]),</span>
-        <span class="p">},</span>
-        <span class="mi">4</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;notation&quot;</span><span class="p">:</span> <span class="s2">&quot;O3&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Ozone&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;bin_edges&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">30</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">110</span><span class="p">,</span> <span class="mi">145</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="mi">240</span><span class="p">,</span> <span class="mi">360</span><span class="p">]),</span>
-        <span class="p">},</span>
-        <span class="mi">5</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;notation&quot;</span><span class="p">:</span> <span class="s2">&quot;NO2&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Nitrogen dioxide&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;bin_edges&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">25</span><span class="p">,</span> <span class="mi">45</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">110</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">270</span><span class="p">,</span> <span class="mi">400</span><span class="p">]),</span>
-        <span class="p">},</span>
-        <span class="mi">6</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;notation&quot;</span><span class="p">:</span> <span class="s2">&quot;CO&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Carbon monoxide&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;bin_edges&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.4</span><span class="p">,</span> <span class="mf">2.1</span><span class="p">,</span> <span class="mf">2.8</span><span class="p">,</span> <span class="mf">3.6</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">,</span> <span class="mf">5.2</span><span class="p">,</span> <span class="mf">6.6</span><span class="p">,</span> <span class="mf">8.4</span><span class="p">,</span> <span class="mf">13.7</span><span class="p">]),</span>
-        <span class="p">},</span>
-        <span class="mi">7</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;notation&quot;</span><span class="p">:</span> <span class="s2">&quot;C6H6&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Benzene&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;bin_edges&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.25</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mf">2.75</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">7.5</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">]),</span>
-        <span class="p">},</span>
-    <span class="p">}</span>
-
-    <span class="k">def</span> <span class="nf">color_coding</span><span class="p">(</span><span class="n">poll</span><span class="p">,</span> <span class="n">bin_edges</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Maps polluatnt value to the bins</span>
+  <span class="k">def</span> <span class="nf">color_coding</span><span class="p">(</span><span class="n">poll</span><span class="p">,</span> <span class="n">bin_edges</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Maps polluatnt value to the bins</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-        <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">digitize</span><span class="p">(</span><span class="n">poll</span><span class="p">,</span> <span class="n">bin_edges</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">color_scale</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
-
-    <span class="k">def</span> <span class="nf">prepare_df</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Returns a df for selected time range </span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">digitize</span><span class="p">(</span><span class="n">poll</span><span class="p">,</span> <span class="n">bin_edges</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        
+    <span class="k">return</span> <span class="n">colors</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> 
+  
+  <span class="k">def</span> <span class="nf">prepare_df</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Returns a df for selected time range </span>
 <span class="sd">        and coverts timestamp to date time format.</span>
 <span class="sd">        Adds a color column according to the pollutant value.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span>
             <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">date_time_col_name</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">start_date</span><span class="p">)</span>
             <span class="o">&amp;</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">date_time_col_name</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">end_date</span><span class="p">)</span>
-        <span class="p">]</span>
-        <span class="n">time_</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">date_time_col_name</span><span class="p">]</span>
-        <span class="n">df</span><span class="p">[</span><span class="n">date_time_col_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">time_</span><span class="p">)</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">keys</span><span class="o">=</span><span class="p">[</span><span class="n">dist_col_name</span><span class="p">,</span> <span class="n">date_time_col_name</span><span class="p">])</span>
-        <span class="n">df</span><span class="p">[</span><span class="s2">&quot;color&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">value_col_name</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
-            <span class="n">color_coding</span><span class="p">,</span> <span class="n">bin_edges</span><span class="o">=</span><span class="n">pollutants</span><span class="p">[</span><span class="n">pollutant_ID</span><span class="p">][</span><span class="s2">&quot;bin_edges&quot;</span><span class="p">]</span>
-        <span class="p">)</span>
-        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
-
-        <span class="k">return</span> <span class="n">df</span>
-
-    <span class="k">def</span> <span class="nf">create_popup_df</span><span class="p">(</span><span class="n">plot</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Returns a df for selected time range.</span>
+            <span class="p">]</span>
+    <span class="n">time_</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">date_time_col_name</span><span class="p">]</span>
+    <span class="n">df</span><span class="p">[</span><span class="n">date_time_col_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">time_</span><span class="p">)</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="n">dist_col_name</span><span class="p">,</span> <span class="n">date_time_col_name</span><span class="p">])</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;color&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">value_col_name</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+        <span class="n">color_coding</span><span class="p">,</span> <span class="n">bin_edges</span> <span class="o">=</span> <span class="n">cvals</span>
+    <span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+    
+    <span class="k">return</span> <span class="n">df</span>
+    
+  <span class="k">def</span> <span class="nf">create_popup_df</span><span class="p">(</span><span class="n">plot</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Returns a df for selected time range.</span>
 <span class="sd">        Adds a color column according to the pollutant value.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-        <span class="n">plot</span> <span class="o">=</span> <span class="n">plot</span><span class="p">[</span>
+    <span class="n">plot</span> <span class="o">=</span> <span class="n">plot</span><span class="p">[</span>
             <span class="p">(</span><span class="n">plot</span><span class="p">[</span><span class="n">date_time_col_name</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">start_date</span><span class="p">)</span>
             <span class="o">&amp;</span> <span class="p">(</span><span class="n">plot</span><span class="p">[</span><span class="n">date_time_col_name</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">end_date</span><span class="p">)</span>
-        <span class="p">]</span>
-        <span class="n">plot</span> <span class="o">=</span> <span class="n">plot</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">keys</span><span class="o">=</span><span class="p">[</span><span class="n">dist_col_name</span><span class="p">,</span> <span class="n">date_time_col_name</span><span class="p">])</span>
-        <span class="n">plot</span><span class="p">[</span><span class="s2">&quot;color&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">plot</span><span class="p">[</span><span class="n">value_col_name</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
-            <span class="n">color_coding</span><span class="p">,</span> <span class="n">bin_edges</span><span class="o">=</span><span class="n">pollutants</span><span class="p">[</span><span class="n">pollutant_ID</span><span class="p">][</span><span class="s2">&quot;bin_edges&quot;</span><span class="p">]</span>
-        <span class="p">)</span>
-        <span class="n">plot</span> <span class="o">=</span> <span class="n">plot</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+            <span class="p">]</span>
+    <span class="n">plot</span> <span class="o">=</span> <span class="n">plot</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="n">dist_col_name</span><span class="p">,</span> <span class="n">date_time_col_name</span><span class="p">])</span>
+    <span class="n">plot</span><span class="p">[</span><span class="s2">&quot;color&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">plot</span><span class="p">[</span><span class="n">value_col_name</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+        <span class="n">color_coding</span><span class="p">,</span> <span class="n">bin_edges</span> <span class="o">=</span> <span class="n">cvals</span>
+    <span class="p">)</span>
+    <span class="n">plot</span> <span class="o">=</span> <span class="n">plot</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+    
+    <span class="k">return</span> <span class="n">plot</span>
 
-        <span class="k">return</span> <span class="n">plot</span>
-
-    <span class="k">def</span> <span class="nf">prepare_style_dict</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">opacity</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+  <span class="k">def</span> <span class="nf">prepare_style_dict</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">opacity</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Prepares a dictionary in the given format:</span>
 
 <span class="sd">    styledict = {</span>
@@ -194,112 +168,100 @@
 <span class="sd">            &#39;2017-1-2&#39;: {&#39;color&#39;: &#39;fffff0&#39;, &#39;opacity&#39;: 1}</span>
 <span class="sd">            ...</span>
 <span class="sd">            }</span>
-<span class="sd">          }&quot;&quot;&quot;</span>
+<span class="sd">          }&quot;&quot;&quot;</span>  
+                
+    <span class="n">features</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>  
 
-        <span class="n">features</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+      <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="n">dist_col_name</span><span class="p">]</span> <span class="ow">in</span> <span class="n">features</span><span class="p">:</span>    
+        <span class="n">features</span><span class="p">[</span><span class="n">row</span><span class="p">[</span><span class="n">dist_col_name</span><span class="p">]]</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">row</span><span class="p">[</span><span class="n">date_time_col_name</span><span class="p">]:</span> <span class="p">{</span><span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;color&#39;</span><span class="p">],</span><span class="s1">&#39;opacity&#39;</span><span class="p">:</span> <span class="n">opacity</span><span class="p">}</span>
+                                  <span class="p">})</span>   
+      <span class="k">else</span><span class="p">:</span>
+        <span class="n">feature</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">row</span><span class="p">[</span><span class="n">dist_col_name</span><span class="p">]</span> <span class="p">:</span> <span class="p">{</span>
+                <span class="n">row</span><span class="p">[</span><span class="n">date_time_col_name</span><span class="p">]:</span> <span class="p">{</span><span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;color&#39;</span><span class="p">],</span><span class="s1">&#39;opacity&#39;</span><span class="p">:</span> <span class="n">opacity</span><span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>    
+        <span class="n">features</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>  
 
-            <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="n">dist_col_name</span><span class="p">]</span> <span class="ow">in</span> <span class="n">features</span><span class="p">:</span>
-                <span class="n">features</span><span class="p">[</span><span class="n">row</span><span class="p">[</span><span class="n">dist_col_name</span><span class="p">]]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
-                    <span class="p">{</span>
-                        <span class="n">row</span><span class="p">[</span><span class="n">date_time_col_name</span><span class="p">]:</span> <span class="p">{</span>
-                            <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;color&quot;</span><span class="p">],</span>
-                            <span class="s2">&quot;opacity&quot;</span><span class="p">:</span> <span class="n">opacity</span><span class="p">,</span>
-                        <span class="p">}</span>
-                    <span class="p">}</span>
-                <span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">feature</span> <span class="o">=</span> <span class="p">{</span>
-                    <span class="n">row</span><span class="p">[</span><span class="n">dist_col_name</span><span class="p">]:</span> <span class="p">{</span>
-                        <span class="n">row</span><span class="p">[</span><span class="n">date_time_col_name</span><span class="p">]:</span> <span class="p">{</span>
-                            <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;color&quot;</span><span class="p">],</span>
-                            <span class="s2">&quot;opacity&quot;</span><span class="p">:</span> <span class="n">opacity</span><span class="p">,</span>
-                        <span class="p">}</span>
-                    <span class="p">}</span>
-                <span class="p">}</span>
-                <span class="n">features</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">features</span>
+    <span class="k">return</span> <span class="n">features</span> 
 
-    <span class="k">def</span> <span class="nf">create_popup</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">district</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Creates an interactive timeseries popup for</span>
+  <span class="k">def</span> <span class="nf">create_popup</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">district</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Creates an interactive timeseries popup for</span>
 <span class="sd">       each district.    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
-        <span class="n">district</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">district</span><span class="p">)</span>
-        <span class="n">i</span> <span class="o">=</span> <span class="n">index</span> <span class="o">*</span> <span class="mi">97</span>
-        <span class="n">j</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">97</span>
-        <span class="n">pop</span> <span class="o">=</span> <span class="n">plot</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">j</span><span class="p">]</span>
+    <span class="n">district</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">district</span><span class="p">)</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">index</span> <span class="o">*</span><span class="mi">97</span>
+    <span class="n">j</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">97</span>
+    <span class="n">pop</span> <span class="o">=</span> <span class="n">plot</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">j</span><span class="p">]</span>
 
-        <span class="n">fig</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">([</span><span class="n">go</span><span class="o">.</span><span class="n">Scatter</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">pop</span><span class="p">[</span><span class="n">date_time_col_name</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">pop</span><span class="p">[</span><span class="n">value_col_name</span><span class="p">])])</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">([</span><span class="n">go</span><span class="o">.</span><span class="n">Scatter</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">pop</span><span class="p">[</span><span class="n">date_time_col_name</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">pop</span><span class="p">[</span><span class="n">value_col_name</span><span class="p">])])</span>
+      
+    <span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="n">Legend</span><span class="o">.</span><span class="n">country_pollutants</span><span class="p">[</span><span class="n">country</span><span class="p">][</span><span class="n">pollutant</span><span class="p">][</span><span class="s2">&quot;notation&quot;</span><span class="p">],</span>            
+        <span class="n">xaxis_title</span><span class="o">=</span><span class="s2">&quot;Time Stamp&quot;</span><span class="p">,</span>
+      <span class="n">yaxis_title</span><span class="o">=</span><span class="s2">&quot;Pollutant Concentration (µg/m³)&quot;</span>
+      <span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">update_xaxes</span><span class="p">(</span><span class="n">showticklabels</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-        <span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
-            <span class="n">title</span><span class="o">=</span><span class="n">pollutants</span><span class="p">[</span><span class="n">pollutant_ID</span><span class="p">][</span><span class="s2">&quot;notation&quot;</span><span class="p">],</span>
-            <span class="n">xaxis_title</span><span class="o">=</span><span class="s2">&quot;Time Stamp&quot;</span><span class="p">,</span>
-            <span class="n">yaxis_title</span><span class="o">=</span><span class="s2">&quot;Pollutant Concentration (µg/m³)&quot;</span><span class="p">,</span>
-        <span class="p">)</span>
-        <span class="n">fig</span><span class="o">.</span><span class="n">update_xaxes</span><span class="p">(</span><span class="n">showticklabels</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">script</span> <span class="o">=</span> <span class="n">plotly</span><span class="o">.</span><span class="n">offline</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">include_plotlyjs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">output_type</span><span class="o">=</span><span class="s1">&#39;div&#39;</span><span class="p">)</span>  
 
-        <span class="n">script</span> <span class="o">=</span> <span class="n">plotly</span><span class="o">.</span><span class="n">offline</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">include_plotlyjs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">output_type</span><span class="o">=</span><span class="s2">&quot;div&quot;</span><span class="p">)</span>
+    <span class="n">html_start</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    &lt;html&gt;</span>
+<span class="s2">    &lt;head&gt;</span>
+<span class="s2">      &lt;script src=&quot;https://cdn.plot.ly/plotly-latest.min.js&quot;&gt;&lt;/script&gt;</span>
+<span class="s2">    &lt;/head&gt;</span>
+<span class="s2">    &lt;body&gt;</span>
+<span class="s2">    &lt;h1&gt;&quot;</span><span class="si">%s</span><span class="s2">&quot;&lt;/h1&gt;&quot;&quot;&quot;</span> <span class="o">%</span><span class="n">district</span>
 
-        <span class="n">html_start</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    &lt;html&gt;</span>
-<span class="sd">    &lt;head&gt;</span>
-<span class="sd">      &lt;script src=&quot;https://cdn.plot.ly/plotly-latest.min.js&quot;&gt;&lt;/script&gt;</span>
-<span class="sd">    &lt;/head&gt;</span>
-<span class="sd">    &lt;body&gt;</span>
-<span class="sd">    &lt;h1&gt;&quot;%s&quot;&lt;/h1&gt;&quot;&quot;&quot;</span>
-            <span class="o">%</span> <span class="n">district</span>
-        <span class="p">)</span>
-
-        <span class="n">html_end</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">html_end</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">    &lt;/body&gt;</span>
 <span class="s2">    &lt;/html&gt;&quot;&quot;&quot;</span>
 
-        <span class="n">html_final</span> <span class="o">=</span> <span class="n">html_start</span> <span class="o">+</span> <span class="n">script</span> <span class="o">+</span> <span class="n">html_end</span>
+    <span class="n">html_final</span> <span class="o">=</span> <span class="n">html_start</span> <span class="o">+</span> <span class="n">script</span> <span class="o">+</span> <span class="n">html_end</span>
 
-        <span class="n">resolution</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="mi">75</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">5</span>
-        <span class="n">iframe</span> <span class="o">=</span> <span class="n">IFrame</span><span class="p">(</span>
-            <span class="n">html_final</span><span class="p">,</span>
-            <span class="n">width</span><span class="o">=</span><span class="p">(</span><span class="n">width</span> <span class="o">*</span> <span class="n">resolution</span><span class="p">)</span> <span class="o">+</span> <span class="mi">75</span><span class="p">,</span>
-            <span class="n">height</span><span class="o">=</span><span class="p">(</span><span class="n">height</span> <span class="o">*</span> <span class="n">resolution</span><span class="p">)</span> <span class="o">+</span> <span class="mi">50</span><span class="p">,</span>
-        <span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">iframe</span>
-
-    <span class="k">def</span> <span class="nf">make_map</span><span class="p">(</span><span class="n">gdf</span><span class="p">,</span> <span class="n">geo</span><span class="p">,</span> <span class="n">features</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Returns a HTML file with time interactive choropleth plot</span>
+    <span class="n">resolution</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="mi">75</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">5</span>
+    <span class="n">iframe</span> <span class="o">=</span> <span class="n">IFrame</span><span class="p">(</span><span class="n">html_final</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="p">(</span><span class="n">width</span><span class="o">*</span><span class="n">resolution</span><span class="p">)</span><span class="o">+</span><span class="mi">75</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="p">(</span><span class="n">height</span><span class="o">*</span><span class="n">resolution</span><span class="p">)</span><span class="o">+</span><span class="mi">50</span><span class="p">)</span>
+  
+    <span class="k">return</span> <span class="n">iframe</span> 
+  
+  <span class="k">def</span> <span class="nf">make_map</span><span class="p">(</span><span class="n">gdf</span><span class="p">,</span> <span class="n">geo</span><span class="p">,</span> <span class="n">features</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Returns a HTML file with time interactive choropleth plot</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-        <span class="n">m</span> <span class="o">=</span> <span class="n">folium</span><span class="o">.</span><span class="n">Map</span><span class="p">([</span><span class="mi">22</span><span class="p">,</span> <span class="mi">82</span><span class="p">],</span> <span class="n">tiles</span><span class="o">=</span><span class="s2">&quot;Stamen Terrain&quot;</span><span class="p">,</span> <span class="n">zoom_start</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">folium</span><span class="o">.</span><span class="n">Map</span><span class="p">([</span><span class="mi">22</span><span class="p">,</span> <span class="mi">82</span><span class="p">],</span> <span class="n">tiles</span><span class="o">=</span><span class="s1">&#39;Stamen Terrain&#39;</span><span class="p">,</span> <span class="n">zoom_start</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 
-        <span class="n">g</span> <span class="o">=</span> <span class="n">TimeSliderChoropleth</span><span class="p">(</span><span class="n">geo</span><span class="p">,</span> <span class="n">styledict</span><span class="o">=</span><span class="n">features</span><span class="p">,)</span><span class="o">.</span><span class="n">add_to</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">TimeSliderChoropleth</span><span class="p">(</span>
+        <span class="n">geo</span><span class="p">,</span>
+        <span class="n">styledict</span> <span class="o">=</span> <span class="n">features</span><span class="p">,</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">add_to</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
 
-        <span class="n">colormap</span><span class="o">.</span><span class="n">add_to</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
-        <span class="n">style</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;fillColor&quot;</span><span class="p">:</span> <span class="s2">&quot;#00000000&quot;</span><span class="p">,</span> <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;#00000000&quot;</span><span class="p">}</span>
+    <span class="n">colormap</span><span class="o">.</span><span class="n">add_to</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+    <span class="n">style</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;fillColor&#39;</span><span class="p">:</span> <span class="s1">&#39;#00000000&#39;</span><span class="p">,</span> <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="s1">&#39;#00000000&#39;</span><span class="p">}</span>
 
-        <span class="c1">#### adding tooltip #####</span>
-        <span class="sd">&quot;&quot;&quot;folium.GeoJson(geo, tooltip = folium.features.GeoJsonTooltip(</span>
+    <span class="c1">#### adding tooltip #####</span>
+    <span class="sd">&#39;&#39;&#39;folium.GeoJson(geo, tooltip = folium.features.GeoJsonTooltip(</span>
 <span class="sd">        fields=[&#39;DISTRICT&#39;]),style_function=lambda x: style,</span>
-<span class="sd">        ).add_to(m)&quot;&quot;&quot;</span>
+<span class="sd">        ).add_to(m)&#39;&#39;&#39;</span>
 
-        <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">gdf</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
-            <span class="n">gs</span> <span class="o">=</span> <span class="n">folium</span><span class="o">.</span><span class="n">GeoJson</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;geometry&quot;</span><span class="p">],</span> <span class="n">style_function</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">style</span><span class="p">)</span>
-            <span class="n">label</span> <span class="o">=</span> <span class="n">create_popup</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;DISTRICT&quot;</span><span class="p">])</span>
+    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">gdf</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>  
+      <span class="n">gs</span> <span class="o">=</span> <span class="n">folium</span><span class="o">.</span><span class="n">GeoJson</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;geometry&#39;</span><span class="p">],</span><span class="n">style_function</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">style</span><span class="p">)</span>
+      <span class="n">label</span> <span class="o">=</span> <span class="n">create_popup</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;DISTRICT&#39;</span><span class="p">])</span>
 
-            <span class="n">folium</span><span class="o">.</span><span class="n">Popup</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">max_width</span><span class="o">=</span><span class="mi">2560</span><span class="p">)</span><span class="o">.</span><span class="n">add_to</span><span class="p">(</span><span class="n">gs</span><span class="p">)</span>
-            <span class="n">gs</span><span class="o">.</span><span class="n">add_to</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+      <span class="n">folium</span><span class="o">.</span><span class="n">Popup</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">max_width</span><span class="o">=</span><span class="mi">2560</span><span class="p">)</span><span class="o">.</span><span class="n">add_to</span><span class="p">(</span><span class="n">gs</span><span class="p">)</span>
+      <span class="n">gs</span><span class="o">.</span><span class="n">add_to</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+      
+      <span class="k">if</span><span class="p">(</span><span class="n">index</span><span class="o">%</span><span class="mi">20</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Done for Districts &quot;</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="s2">&quot; out of 640&quot;</span><span class="p">)</span>
+    
+    <span class="n">m</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;TimeSliderChoropleth.html&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Map created&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">m</span>
 
-            <span class="k">if</span> <span class="n">index</span> <span class="o">%</span> <span class="mi">20</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Done for Districts &quot;</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="s2">&quot; out of 640&quot;</span><span class="p">)</span>
-
-        <span class="n">m</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;TimeSliderChoropleth.html&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Map created&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">m</span>
-
-    <span class="k">def</span> <span class="nf">change_style</span><span class="p">(</span><span class="n">map_</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Changes time slider style.</span>
+  <span class="k">def</span> <span class="nf">change_style</span><span class="p">(</span><span class="n">map_</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Changes time slider style.</span>
 <span class="sd">       Makes the slider background transparent.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-        <span class="n">style_add</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">style_add</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">    &lt;style&gt;</span>
 <span class="s2">      .slidecontainer {</span>
 <span class="s2">        width: 90%;</span>
@@ -336,19 +298,17 @@
 <span class="s2">    }</span>
 <span class="s2">      &lt;/style&gt;</span>
 <span class="s2">    &quot;&quot;&quot;</span>
-        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="s2">&quot;TimeSliderChoropleth.html&quot;</span><span class="p">),</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-        <span class="n">insert_pos_1</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">find</span><span class="p">(</span>
-            <span class="sd">&quot;&quot;&quot;&lt;script src=&quot;https://d3js.org/d3.v4.min.js&quot;&gt;&lt;/script&gt;&quot;&quot;&quot;</span>
-        <span class="p">)</span>
-        <span class="n">g</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-        <span class="n">g</span> <span class="o">=</span> <span class="n">f</span><span class="p">[:</span><span class="n">insert_pos_1</span><span class="p">]</span> <span class="o">+</span> <span class="n">style_add</span> <span class="o">+</span> <span class="n">f</span><span class="p">[</span><span class="n">insert_pos_1</span><span class="p">:]</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="s1">&#39;TimeSliderChoropleth.html&#39;</span><span class="p">),</span><span class="s2">&quot;r&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    <span class="n">insert_pos_1</span> <span class="o">=</span><span class="n">f</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;&lt;script src=&quot;https://d3js.org/d3.v4.min.js&quot;&gt;&lt;/script&gt;&quot;&quot;&quot;</span><span class="p">)</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">f</span><span class="p">[:</span><span class="n">insert_pos_1</span><span class="p">]</span> <span class="o">+</span> <span class="n">style_add</span> <span class="o">+</span> <span class="n">f</span><span class="p">[</span><span class="n">insert_pos_1</span><span class="p">:]</span>
 
-        <span class="n">style_2</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;.attr(&#39;class&#39;, &#39;slider&#39;)&quot;&quot;&quot;</span>
-        <span class="n">insert_pos_2</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;.style(&#39;align&#39;, &#39;center&#39;);&quot;&quot;&quot;</span><span class="p">)</span>
-        <span class="n">j</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
-        <span class="n">j</span> <span class="o">=</span> <span class="n">g</span><span class="p">[:</span><span class="n">insert_pos_2</span><span class="p">]</span> <span class="o">+</span> <span class="n">style_2</span> <span class="o">+</span> <span class="n">g</span><span class="p">[</span><span class="n">insert_pos_2</span><span class="p">:]</span>
+    <span class="n">style_2</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;.attr(&#39;class&#39;, &#39;slider&#39;)&quot;&quot;&quot;</span>
+    <span class="n">insert_pos_2</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;.style(&#39;align&#39;, &#39;center&#39;);&quot;&quot;&quot;</span><span class="p">)</span>
+    <span class="n">j</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+    <span class="n">j</span> <span class="o">=</span> <span class="n">g</span><span class="p">[:</span><span class="n">insert_pos_2</span><span class="p">]</span> <span class="o">+</span> <span class="n">style_2</span> <span class="o">+</span> <span class="n">g</span><span class="p">[</span><span class="n">insert_pos_2</span><span class="p">:]</span>
 
-        <span class="sd">&#39;&#39;&#39;style_3 = &quot;&quot;&quot;position: absolute;&quot;&quot;&quot;</span>
+    <span class="sd">&#39;&#39;&#39;style_3 = &quot;&quot;&quot;position: absolute;&quot;&quot;&quot;</span>
 <span class="sd">    insert_pos_3 = j.find(&quot;&quot;&quot;  </span>
 <span class="sd">        width: 100.0%;</span>
 <span class="sd">        height: 100.0%;</span>
@@ -381,41 +341,40 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 <span class="sd">    ) </span>
 <span class="sd">    k = deepcopy(l)</span>
-<span class="sd">    k = l[:insert_pos_4] + style_4 + l[insert_pos_4:] &#39;&#39;&#39;</span>
+<span class="sd">    k = l[:insert_pos_4] + style_4 + l[insert_pos_4:] &#39;&#39;&#39;</span> 
+         
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;TimeSliderChoropleth.html&quot;</span><span class="p">,</span><span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">h</span><span class="p">:</span>
+      <span class="n">h</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Map saved&quot;</span><span class="p">)</span>  
 
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;TimeSliderChoropleth.html&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">h</span><span class="p">:</span>
-            <span class="n">h</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Map saved&quot;</span><span class="p">)</span>
 
-    <span class="c1"># =============================================================================</span>
-    <span class="c1">#     Creates a colormap for legend.</span>
-    <span class="c1"># =============================================================================</span>
-    <span class="n">color_scale</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
-        <span class="p">[</span><span class="s2">&quot;#009600&quot;</span><span class="p">,</span> <span class="s2">&quot;#64C800&quot;</span><span class="p">,</span> <span class="s2">&quot;#FFFF00&quot;</span><span class="p">,</span> <span class="s2">&quot;#FF7800&quot;</span><span class="p">,</span> <span class="s2">&quot;#FF0000&quot;</span><span class="p">,</span> <span class="s2">&quot;#961414&quot;</span><span class="p">,]</span>
-    <span class="p">)</span>
+  <span class="c1"># =============================================================================</span>
+  <span class="c1">#     Creates a colormap for legend.</span>
+  <span class="c1"># =============================================================================</span>
 
-    <span class="n">colormap</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">LinearColormap</span><span class="p">(</span>
-        <span class="n">colors</span><span class="o">=</span><span class="n">color_scale</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="mi">30</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">250</span><span class="p">,</span> <span class="mi">1000</span><span class="p">]</span>
-    <span class="p">)</span>
-    <span class="n">colormap</span><span class="o">.</span><span class="n">caption</span> <span class="o">=</span> <span class="n">pollutants</span><span class="p">[</span><span class="n">pollutant_ID</span><span class="p">][</span><span class="s2">&quot;notation&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot; gradient scale&quot;</span>
+  <span class="n">cvals</span>  <span class="o">=</span> <span class="n">Legend</span><span class="o">.</span><span class="n">country_pollutants</span><span class="p">[</span><span class="n">country</span><span class="p">][</span><span class="n">pollutant</span><span class="p">][</span><span class="s1">&#39;bin_edges&#39;</span><span class="p">]</span>
+  <span class="n">colors</span> <span class="o">=</span> <span class="n">Legend</span><span class="o">.</span><span class="n">country_pollutants</span><span class="p">[</span><span class="n">country</span><span class="p">][</span><span class="n">pollutant</span><span class="p">][</span><span class="s1">&#39;color_scale&#39;</span><span class="p">]</span>
 
-    <span class="c1"># =============================================================================</span>
-    <span class="c1">#     Converts geo pandas df to json format</span>
-    <span class="c1"># =============================================================================</span>
-    <span class="n">geo</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">gdf</span><span class="o">.</span><span class="n">to_json</span><span class="p">())</span>
-    <span class="n">plot</span> <span class="o">=</span> <span class="n">df</span>
+  <span class="n">colormap</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">LinearColormap</span><span class="p">(</span><span class="n">colors</span><span class="o">=</span><span class="n">colors</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="n">cvals</span><span class="p">)</span>
+  <span class="n">colormap</span><span class="o">.</span><span class="n">caption</span> <span class="o">=</span> <span class="n">Legend</span><span class="o">.</span><span class="n">country_pollutants</span><span class="p">[</span><span class="n">country</span><span class="p">][</span><span class="n">pollutant</span><span class="p">][</span><span class="s2">&quot;notation&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot; gradient scale&quot;</span>
 
-    <span class="c1"># =============================================================================</span>
-    <span class="c1">#     Prepares the Datafra</span>
-    <span class="c1"># =============================================================================</span>
+  <span class="c1"># =============================================================================</span>
+  <span class="c1">#     Converts geo pandas df to json format</span>
+  <span class="c1"># =============================================================================  </span>
+  <span class="n">geo</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">gdf</span><span class="o">.</span><span class="n">to_json</span><span class="p">())</span>
+  <span class="n">plot</span> <span class="o">=</span> <span class="n">df</span>
 
-    <span class="n">data_frame</span> <span class="o">=</span> <span class="n">prepare_df</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
-    <span class="n">pop_up_data_frame</span> <span class="o">=</span> <span class="n">create_popup_df</span><span class="p">(</span><span class="n">plot</span><span class="p">)</span>
-    <span class="n">style_dict</span> <span class="o">=</span> <span class="n">prepare_style_dict</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">opacity</span><span class="p">)</span>
-    <span class="n">map_</span> <span class="o">=</span> <span class="n">make_map</span><span class="p">(</span><span class="n">gdf</span><span class="p">,</span> <span class="n">geo</span><span class="p">,</span> <span class="n">style_dict</span><span class="p">)</span>
-    <span class="n">map_</span> <span class="o">=</span> <span class="n">change_style</span><span class="p">(</span><span class="n">map_</span><span class="p">)</span>
+  <span class="c1"># =============================================================================</span>
+  <span class="c1">#     Prepares the Dataframe</span>
+  <span class="c1"># ============================================================================= </span>
 
-    <span class="k">return</span> <span class="n">map_</span></div>
+  <span class="n">data_frame</span> <span class="o">=</span> <span class="n">prepare_df</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+  <span class="n">pop_up_data_frame</span> <span class="o">=</span> <span class="n">create_popup_df</span><span class="p">(</span><span class="n">plot</span><span class="p">)</span>
+  <span class="n">style_dict</span> <span class="o">=</span> <span class="n">prepare_style_dict</span><span class="p">(</span><span class="n">data_frame</span><span class="p">,</span> <span class="n">opacity</span><span class="p">)</span>
+  <span class="n">map_</span> <span class="o">=</span> <span class="n">make_map</span><span class="p">(</span><span class="n">gdf</span><span class="p">,</span> <span class="n">geo</span><span class="p">,</span> <span class="n">style_dict</span><span class="p">)</span>
+  <span class="n">map_</span> <span class="o">=</span> <span class="n">change_style</span><span class="p">(</span><span class="n">map_</span><span class="p">)</span>
+
+  <span class="k">return</span> <span class="n">map_</span></div>
 </pre></div>
 
           </div>
