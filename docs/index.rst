@@ -30,6 +30,15 @@ __ https://github.com/sustainability-lab/vayu/
 
     pages/installation
 
+.. For examples please have a look at the following.
+
+.. .. toctree::
+..     :maxdepth: 1
+..     :glob:
+..     :caption: Examples:
+
+..     examples/nbs/*
+
 
 .. Indices and tables
 .. ==================

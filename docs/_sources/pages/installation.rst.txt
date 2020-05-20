@@ -19,11 +19,12 @@ Documentations
 
     vayu
 
-
 Examples
-----------
+--------
 
 .. toctree::
-    :caption: Jupyter notebooks.
+    :caption: Examples:
+    :maxdepth: 1
+    :glob:
 
-    examples
+    ../examples/nbs/*

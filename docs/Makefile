@@ -30,7 +30,7 @@ help:
 clean: 
 	@rm -rf _build
 
-github:
+alldocs:
 # 	@make environment
 	@make clean
 	@$(SPHINXAPIDOC) -f -o "$(APIDOCOUTDIR)" "$(PROJDIR)"
