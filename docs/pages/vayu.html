@@ -204,6 +204,127 @@ on the y-axis of a relationship, ex: ‘pm10’</p></li>
 <div class="section" id="vayu-polarfreq-module">
 <h2>vayu.polarFreq module<a class="headerlink" href="#vayu-polarfreq-module" title="Permalink to this headline">¶</a></h2>
 </div>
+<div class="section" id="module-vayu.pollutionRose">
+<span id="vayu-pollutionrose-module"></span><h2>vayu.pollutionRose module<a class="headerlink" href="#module-vayu.pollutionRose" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="vayu.pollutionRose.WindroseAxes">
+<em class="property">class </em><code class="sig-prename descclassname">vayu.pollutionRose.</code><code class="sig-name descname">WindroseAxes</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vayu/pollutionRose.html#WindroseAxes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vayu.pollutionRose.WindroseAxes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.projections.polar.PolarAxes</span></code></p>
+<p>Create a windrose axes</p>
+<dl class="py method">
+<dt id="vayu.pollutionRose.WindroseAxes.bar">
+<code class="sig-name descname">bar</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">direction</span></em>, <em class="sig-param"><span class="n">var</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vayu/pollutionRose.html#WindroseAxes.bar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vayu.pollutionRose.WindroseAxes.bar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot a windrose in bar mode. For each var bins and for each sector,
+a colored bar will be draw on the axes.
+:param direction: directions the wind blows from, North centred
+:type direction: 1D array
+:param var: values of the variable to compute. Typically the wind speeds.
+:type var: 1D array</p>
+<dl class="field-list simple">
+<dt class="field-odd">Other Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nsector</strong> (<em>integer, optional</em>) – number of sectors used to compute the windrose table. If not set,
+nsectors=12, then each sector will be 360/12=22.5°, and the
+resulting computed table will be aligned with the cardinals points.</p></li>
+<li><p><strong>bins</strong> (<em>1D array or integer, optional</em>) – number of bins, or a sequence of bins variable. If not set, bins=6
+between min(<cite>var</cite>) and max(<cite>var</cite>).</p></li>
+<li><p><strong>blowto</strong> (<em>bool, optional.</em>) – if True, the windrose will be pi rotated, to show where the wind
+blow to (usefull for pollutant rose).</p></li>
+<li><p><strong>colors</strong> (<em>string or tuple, optional</em>) – one string color (‘k’ or ‘black’), in this case all bins will be
+plotted in this color; a tuple of matplotlib color args (string,
+float, rgb, etc), different levels will be plotted
+in different colors in the order specified.</p></li>
+<li><p><strong>cmap</strong> (a cm Colormap instance from <code class="xref py py-obj docutils literal notranslate"><span class="pre">matplotlib.cm</span></code>, optional.) – if cmap == None and colors == None, a default Colormap is used.</p></li>
+<li><p><strong>edgecolor</strong> (<em>string, optional</em>) – The string color each edge box will be plotted.
+Default : no edgecolor</p></li>
+<li><p><strong>opening</strong> (<em>float, optional</em>) – between 0.0 and 1.0, to control the space between each sector (1.0
+for no space)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="vayu.pollutionRose.WindroseAxes.cla">
+<code class="sig-name descname">cla</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vayu/pollutionRose.html#WindroseAxes.cla"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vayu.pollutionRose.WindroseAxes.cla" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clear the current axes</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="vayu.pollutionRose.WindroseAxes.from_ax">
+<em class="property">static </em><code class="sig-name descname">from_ax</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ax</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fig</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">rmax</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vayu/pollutionRose.html#WindroseAxes.from_ax"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vayu.pollutionRose.WindroseAxes.from_ax" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a WindroseAxes object for the figure <cite>fig</cite>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="vayu.pollutionRose.WindroseAxes.legend">
+<code class="sig-name descname">legend</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pollutantName</span></em>, <em class="sig-param"><span class="n">loc</span><span class="o">=</span><span class="default_value">'upper right'</span></em>, <em class="sig-param"><span class="n">decimal_places</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vayu/pollutionRose.html#WindroseAxes.legend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vayu.pollutionRose.WindroseAxes.legend" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the legend location and her properties.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>loc</strong> (<em>int</em><em>, </em><em>string</em><em> or </em><em>pair of floats</em><em>, </em><em>default: 'upper right'</em>) – see <code class="xref py py-obj docutils literal notranslate"><span class="pre">matplotlib.pyplot.legend</span></code>.</p></li>
+<li><p><strong>decimal_places</strong> (<em>int</em><em>, </em><em>default 1</em>) – The decimal places of the formated legend</p></li>
+</ul>
+</dd>
+<dt class="field-even">Other Parameters</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>isaxes</strong> (<em>boolean, default True</em>) – whether this is an axes legend</p></li>
+<li><p><strong>prop</strong> (<em>FontProperties(size=’smaller’)</em>) – the font property</p></li>
+<li><p><strong>borderpad</strong> (<em>float</em>) – the fractional whitespace inside the legend border</p></li>
+<li><p><strong>shadow</strong> (<em>boolean</em>) – if True, draw a shadow behind legend</p></li>
+<li><p><strong>labelspacing</strong> (<em>float, 0.005</em>) – the vertical space between the legend entries</p></li>
+<li><p><strong>handlelenght</strong> (<em>float, 0.05</em>) – the length of the legend lines</p></li>
+<li><p><strong>handletextsep</strong> (<em>float, 0.02</em>) – the space between the legend line and legend text</p></li>
+<li><p><strong>borderaxespad</strong> (<em>float, 0.02</em>) – the border between the axes and legend edge</p></li>
+<li><p><strong>kwarg</strong> – Every other kwarg argument supported by
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">matplotlib.pyplot.legend</span></code></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="vayu.pollutionRose.WindroseAxes.name">
+<code class="sig-name descname">name</code><em class="property"> = 'windrose'</em><a class="headerlink" href="#vayu.pollutionRose.WindroseAxes.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="vayu.pollutionRose.WindroseAxes.set_legend">
+<code class="sig-name descname">set_legend</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">pyplot_arguments</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vayu/pollutionRose.html#WindroseAxes.set_legend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vayu.pollutionRose.WindroseAxes.set_legend" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="vayu.pollutionRose.WindroseAxes.set_radii_angle">
+<code class="sig-name descname">set_radii_angle</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vayu/pollutionRose.html#WindroseAxes.set_radii_angle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vayu.pollutionRose.WindroseAxes.set_radii_angle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the radii labels angle</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="vayu.pollutionRose.histogram">
+<code class="sig-prename descclassname">vayu.pollutionRose.</code><code class="sig-name descname">histogram</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">direction</span></em>, <em class="sig-param"><span class="n">var</span></em>, <em class="sig-param"><span class="n">bins</span></em>, <em class="sig-param"><span class="n">nsector</span></em>, <em class="sig-param"><span class="n">normed</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">blowto</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vayu/pollutionRose.html#histogram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vayu.pollutionRose.histogram" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="vayu.pollutionRose.pollutionRose">
+<code class="sig-prename descclassname">vayu.pollutionRose.</code><code class="sig-name descname">pollutionRose</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span></em>, <em class="sig-param"><span class="n">pollutant</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vayu/pollutionRose.html#pollutionRose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vayu.pollutionRose.pollutionRose" title="Permalink to this definition">¶</a></dt>
+<dd><p>The plots show the proportion (here represented
+as a percentage) of time that the wind is from
+a certain angle and wind speed range.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>data frame</em>) – data frame that contains wind speed
+and wind direction</p></li>
+<li><p><strong>pollutant</strong> (<em>type string</em>) – Name of pollutant for plot to graph</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
 <div class="section" id="module-vayu.scatterPlot">
 <span id="vayu-scatterplot-module"></span><h2>vayu.scatterPlot module<a class="headerlink" href="#module-vayu.scatterPlot" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
@@ -440,127 +561,6 @@ pollutant.</p>
 <code class="sig-name descname">pollutant_legend</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pollutant</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vayu/utils.html#Legend.pollutant_legend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vayu.utils.Legend.pollutant_legend" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-</dd></dl>
-
-</div>
-<div class="section" id="module-vayu.windRosePy">
-<span id="vayu-windrosepy-module"></span><h2>vayu.windRosePy module<a class="headerlink" href="#module-vayu.windRosePy" title="Permalink to this headline">¶</a></h2>
-<dl class="py class">
-<dt id="vayu.windRosePy.WindroseAxes">
-<em class="property">class </em><code class="sig-prename descclassname">vayu.windRosePy.</code><code class="sig-name descname">WindroseAxes</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vayu/windRosePy.html#WindroseAxes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vayu.windRosePy.WindroseAxes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">matplotlib.projections.polar.PolarAxes</span></code></p>
-<p>Create a windrose axes</p>
-<dl class="py method">
-<dt id="vayu.windRosePy.WindroseAxes.bar">
-<code class="sig-name descname">bar</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">direction</span></em>, <em class="sig-param"><span class="n">var</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vayu/windRosePy.html#WindroseAxes.bar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vayu.windRosePy.WindroseAxes.bar" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plot a windrose in bar mode. For each var bins and for each sector,
-a colored bar will be draw on the axes.
-:param direction: directions the wind blows from, North centred
-:type direction: 1D array
-:param var: values of the variable to compute. Typically the wind speeds.
-:type var: 1D array</p>
-<dl class="field-list simple">
-<dt class="field-odd">Other Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>nsector</strong> (<em>integer, optional</em>) – number of sectors used to compute the windrose table. If not set,
-nsectors=12, then each sector will be 360/12=22.5°, and the
-resulting computed table will be aligned with the cardinals points.</p></li>
-<li><p><strong>bins</strong> (<em>1D array or integer, optional</em>) – number of bins, or a sequence of bins variable. If not set, bins=6
-between min(<cite>var</cite>) and max(<cite>var</cite>).</p></li>
-<li><p><strong>blowto</strong> (<em>bool, optional.</em>) – if True, the windrose will be pi rotated, to show where the wind
-blow to (usefull for pollutant rose).</p></li>
-<li><p><strong>colors</strong> (<em>string or tuple, optional</em>) – one string color (‘k’ or ‘black’), in this case all bins will be
-plotted in this color; a tuple of matplotlib color args (string,
-float, rgb, etc), different levels will be plotted
-in different colors in the order specified.</p></li>
-<li><p><strong>cmap</strong> (a cm Colormap instance from <code class="xref py py-obj docutils literal notranslate"><span class="pre">matplotlib.cm</span></code>, optional.) – if cmap == None and colors == None, a default Colormap is used.</p></li>
-<li><p><strong>edgecolor</strong> (<em>string, optional</em>) – The string color each edge box will be plotted.
-Default : no edgecolor</p></li>
-<li><p><strong>opening</strong> (<em>float, optional</em>) – between 0.0 and 1.0, to control the space between each sector (1.0
-for no space)</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="vayu.windRosePy.WindroseAxes.cla">
-<code class="sig-name descname">cla</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vayu/windRosePy.html#WindroseAxes.cla"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vayu.windRosePy.WindroseAxes.cla" title="Permalink to this definition">¶</a></dt>
-<dd><p>Clear the current axes</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="vayu.windRosePy.WindroseAxes.from_ax">
-<em class="property">static </em><code class="sig-name descname">from_ax</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ax</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">fig</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">rmax</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vayu/windRosePy.html#WindroseAxes.from_ax"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vayu.windRosePy.WindroseAxes.from_ax" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a WindroseAxes object for the figure <cite>fig</cite>.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="vayu.windRosePy.WindroseAxes.legend">
-<code class="sig-name descname">legend</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">pollutantName</span></em>, <em class="sig-param"><span class="n">loc</span><span class="o">=</span><span class="default_value">'upper right'</span></em>, <em class="sig-param"><span class="n">decimal_places</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vayu/windRosePy.html#WindroseAxes.legend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vayu.windRosePy.WindroseAxes.legend" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets the legend location and her properties.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>loc</strong> (<em>int</em><em>, </em><em>string</em><em> or </em><em>pair of floats</em><em>, </em><em>default: 'upper right'</em>) – see <code class="xref py py-obj docutils literal notranslate"><span class="pre">matplotlib.pyplot.legend</span></code>.</p></li>
-<li><p><strong>decimal_places</strong> (<em>int</em><em>, </em><em>default 1</em>) – The decimal places of the formated legend</p></li>
-</ul>
-</dd>
-<dt class="field-even">Other Parameters</dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>isaxes</strong> (<em>boolean, default True</em>) – whether this is an axes legend</p></li>
-<li><p><strong>prop</strong> (<em>FontProperties(size=’smaller’)</em>) – the font property</p></li>
-<li><p><strong>borderpad</strong> (<em>float</em>) – the fractional whitespace inside the legend border</p></li>
-<li><p><strong>shadow</strong> (<em>boolean</em>) – if True, draw a shadow behind legend</p></li>
-<li><p><strong>labelspacing</strong> (<em>float, 0.005</em>) – the vertical space between the legend entries</p></li>
-<li><p><strong>handlelenght</strong> (<em>float, 0.05</em>) – the length of the legend lines</p></li>
-<li><p><strong>handletextsep</strong> (<em>float, 0.02</em>) – the space between the legend line and legend text</p></li>
-<li><p><strong>borderaxespad</strong> (<em>float, 0.02</em>) – the border between the axes and legend edge</p></li>
-<li><p><strong>kwarg</strong> – Every other kwarg argument supported by
-<code class="xref py py-obj docutils literal notranslate"><span class="pre">matplotlib.pyplot.legend</span></code></p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt id="vayu.windRosePy.WindroseAxes.name">
-<code class="sig-name descname">name</code><em class="property"> = 'windrose'</em><a class="headerlink" href="#vayu.windRosePy.WindroseAxes.name" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="vayu.windRosePy.WindroseAxes.set_legend">
-<code class="sig-name descname">set_legend</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">pyplot_arguments</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vayu/windRosePy.html#WindroseAxes.set_legend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vayu.windRosePy.WindroseAxes.set_legend" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt id="vayu.windRosePy.WindroseAxes.set_radii_angle">
-<code class="sig-name descname">set_radii_angle</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vayu/windRosePy.html#WindroseAxes.set_radii_angle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vayu.windRosePy.WindroseAxes.set_radii_angle" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the radii labels angle</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py function">
-<dt id="vayu.windRosePy.histogram">
-<code class="sig-prename descclassname">vayu.windRosePy.</code><code class="sig-name descname">histogram</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">direction</span></em>, <em class="sig-param"><span class="n">var</span></em>, <em class="sig-param"><span class="n">bins</span></em>, <em class="sig-param"><span class="n">nsector</span></em>, <em class="sig-param"><span class="n">normed</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">blowto</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vayu/windRosePy.html#histogram"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vayu.windRosePy.histogram" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt id="vayu.windRosePy.windRose">
-<code class="sig-prename descclassname">vayu.windRosePy.</code><code class="sig-name descname">windRose</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span></em>, <em class="sig-param"><span class="n">pollutant</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/vayu/windRosePy.html#windRose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vayu.windRosePy.windRose" title="Permalink to this definition">¶</a></dt>
-<dd><p>The plots show the proportion (here represented
-as a percentage) of time that the wind is from
-a certain angle and wind speed range.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>df</strong> (<em>data frame</em>) – data frame that contains wind speed
-and wind direction</p></li>
-<li><p><strong>pollutant</strong> (<em>type string</em>) – Name of pollutant for plot to graph</p></li>
-</ul>
-</dd>
-</dl>
 </dd></dl>
 
 </div>

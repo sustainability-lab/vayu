@@ -439,18 +439,19 @@ def histogram(direction, var, bins, nsector, normed=False, blowto=False):
 # print(mydata.head())
 
 
-def windRose(df, pollutant):
-    """ The plots show the proportion (here represented 
-        as a percentage) of time that the wind is from 
-        a certain angle and wind speed range.  
-        
-        Parameters
-        ----------
-        df: data frame
-            data frame that contains wind speed
-            and wind direction
-        pollutant: type string
-            Name of pollutant for plot to graph
+def pollutionRose(df, pollutant):
+    """
+    The plots show the proportion (here represented 
+    as a percentage) of time that the wind is from 
+    a certain angle and wind speed range.  
+    
+    Parameters
+    ----------
+    df: data frame
+        data frame that contains wind speed
+        and wind direction
+    pollutant: type string
+        Name of pollutant for plot to graph
     """
     pollutantSeries = df[pollutant]
 

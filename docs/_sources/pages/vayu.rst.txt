@@ -60,6 +60,14 @@ vayu.polarFreq module
    :undoc-members:
    :show-inheritance:
 
+vayu.pollutionRose module
+-------------------------
+
+.. automodule:: vayu.pollutionRose
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 vayu.scatterPlot module
 -----------------------
 
@@ -136,14 +144,6 @@ vayu.utils module
 -----------------
 
 .. automodule:: vayu.utils
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-vayu.windRosePy module
-----------------------
-
-.. automodule:: vayu.windRosePy
    :members:
    :undoc-members:
    :show-inheritance:

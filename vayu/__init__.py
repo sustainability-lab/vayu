@@ -12,7 +12,6 @@
 
 from .timeProp import timeProp
 from .timePlot import timePlot
-from .windRosePy import windRose
 from .trendLevel import trendLevel
 from .summaryPlot import summaryPlot
 from .scatterPlot import scatterPlot
@@ -20,6 +19,7 @@ from .smoothTrend import smoothTrend
 from .selectByDate import selectByDate
 from .calendarPlot import calendarPlot
 from .interpolPlot import interpolPlot
+from .pollutionRose import pollutionRose
 from .timeVariation import timeVariation
 from .linearRelation import linearRelation
 from .interactiveChoroplethPlot import interactiveChoroplethPlot
