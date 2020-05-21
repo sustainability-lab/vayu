@@ -87,7 +87,8 @@ def calendarPlot(df, pollutant, year, country, **kwargs):
                 )
 
         ax.set_yticklabels([])
-        ax.set_xticklabels([])
+        ax.set_xticks([0,1,2,3,4,5,6])
+        ax.set_xticklabels(['M', 'T', 'W', 'Th', 'F', 'Sa', 'Su'])
 
     # =============================================================================
     #     Cuts given data to show average of each day.
