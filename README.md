@@ -16,7 +16,7 @@ pip install vayu
 ```
 
 # Sample Usage
-For sample usage please look for jupyer notebooks in `examples/nbs` in the [official repository][2].
+For sample usage please look for jupyer notebooks in `docs/examples/nbs` in the [official repository][2].
 
 [1]: https://sustainability-lab.github.io/vayu/
 [2]: https://github.com/sustainability-lab/vayu/
