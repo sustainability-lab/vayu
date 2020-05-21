@@ -1,147 +1,109 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Jul 26 02:20:37 2019
+def smoothTrend(df, date_col_name, pollutant_col_name):
 
-@author: Man Vinayaka
-"""
-
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Jul 26 01:59:09 2019
-
-@author: Man Vinayaka
-"""
-
-
-def smoothTrend(df, pollutant, Type):
-    """ Plots a connected scatter plot of the average value of
-        the pollutant every month of every year. Then plots a
-        smooth line of best fit through the plot showing the user
-        the overall trend of the pollutant through the years.
-		
-		Parameters
-		----------
-		df: data frame
-			minimally containing date and at least one other
-			pollutant 
-		pollutant: type string
-			A pollutant name correspoinding to 
-			a variable in a data frame, ex: 'pm25'
-        Type: type int
-            Value can be either 1 or 2
-            1: normal trend line
-            2: bootstrap uncertainties
-    """
-    import datetime as dt
     import matplotlib.pyplot as plt
     import matplotlib as mpl
-    import numpy as np
     import pandas as pd
-    from numpy import array
-    import seaborn as sns
-    import scipy
-    from scipy import stats
-    import math
-    from scipy.ndimage.filters import gaussian_filter1d
+    import numpy as np
+    import calendar
 
-    # =============================================================================
-    # df = pd.read_csv("mydata.csv")
-    # =============================================================================
-    df.index = pd.to_datetime(df.date)
-    unique_years = np.unique(df.index.year)
-    # df = df[pd.notnull(df[pollutant])]
+    """Plots a connected scatter plot of the average value of
+          the pollutant every month of every year. Then plots a
+          smooth line of best fit through the plot showing the user
+          the overall trend of the pollutant through the years.
+      
+      Parameters
+      ----------
+      df: data frame
+        minimally containing date and at least one other
+        pollutant 
 
-    i = 0
-    year = []
-    while i < len(unique_years):
-        year.append(str(unique_years[i]))
-        i = i + 1
-    num_unique_years = len(year)
+     date: type string
+       Name of the column having dates
 
-    i = 0
-    values = []
-    while i < num_unique_years:
-        df_v = df[year[i]].resample("1D").mean()
-        df_v = df_v.fillna(method="ffill")
-        df_v["month"] = df_v.index.month
-        # df_new.index.dayofweek
-        nox = df_v[pollutant].mean()
-        values.append(nox)
-        i = i + 1
-    values = gaussian_filter1d(values, sigma=0.75)
-    # df = df.drop("date", axis=1)
-    # print(df)
-    i = 0
-    x = 0
-    j = 0
-    var2 = []
-    while i < num_unique_years:
-        df_new = df[year[j]].resample("1D").mean()
-        df_new = df_new.fillna(method="ffill")
-        df_new["month"] = df_new.index.month
-        # df_new['day']=df_new.index.dayofweek
-        # df_new['hour']=df_new.index.hour
-        i = i + 1
-        j = j + 1
-        x = 0
-        while x < 12:
-            a = df_new[df_new.month == x]
-            mean_var2 = a[pollutant].mean()
-            var2.append(mean_var2)
-            x = x + 1
-    i = 0
-    while i < len(var2):
-        if pd.notnull(var2[i]) == False:
-            var2[i] = (var2[i - 1] + var2[i + 1]) / 2
-        i = i + 1
+     pollutant: type string
+        A pollutant column name correspoinding to 
+        a variable in a data frame, ex: 'pm25' 
+        """
 
-    scatterX = []
-    t = 0
-    while t < num_unique_years:
-        r = 0
-        while r < 12:
-            scatterX.append(t + (r / 12))
-            r = r + 1
-        t = t + 1
+    df["date"] = pd.to_datetime(df[date_col_name])
 
-    y = var2
-    x = scatterX
+    df_year = df
+    df_year["year"] = df_year["date"].dt.year
+    df_year["month"] = df_year["date"].dt.month
+    df_year = df_year.groupby(["year", "month"]).mean()
+    df_year = df_year.reset_index()
 
-    def best_fit(X, Y):
+    years = np.unique(df_year["year"])
+    months = np.unique(df_year["month"])
+    num_years = len(years)
 
-        xbar = sum(X) / len(X)
-        ybar = sum(Y) / len(Y)
-        n = len(X)  # or len(Y)
+    plt.figure(1, figsize=(30, 8))
 
-        numer = sum([xi * yi for xi, yi in zip(X, Y)]) - n * xbar * ybar
-        denum = sum([xi ** 2 for xi in X]) - n * xbar ** 2
+    result_t = [k for k in range(0, 12)]
 
-        b = numer / denum
-        a = ybar - b * xbar
+    temp = 0
+    a = 0
+    prev = 0
+    months = []
+    name = []
+    minor = []
 
-        # print('best fit line:\ny = {:.2f} + {:.2f}x'.format(a, b))
+    for i in range(num_years):
+        df_imply = df_year
+        df_imply = df_imply.loc[df_year["year"] == years[i]]
+        m = df_imply["month"].unique()
+        months.append(m)
+        count_row = df_imply.shape[0]
+        result_t = [k for k in range(temp, temp + count_row)]
+        minor.append(temp + count_row)
+        temp = temp + count_row
+        if i == 0:
+            plt.plot(
+                result_t,
+                df_imply[pollutant_col_name],
+                color="red",
+                linestyle="--",
+                dashes=(10, 5),
+                label="Concentration monthly averaged",
+            )
+        else:
+            plt.plot(
+                result_t,
+                df_imply[pollutant_col_name],
+                color="red",
+                linestyle="--",
+                dashes=(10, 5),
+            )
 
-        return a, b
+    tick = np.array(months)
 
-    a, b = best_fit(x, y)
+    for i in range(len(tick)):
+        for j in range(len(tick[0])):
+            name.append(str(years[a]) + " " + calendar.month_name[tick[i][j]])
+            if j + 1 + prev == minor[a]:
+                prev = minor[a]
+                a = a + 1
 
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
-    # print(len(x))
-    ax.plot(x, y, "-o", color="red")
-    ax.set_xlabel("Year")
-    ax.set_ylabel("concentration")
-    ax.set_title("monthly mean " + pollutant)
-    if Type == 1:
-        plt.plot(
-            np.unique(x), np.poly1d(np.polyfit(x, y, 1))(np.unique(x)), color="black"
-        )
-    else:
-        plt.plot(values, color="black")
+    name = np.asarray(name)
+
+    plt.xticks(range(0, len(name)), name, rotation="vertical")
+    plt.xlabel("Timeline", fontsize=16)
+    plt.ylabel("Concentration of Pollutant", fontsize=16)
+
+    df_year = df_year.groupby(["year"]).mean()
+
+    minor = [minor[-1]] + minor[:-1]
+
+    minor[0] = 0
+
+    minor = [(k + k + 1) / 2 for k in minor]
+
+    plt.plot(
+        minor,
+        df_year[pollutant_col_name],
+        color="black",
+        label="Concentration yearly averaged",
+    )
+
+    plt.legend(loc="upper right", bbox_to_anchor=(1.1, 1.1), fontsize=16)
     plt.show()
-
-
-# =============================================================================
-# df = pd.read_csv("mydata.csv")
-# smoothTrend(df, 'o3',1)
-# =============================================================================
