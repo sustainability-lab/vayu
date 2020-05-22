@@ -1,8 +1,6 @@
-<<<<<<< HEAD
+
 def smoothTrend(df, date_col_name, pollutant_col_name):
 
-=======
-def smoothTrend(df, pollutant, Type):
     """ Plots a connected scatter plot of the average value of
         the pollutant every month of every year. Then plots a
         smooth line of best fit through the plot showing the user
@@ -22,7 +20,6 @@ def smoothTrend(df, pollutant, Type):
             2: bootstrap uncertainties
     """
     import datetime as dt
->>>>>>> 160196764e2db9f7167fd1b1acdbfce29ed6218f
     import matplotlib.pyplot as plt
     import matplotlib as mpl
     import pandas as pd
