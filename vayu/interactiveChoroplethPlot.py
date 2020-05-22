@@ -334,7 +334,11 @@ def interactiveChoroplethPlot(
   map_ = change_style(map_)
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   return map_
+=======
+  return map_
+>>>>>>> 160196764e2db9f7167fd1b1acdbfce29ed6218f
 =======
   return map_
 >>>>>>> 160196764e2db9f7167fd1b1acdbfce29ed6218f
