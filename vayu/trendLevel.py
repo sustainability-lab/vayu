@@ -4,13 +4,14 @@ def trendLevel(df, pollutant, **kwargs):
     df. It takes the average hour value of each month and plots a heatmap
     showing what timesof the year there is a high concentration of the 
     pollutant.
-	
-	Parameters
-	----------
-	df: data frame
-		data frame of complete data
-	pollutant: type string
-		Name of the data series in df to produce plot
+    
+    Parameters
+    ----------
+    df: `pd.DataFrame`
+        data frame of complete data
+    pollutant: string
+        Name of the data series in df to produce plot
+    
     """
     import datetime as dt
     import matplotlib.pyplot as plt
@@ -25,7 +26,10 @@ def trendLevel(df, pollutant, **kwargs):
     pollutant_series = df[pollutant]
     unique_years = np.unique(df.index.year)[:6]
     num_unique_years = len(unique_years)
-    fig, ax = plt.subplots(nrows=num_unique_years, sharex=True, figsize=(10, 50))
+    fig, ax = plt.subplots(nrows=num_unique_years, figsize=(10, 50))
+    
+    months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul',
+              'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
     for i, unique_years in enumerate(unique_years):
         year_string = f"{unique_years}"
@@ -43,6 +47,8 @@ def trendLevel(df, pollutant, **kwargs):
             vmax=400,
             ax=ax[i],
         )
+        ax[i].set_xticklabels(months)
+        ax[i].set_ylabel("Hour of the Day")
         ax[i].set_title(year_string)
         ax[i].invert_yaxis()
     return ax

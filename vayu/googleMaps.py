@@ -1,21 +1,24 @@
 def googleMaps(df, lat, long, pollutant, dataLoc):
-    """ Plots a folium plot of longitude and latitude points
-        provided with information about each point when clicked 
-        on
-		
-		Parameters
-		----------
-		df: data frame
-			minimally containing date and values of pollutant, city,
-            longitude, latitude, and AQI
-		lat: type string
-			Name of column in df of where latitude points are
-        long: type string
-			Name of column in df of where longitude points are
-        pollutant: type string
-            Name of pollutant 
-        dataLoc: type string
-            Name of df column where pollutanat values are stored
+    """Plots a geographical plot.
+
+    Plots a folium plot of longitude and latitude points 
+    provided with information about each point when clicked 
+    on.
+
+    Parameters
+    ----------
+    df: pandas.DataFrame
+        minimally containing date and values of pollutant, city,
+        longitude, latitude, and AQI
+    lat: str
+        Name of column in df of where latitude points are
+    long: str
+        Name of column in df of where longitude points are
+    pollutant: str
+        Name of pollutant 
+    dataLoc: str
+        Name of df column where pollutanat values are stored
+
     """
     import folium
     import webbrowser

@@ -333,4 +333,8 @@ def interactiveChoroplethPlot(
   map_ = make_map(gdf, geo, style_dict)
   map_ = change_style(map_)
 
+<<<<<<< HEAD
   return map_
+=======
+  return map_
+>>>>>>> 160196764e2db9f7167fd1b1acdbfce29ed6218f

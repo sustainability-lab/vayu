@@ -1,21 +1,14 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sun Jul 21 19:40:26 2019
-
-@author: Man Vinayaka
-"""
-
-# Select by Data
 def selectByDate(df, year):
-    """ Utility function to cut given dataframe by the year 
-        and find the average value of each day 
-		
-		Parameters
-		----------
-		df: data frame
-			a data frame containing a date field
-		year: type string
-			a year to select to cut data
+    """ 
+    Utility function to cut given dataframe by the year 
+    and find the average value of each day 
+    
+    Parameters
+    ----------
+    df: data frame
+        a data frame containing a date field
+    year: type string
+        a year to select to cut data
     """
     import pandas as pd
     import numpy as np
