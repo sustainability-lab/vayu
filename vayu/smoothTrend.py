@@ -1,11 +1,5 @@
 def smoothTrend(df, date_col_name, pollutant_col_name):
 
-    import matplotlib.pyplot as plt
-    import matplotlib as mpl
-    import pandas as pd
-    import numpy as np
-    import calendar
-
     """Plots a connected scatter plot of the average value of
           the pollutant every month of every year. Then plots a
           smooth line of best fit through the plot showing the user
@@ -24,6 +18,12 @@ def smoothTrend(df, date_col_name, pollutant_col_name):
         A pollutant column name correspoinding to 
         a variable in a data frame, ex: 'pm25' 
         """
+
+    import matplotlib.pyplot as plt
+    import matplotlib as mpl
+    import pandas as pd
+    import numpy as np
+    import calendar
 
     df["date"] = pd.to_datetime(df[date_col_name])
 
@@ -57,23 +57,13 @@ def smoothTrend(df, date_col_name, pollutant_col_name):
         result_t = [k for k in range(temp, temp + count_row)]
         minor.append(temp + count_row)
         temp = temp + count_row
-        if i == 0:
-            plt.plot(
-                result_t,
-                df_imply[pollutant_col_name],
-                color="red",
-                linestyle="--",
-                dashes=(10, 5),
-                label="Concentration monthly averaged",
-            )
-        else:
-            plt.plot(
-                result_t,
-                df_imply[pollutant_col_name],
-                color="red",
-                linestyle="--",
-                dashes=(10, 5),
-            )
+        plt.plot(
+            result_t,
+            df_imply[pollutant_col_name],
+            color="red",
+            linestyle="--",
+            dashes=(2, 15),
+        )
 
     tick = np.array(months)
 
@@ -88,7 +78,7 @@ def smoothTrend(df, date_col_name, pollutant_col_name):
 
     plt.xticks(range(0, len(name)), name, rotation="vertical")
     plt.xlabel("Timeline", fontsize=16)
-    plt.ylabel("Concentration of Pollutant", fontsize=16)
+    plt.ylabel("Concentration", fontsize=16)
 
     df_year = df_year.groupby(["year"]).mean()
 
@@ -98,12 +88,6 @@ def smoothTrend(df, date_col_name, pollutant_col_name):
 
     minor = [(k + k + 1) / 2 for k in minor]
 
-    plt.plot(
-        minor,
-        df_year[pollutant_col_name],
-        color="black",
-        label="Concentration yearly averaged",
-    )
+    plt.plot(minor, df_year[pollutant_col_name], color="black")
 
-    plt.legend(loc="upper right", bbox_to_anchor=(1.1, 1.1), fontsize=16)
     plt.show()
