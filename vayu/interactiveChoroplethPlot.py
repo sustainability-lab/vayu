@@ -1,17 +1,16 @@
 def interactiveChoroplethPlot(
-  gdf,
-  df,
-  pollutant,
-  country,
-  date_time_col_name,
-  value_col_name,
-  dist_col_name,
-  start_date,
-  end_date,
-  opacity = 0.4
-  ):
-  
-  """ Plots an Interactive Choropleth Plot
+    gdf,
+    df,
+    date_time_col_name,
+    value_col_name,
+    dist_col_name,
+    start_date,
+    end_date,
+    pollutant_ID,
+    opacity=0.4,
+):
+
+    """ Plots an Interactive Choropleth Plot
       of a given pollutant for given duration 
       of time.
 
@@ -19,16 +18,10 @@ def interactiveChoroplethPlot(
   ----------
 
   gdf: geo pandas data frame 
-       minimally containing DISTRICT  and geometry
+       minimally containing DISTRICT	and geometry
 
   df: data frame 
       minimally containing time stamps and pollutant value
-
-  pollutant: type string
-             Name of pollutant ex: 'pm25'
-  
-  India: type string
-         Name of country ex: 'India'            
 
   date_time_col_name: type string
                       name of column in df having time stamps
@@ -46,73 +39,114 @@ def interactiveChoroplethPlot(
   end_date: type string
             time stamp corresponding to end date,
             ex : '2019-08-20-23:00'
+
+  pollutant_ID: type integer
+              A pollutant ID correspoinding to 
+              a pollutant, ex: 3 for PM2.5
   
   opacity: type float
            A float value in range 0 to 1
            1 represents maximum opacity           
   """
-  import plotly.graph_objects as go
-  import plotly
-  from folium import IFrame
-  import matplotlib.pyplot as plt
-  import geopandas as gpd
-  import pandas as pd
-  import numpy as np
-  import seaborn as sns
-  import folium
-  import branca.colormap as cm
-  import json
-  from string import Template
-  from folium.plugins import TimeSliderChoropleth
-  from copy import deepcopy
-  import os
-  from .utils import Legend
+    import plotly.graph_objects as go
+    import plotly
+    from folium import IFrame
+    import matplotlib.pyplot as plt
+    import geopandas as gpd
+    import pandas as pd
+    import numpy as np
+    import seaborn as sns
+    import folium
+    import branca.colormap as cm
+    import json
+    from string import Template
+    from folium.plugins import TimeSliderChoropleth
+    from copy import deepcopy
+    import os
 
-  def color_coding(poll, bin_edges):
-    """ Maps polluatnt value to the bins
+    pollutants = {
+        1: {
+            "notation": "SO2",
+            "name": "Sulphur dioxide",
+            "bin_edges": np.array([15, 30, 45, 60, 80, 100, 125, 165, 250]),
+        },
+        2: {
+            "notation": "PM10",
+            "name": "Particulate matter < 10 µm",
+            "bin_edges": np.array([10, 20, 30, 40, 50, 70, 100, 150, 200]),
+        },
+        3: {
+            "notation": "PM2.5",
+            "name": "Particulate matter < 2.5 µm",
+            "bin_edges": np.array([30, 60, 90, 120, 250, 600]),
+        },
+        4: {
+            "notation": "O3",
+            "name": "Ozone",
+            "bin_edges": np.array([30, 50, 70, 90, 110, 145, 180, 240, 360]),
+        },
+        5: {
+            "notation": "NO2",
+            "name": "Nitrogen dioxide",
+            "bin_edges": np.array([25, 45, 60, 80, 110, 150, 200, 270, 400]),
+        },
+        6: {
+            "notation": "CO",
+            "name": "Carbon monoxide",
+            "bin_edges": np.array([1.4, 2.1, 2.8, 3.6, 4.5, 5.2, 6.6, 8.4, 13.7]),
+        },
+        7: {
+            "notation": "C6H6",
+            "name": "Benzene",
+            "bin_edges": np.array([0.5, 1.0, 1.25, 1.5, 2.75, 3.5, 5.0, 7.5, 10.0]),
+        },
+    }
+
+    def color_coding(poll, bin_edges):
+        """ Maps polluatnt value to the bins
     """
-    idx = np.digitize(poll, bin_edges, right=True)
-        
-    return colors[idx] 
-  
-  def prepare_df(df):
-    """ Returns a df for selected time range 
+        idx = np.digitize(poll, bin_edges, right=True)
+
+        return color_scale[idx]
+
+    def prepare_df(df):
+        """ Returns a df for selected time range 
         and coverts timestamp to date time format.
         Adds a color column according to the pollutant value.
     """
-    df = df[
+        df = df[
             (df[date_time_col_name] >= start_date)
             & (df[date_time_col_name] <= end_date)
-            ]
-    time_ = df[date_time_col_name]
-    df[date_time_col_name] = pd.to_datetime(time_).dt.strftime('%s')
-    df = df.set_index(keys = [dist_col_name, date_time_col_name])
-    df["color"] = df[value_col_name].apply(
-        color_coding, bin_edges = cvals
-    )
-    df = df.reset_index()
-    print(df.head())
-    
-    return df
-    
-  def create_popup_df(plot):
-    """ Returns a df for selected time range.
+        ]
+        time_ = df[date_time_col_name]
+        df[date_time_col_name] = pd.to_datetime(time_).dt.strftime("%s")
+        df = df.set_index(keys=[dist_col_name, date_time_col_name])
+        df["color"] = df[value_col_name].apply(
+            color_coding, bin_edges=pollutants[pollutant_ID]["bin_edges"]
+        )
+        df = df.reset_index()
+        print(df.head())
+
+        return df
+
+    def create_popup_df(plot):
+        """ Returns a df for selected time range.
         Adds a color column according to the pollutant value.
     """
-    plot = plot[
+        plot = plot[
             (plot[date_time_col_name] >= start_date)
             & (plot[date_time_col_name] <= end_date)
-            ]
-    plot = plot.set_index(keys = [dist_col_name, date_time_col_name])
-    plot["color"] = plot[value_col_name].apply(
-        color_coding, bin_edges = cvals
-    )
-    plot = plot.reset_index()
-    
-    return plot
+        ]
+        plot = plot.set_index(keys=[dist_col_name, date_time_col_name])
+        plot["color"] = plot[value_col_name].apply(
+            color_coding, bin_edges=pollutants[pollutant_ID]["bin_edges"]
+        )
+        plot = plot.reset_index()
 
-  def prepare_style_dict(df, opacity):
-    """
+        return plot
+
+    def prepare_style_dict(df, opacity):
+        """
     Prepares a dictionary in the given format:
 
     styledict = {
@@ -127,100 +161,112 @@ def interactiveChoroplethPlot(
             '2017-1-2': {'color': 'fffff0', 'opacity': 1}
             ...
             }
-          }"""  
-                
-    features = {}
-    for _, row in df.iterrows():  
+          }"""
 
-      if row[dist_col_name] in features:    
-        features[row[dist_col_name]].update({row[date_time_col_name]: {'color': row['color'],'opacity': opacity}
-                                  })   
-      else:
-        feature = {
-            row[dist_col_name] : {
-                row[date_time_col_name]: {'color': row['color'],'opacity': opacity}
-            }
-        }    
-        features.update(feature)  
+        features = {}
+        for _, row in df.iterrows():
 
-    return features 
+            if row[dist_col_name] in features:
+                features[row[dist_col_name]].update(
+                    {
+                        row[date_time_col_name]: {
+                            "color": row["color"],
+                            "opacity": opacity,
+                        }
+                    }
+                )
+            else:
+                feature = {
+                    row[dist_col_name]: {
+                        row[date_time_col_name]: {
+                            "color": row["color"],
+                            "opacity": opacity,
+                        }
+                    }
+                }
+                features.update(feature)
+        return features
 
-  def create_popup(index, district):
-    """Creates an interactive timeseries popup for
+    def create_popup(index, district):
+        """Creates an interactive timeseries popup for
        each district.    
     """
-    district = str(district)
-    i = index *97
-    j = i + 97
-    pop = plot[i:j]
+        district = str(district)
+        i = index * 97
+        j = i + 97
+        pop = plot[i:j]
 
-    fig = go.Figure([go.Scatter(x=pop[date_time_col_name], y=pop[value_col_name])])
-      
-    fig.update_layout(
-        title = Legend.country_pollutants[country][pollutant]["notation"],            
-        xaxis_title="Time Stamp",
-      yaxis_title="Pollutant Concentration (µg/m³)"
-      )
-    fig.update_xaxes(showticklabels=False)
+        fig = go.Figure([go.Scatter(x=pop[date_time_col_name], y=pop[value_col_name])])
 
-    script = plotly.offline.plot(fig, include_plotlyjs=False, output_type='div')  
+        fig.update_layout(
+            title=pollutants[pollutant_ID]["notation"],
+            xaxis_title="Time Stamp",
+            yaxis_title="Pollutant Concentration (µg/m³)",
+        )
+        fig.update_xaxes(showticklabels=False)
 
-    html_start = """
+        script = plotly.offline.plot(fig, include_plotlyjs=False, output_type="div")
+
+        html_start = (
+            """
     <html>
     <head>
       <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     </head>
     <body>
-    <h1>"%s"</h1>""" %district
+    <h1>"%s"</h1>"""
+            % district
+        )
 
-    html_end = """
+        html_end = """
     </body>
     </html>"""
 
-    html_final = html_start + script + html_end
+        html_final = html_start + script + html_end
 
-    resolution, width, height = 75, 7, 5
-    iframe = IFrame(html_final, width=(width*resolution)+75, height=(height*resolution)+50)
-  
-    return iframe 
-  
-  def make_map(gdf, geo, features):
-    """ Returns a HTML file with time interactive choropleth plot
+        resolution, width, height = 75, 7, 5
+        iframe = IFrame(
+            html_final,
+            width=(width * resolution) + 75,
+            height=(height * resolution) + 50,
+        )
+
+        return iframe
+
+    def make_map(gdf, geo, features):
+        """ Returns a HTML file with time interactive choropleth plot
     """
-    m = folium.Map([22, 82], tiles='Stamen Terrain', zoom_start=5)
+        m = folium.Map([22, 82], tiles="Stamen Terrain", zoom_start=5)
 
-    g = TimeSliderChoropleth(
-        geo,
-        styledict = features,
-        ).add_to(m)
+        g = TimeSliderChoropleth(geo, styledict=features).add_to(m)
 
-    colormap.add_to(m)
-    style = {'fillColor': '#00000000', 'color': '#00000000'}
+        colormap.add_to(m)
+        style = {"fillColor": "#00000000", "color": "#00000000"}
 
-    #### adding tooltip #####
-    '''folium.GeoJson(geo, tooltip = folium.features.GeoJsonTooltip(
+        #### adding tooltip #####
+        """folium.GeoJson(geo, tooltip = folium.features.GeoJsonTooltip(
         fields=['DISTRICT']),style_function=lambda x: style,
-        ).add_to(m)'''
+        ).add_to(m)"""
 
-    for index, row in gdf.iterrows():  
-      gs = folium.GeoJson(row['geometry'],style_function=lambda x: style)
-      label = create_popup(index, row['DISTRICT'])
+        for index, row in gdf.iterrows():
+            gs = folium.GeoJson(row["geometry"], style_function=lambda x: style)
+            label = create_popup(index, row["DISTRICT"])
 
-      folium.Popup(label, max_width=2560).add_to(gs)
-      gs.add_to(m)
-      
-      if(index%20 == 0):
-        print("Done for Districts ", index, " out of 640")
-    
-    m.save('TimeSliderChoropleth.html')
-    print("Map created")
-    return m
+            folium.Popup(label, max_width=2560).add_to(gs)
+            gs.add_to(m)
 
-  def change_style(map_):
-    """Changes time slider style.
+            if index % 20 == 0:
+                print("Done for Districts ", index, " out of 640")
+
+        m.save("TimeSliderChoropleth.html")
+        print("Map created")
+        return m
+
+    def change_style(map_):
+        """Changes time slider style.
        Makes the slider background transparent.
     """
-    style_add = """
+        style_add = """
     <style>
       .slidecontainer {
         width: 90%;
@@ -257,17 +303,19 @@ def interactiveChoroplethPlot(
     }
       </style>
     """
-    f = open(os.path.join(os.getcwd(), 'TimeSliderChoropleth.html'),"r").read()
-    insert_pos_1 =f.find("""<script src="https://d3js.org/d3.v4.min.js"></script>""")
-    g = deepcopy(f)
-    g = f[:insert_pos_1] + style_add + f[insert_pos_1:]
+        f = open(os.path.join(os.getcwd(), "TimeSliderChoropleth.html"), "r").read()
+        insert_pos_1 = f.find(
+            """<script src="https://d3js.org/d3.v4.min.js"></script>"""
+        )
+        g = deepcopy(f)
+        g = f[:insert_pos_1] + style_add + f[insert_pos_1:]
 
-    style_2 = """.attr('class', 'slider')"""
-    insert_pos_2 = g.find(""".style('align', 'center');""")
-    j = deepcopy(g)
-    j = g[:insert_pos_2] + style_2 + g[insert_pos_2:]
+        style_2 = """.attr('class', 'slider')"""
+        insert_pos_2 = g.find(""".style('align', 'center');""")
+        j = deepcopy(g)
+        j = g[:insert_pos_2] + style_2 + g[insert_pos_2:]
 
-    '''style_3 = """position: absolute;"""
+        '''style_3 = """position: absolute;"""
     insert_pos_3 = j.find("""  
         width: 100.0%;
         height: 100.0%;
@@ -300,37 +348,38 @@ def interactiveChoroplethPlot(
     """
     ) 
     k = deepcopy(l)
-    k = l[:insert_pos_4] + style_4 + l[insert_pos_4:] ''' 
-         
-    with open("TimeSliderChoropleth.html","w") as h:
-      h.write(j)
-    print("Map saved")  
+    k = l[:insert_pos_4] + style_4 + l[insert_pos_4:] '''
 
+        with open("TimeSliderChoropleth.html", "w") as h:
+            h.write(j)
+        print("Map saved")
 
-  # =============================================================================
-  #     Creates a colormap for legend.
-  # =============================================================================
+    # =============================================================================
+    #     Creates a colormap for legend.
+    # =============================================================================
+    color_scale = np.array(
+        ["#009600", "#64C800", "#FFFF00", "#FF7800", "#FF0000", "#961414"]
+    )
 
-  cvals  = Legend.country_pollutants[country][pollutant]['bin_edges']
-  colors = Legend.country_pollutants[country][pollutant]['color_scale']
+    colormap = cm.LinearColormap(
+        colors=color_scale, vmin=0, vmax=600, index=[30, 60, 90, 120, 250, 1000]
+    )
+    colormap.caption = pollutants[pollutant_ID]["notation"] + " gradient scale"
 
-  colormap = cm.LinearColormap(colors=colors, vmin=0, vmax=600, index = cvals)
-  colormap.caption = Legend.country_pollutants[country][pollutant]["notation"] + " gradient scale"
+    # =============================================================================
+    #     Converts geo pandas df to json format
+    # =============================================================================
+    geo = json.loads(gdf.to_json())
+    plot = df
 
-  # =============================================================================
-  #     Converts geo pandas df to json format
-  # =============================================================================  
-  geo = json.loads(gdf.to_json())
-  plot = df
+    # =============================================================================
+    #     Prepares the Datafra
+    # =============================================================================
 
-  # =============================================================================
-  #     Prepares the Dataframe
-  # ============================================================================= 
+    data_frame = prepare_df(df)
+    pop_up_data_frame = create_popup_df(plot)
+    style_dict = prepare_style_dict(data_frame, opacity)
+    map_ = make_map(gdf, geo, style_dict)
+    map_ = change_style(map_)
 
-  data_frame = prepare_df(df)
-  pop_up_data_frame = create_popup_df(plot)
-  style_dict = prepare_style_dict(data_frame, opacity)
-  map_ = make_map(gdf, geo, style_dict)
-  map_ = change_style(map_)
-
-  return map_
+    return map_
