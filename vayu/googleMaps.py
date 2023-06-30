@@ -1,4 +1,4 @@
-def googleMaps(df, lat, long, pollutant, dataLoc):
+def googleMaps(df, lat, long, pollutant, date, markersize):
     """Plots a geographical plot.
 
     Plots a folium plot of longitude and latitude points 
@@ -54,4 +54,4 @@ def googleMaps(df, lat, long, pollutant, dataLoc):
 
 #Example
 # df = pd.read_csv('interpolData.csv')
-# googleMaps(df,'Latitude','Longitude','Ozone','Arithmetic Mean')
+#googleMaps(df, 'latitude', 'longitude', 'pm25', '2022-08-23', 5)
