@@ -19,7 +19,7 @@ def timePlot(df, year, pollutants=["pm25", "pm10"]):
     import matplotlib as mpl
     import matplotlib.pyplot as plt
     import plotly.graph_objects as go
-    
+
      # Cuts the df down to the month specified
     df.index = pd.to_datetime(df.date)
     df_n_1 = df[(df.index.year == int(year))]
