@@ -1,4 +1,10 @@
-def timePlot(df, year, pollutants=["pm25"]):
+import numpy as np
+import pandas as pd
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import plotly.graph_objects as go
+
+def time_plot(df:pd.DataFrame, year:str, pollutants:list=["pm25"]):
     """
     Plot time series of pollutants for given month and year.
         
@@ -12,12 +18,7 @@ def timePlot(df, year, pollutants=["pm25"]):
     pollutants: list
         column names of pollutatnts to compare
     """
-    import numpy as np
-    import pandas as pd
-    import matplotlib as mpl
-    import matplotlib.pyplot as plt
-    import plotly.graph_objects as go
-
+    
      # Cuts the df down to the month specified
     df.index = pd.to_datetime(df.date)
     df_n_1 = df[(df.index.year == int(year))]
@@ -64,6 +65,6 @@ def timePlot(df, year, pollutants=["pm25"]):
     fig.show()
 
 #Example:
-#timePlot(df, 2022, pollutants=['pm25','pm10','ws','wd'...and so on])
+#time_plot(df, 2022, pollutants=['pm25','pm10','ws','wd'...and so on])
 #--------------------
     
