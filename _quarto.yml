@@ -17,3 +17,6 @@ website:
       - section: "Examples"
         contents:
           - examples/abcd.ipynb
+
+execute:
+  freeze: auto
