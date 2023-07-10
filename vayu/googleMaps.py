@@ -1,4 +1,11 @@
-def googleMaps(df, lat, long, pollutant, dataLoc):
+import folium
+import webbrowser
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+    
+def google_maps(df:pd.DataFrame, lat:str, long:str, pollutant:str, date:str, markersize:int,zoom:int):
     """Plots a geographical plot.
 
     Plots a folium plot of longitude and latitude points 
@@ -15,67 +22,32 @@ def googleMaps(df, lat, long, pollutant, dataLoc):
     long: str
         Name of column in df of where longitude points are
     pollutant: str
-        Name of pollutant 
-    dataLoc: str
-        Name of df column where pollutanat values are stored
+        Name of pollutant where values of that pollutant is stored.
+    date: str
+        visualizing the pollutant of a specific date.
+    markersize: int
+        The int by which the value of pollutant will be multiplied.
+    zoom: int
+        The int by which you want to zoom in the plot
 
     """
-    import folium
-    import webbrowser
-    import pandas as pd
-    import matplotlib.pyplot as plt
-    import numpy as np
-    import pandas as pd
+   
+    df1 = df[df['date'] == date]
 
-    latitude = 37.0902
-    longitude = -95.7129
-    Arithmetic_Mean_map = folium.Map(location=[latitude, longitude], zoom_start=4)
+    lat= df1[lat].values[0] 
+    long=df1[long].values[0] 
+    my_map4 = folium.Map(location = [lat, long], zoom_start = zoom)
 
-    # =============================================================================
-    # df = pd.read_csv('interpolData.csv')
-    # =============================================================================
+    for lat,long,pol,st in zip(df['latitude'],df['longitude'],df[pollutant],df['station']):
+        folium.CircleMarker([lat, long],radius=markersize * pol, popup=(str(st).capitalize()+"<br>"+ str(round(pol, 3))), fill=True, fill_opacity=0.7, color = 'red').add_to(my_map4)
 
-    some_value = pollutant
-    df = df.loc[df["Parameter Name"] == some_value]
-
-    some_value = "2018-05-07"
-    df = df.loc[df["Date Local"] == some_value]
-
-    df = df.sample(frac=1)
-
-    # df_train, df_test = train_test_split(df, test_size=0.2)
-    df["Arithmetic Mean Q"] = pd.qcut(df[dataLoc], 4, labels=False)
-    colordict = {0: "lightblue", 1: "lightgreen", 2: "orange", 3: "red"}
-
-    for lat, lon, Arithmetic_Mean_Q, Arithmetic_Mean, city, AQI in zip(
-        df[lat],
-        df[long],
-        df["Arithmetic Mean Q"],
-        df[dataLoc],
-        df["City Name"],
-        df["AQI"],
-    ):
-        folium.CircleMarker(
-            [lat, lon],
-            radius=0.15 * AQI,
-            popup=(
-                "City: "
-                + str(city).capitalize()
-                + "<br>"
-                #'Bike score: ' + str(bike) + '<br>'
-                "Arithmetic_Mean level: "
-                + str(Arithmetic_Mean)
-                + "%"
-            ),
-            color="b",
-            key_on=Arithmetic_Mean_Q,
-            threshold_scale=[0, 1, 2, 3],
-            fill_color=colordict[Arithmetic_Mean_Q],
-            fill=True,
-            fill_opacity=0.7,
-        ).add_to(Arithmetic_Mean_map)
-    Arithmetic_Mean_map.save("mymap.html")
+    my_map4.save("googleMaps.html")
+    print('your map has been saved')
+    return my_map4
 
 
+#Example:
 # df = pd.read_csv('interpolData.csv')
-# googleMaps(df,'Latitude','Longitude','Ozone','Arithmetic Mean')
+# Call the function and display the map in Jupyter Notebook
+# map_obj = google_maps(df, 'latitude', 'longitude', 'pm25', '2022-02-23', 5,10)
+# map_obj

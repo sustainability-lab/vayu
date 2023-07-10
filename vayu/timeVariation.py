@@ -1,4 +1,11 @@
-def timeVariation(df, pollutant):
+import datetime as dt
+import matplotlib.pyplot as plt
+import matplotlib as mpl
+import numpy as np
+import pandas as pd
+from numpy import array
+
+def time_variation(df:str, pollutant:list=['pm25']):
     """ 
     Plots four plots:
     - The average pollutant level per day by 
@@ -15,20 +22,19 @@ def timeVariation(df, pollutant):
     df: pandas.DataFrame
       data frame of hourly data. 
       Must include a date field and at least one variable to plot
-    pollutant: str
-      Name of variable to plot
+    pollutant: list
+      Name of variables to plot
 
     """
-    import datetime as dt
-    import matplotlib.pyplot as plt
-    import matplotlib as mpl
-    import numpy as np
-    import pandas as pd
-    from numpy import array
+   
 
     df["date"] = pd.to_datetime(df.date)
 
-    df_days = df
+    df_days=df
+    df_hour=df
+    df_month=df
+    df_weekday = df
+    
     df_days["day"] = df_days["date"].dt.day_name()
     df_days = df_days.set_index(keys=["day"])
     df_days = df_days.groupby(["day"])
@@ -42,7 +48,6 @@ def timeVariation(df, pollutant):
         "Saturday",
         "Sunday",
     ]
-    pollutant = ["pm10", "no2", "pm25", "so2"]
 
     for i in range(len(dayWeek)):
         plt.figure(1, figsize=(40, 5))
@@ -52,11 +57,9 @@ def timeVariation(df, pollutant):
         df_day = df_days.get_group(dayWeek[i])
         df_day["hour"] = df_day["date"].dt.hour
 
-        df_day_m = df_day.groupby("hour").mean()
-        df_day_m = df_day_m.reset_index()
-
-        df_day_s = df_day.groupby("hour").std()
-        df_day_s = df_day_s.reset_index()
+        df_day_m = df_day.groupby("hour").mean().reset_index()
+        df_day_s = df_day.groupby("hour").std().reset_index()
+       
 
         for k in range(len(pollutant)):
             plt.plot(df_day_m["hour"], df_day_m[pollutant[k]], label=pollutant[k])
@@ -68,21 +71,16 @@ def timeVariation(df, pollutant):
             )
             plt.xlabel(dayWeek[i])
             plt.legend()
+    plt.savefig("TimeVariationPlots1.png", bbox_inches="tight")
 
     plt.figure(2, figsize=(35, 5))
     plt.subplot(1, 3, 1)
-
-    df_hour = df
-    df_hour["hour"] = df_hour["date"].dt.hour
-
-    df_hour_m = df.groupby("hour").mean()
-    df_hour_m = df_hour_m.reset_index()
-
-    df_hour_s = df.groupby("hour").std()
-    df_hour_s = df_hour_s.reset_index()
-
     plt.grid()
 
+    df_hour["hour"] = df_hour["date"].dt.hour
+    df_hour_m = df.groupby("hour").mean().reset_index()
+    df_hour_s = df.groupby("hour").std().reset_index()
+    
     for i in range(len(pollutant)):
         plt.plot(df_hour_m["hour"], df_hour_m[pollutant[i]], label=pollutant[i])
         plt.fill_between(
@@ -95,17 +93,12 @@ def timeVariation(df, pollutant):
         plt.legend()
 
     plt.subplot(1, 3, 2)
-    df_month = df
-    df_month["month"] = df_month["date"].dt.month
-
-    df_month_m = df_month.groupby("month").mean()
-    df_month_m = df_month_m.reset_index()
-
-    df_month_s = df_month.groupby("month").std()
-    df_month_s = df_month_s.reset_index()
-
     plt.grid()
 
+    df_month["month"] = df_month["date"].dt.month
+    df_month_m = df_month.groupby("month").mean().reset_index()
+    df_month_s = df_month.groupby("month").std().reset_index()
+    
     for i in range(len(pollutant)):
         plt.plot(df_month_m["month"], df_month_m[pollutant[i]], label=pollutant[i])
         plt.fill_between(
@@ -118,16 +111,11 @@ def timeVariation(df, pollutant):
         plt.legend()
 
     plt.subplot(1, 3, 3)
-    df_weekday = df
-    df_weekday["weekday"] = df_weekday["date"].dt.weekday
-
-    df_weekday_m = df_weekday.groupby("weekday").mean()
-    df_weekday_m = df_weekday_m.reset_index()
-
-    df_weekday_s = df_weekday.groupby("weekday").std()
-    df_weekday_s = df_weekday_s.reset_index()
-
     plt.grid()
+    
+    df_weekday["weekday"] = df_weekday["date"].dt.weekday
+    df_weekday_m = df_weekday.groupby("weekday").mean().reset_index()
+    df_weekday_s = df_weekday.groupby("weekday").std().reset_index()
 
     for i in range(len(pollutant)):
         plt.plot(
@@ -141,9 +129,15 @@ def timeVariation(df, pollutant):
         )
         plt.xlabel("WeekDay")
         plt.legend()
+    plt.savefig("TimeVariationPlots2.png", bbox_inches="tight")
+    print("Your plots has also been saved")
+    plt.show()
+    
+
+
 
 
 # =============================================================================
 # df = pd.read_csv("mydata.csv")
-# timeVariation(df,['pm10'])
+# time_variation(df, pollutant=['pm25','nh3'])
 # =============================================================================
