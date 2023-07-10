@@ -1,4 +1,11 @@
-def googleMaps(df, lat, long, pollutant, date, markersize,zoom):
+import folium
+import webbrowser
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+    
+def google_maps(df:pd.DataFrame, lat:str, long:str, pollutant:str, date:str, markersize:int,zoom:int):
     """Plots a geographical plot.
 
     Plots a folium plot of longitude and latitude points 
@@ -24,19 +31,8 @@ def googleMaps(df, lat, long, pollutant, date, markersize,zoom):
         The int by which you want to zoom in the plot
 
     """
-    import folium
-    import webbrowser
-    import pandas as pd
-    import matplotlib.pyplot as plt
-    import numpy as np
-    import pandas as pd
-    
    
     df1 = df[df['date'] == date]
-
-    # =============================================================================
-    # df = pd.read_csv('interpolData.csv')
-    # =============================================================================
 
     lat= df1[lat].values[0] 
     long=df1[long].values[0] 
@@ -53,5 +49,5 @@ def googleMaps(df, lat, long, pollutant, date, markersize,zoom):
 #Example:
 # df = pd.read_csv('interpolData.csv')
 # Call the function and display the map in Jupyter Notebook
-# map_obj = googleMaps(df, 'latitude', 'longitude', 'pm25', '2022-02-23', 5,10)
+# map_obj = google_maps(df, 'latitude', 'longitude', 'pm25', '2022-02-23', 5,10)
 # map_obj
