@@ -1,4 +1,4 @@
-def timePlot(df, year, pollutants=["pm25", "pm10"]):
+def timePlot(df, year, pollutants=["pm25"]):
     """
     Plot time series of pollutants for given month and year.
         
@@ -9,8 +9,6 @@ def timePlot(df, year, pollutants=["pm25", "pm10"]):
         and at least one variable to plot
     year: str
         year of which data will be cut
-    month: int
-        month of what plot will be graphed
     pollutants: list
         column names of pollutatnts to compare
     """
