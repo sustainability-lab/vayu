@@ -1,0 +1,18 @@
+project:
+  type: website
+
+format:
+  html:
+    theme: bootstrap
+
+website: 
+  sidebar: 
+    style: "docked"
+    search: true
+    contents:
+      - section: "Introduction"
+        path: "index.html"
+
+      - section: "Examples"
+        contents:
+          - examples/
