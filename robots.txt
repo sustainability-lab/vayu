@@ -1,1 +1,1 @@
-Sitemap: https://sustainability-lab.github.io/vayu/sitemap.xml
+Sitemap: https://github.com/sustainability-lab/vayu/sitemap.xml

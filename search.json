@@ -1,12 +1,5 @@
 [
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Vayu",
-    "section": "",
-    "text": "Vayu\nVayu is a visualization tool for environmental data in Python."
-  },
-  {
     "objectID": "examples/abcd.html",
     "href": "examples/abcd.html",
     "title": "Example notebook",
@@ -26,5 +19,12 @@
     "title": "Example notebook",
     "section": "Code check",
     "text": "Code check\n\nimport numpy as np\n\nnp.random.seed(0)\nnp.random.uniform()\n\n0.5488135039273248"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Vayu",
+    "section": "",
+    "text": "Vayu\nVayu is a visualization tool for environmental data in Python. It can be helpful for data exploration and post analysis of results."
   }
 ]
