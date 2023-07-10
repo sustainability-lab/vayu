@@ -1,0 +1,30 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Vayu",
+    "section": "",
+    "text": "Vayu\nVayu is a visualization tool for environmental data in Python."
+  },
+  {
+    "objectID": "examples/abcd.html",
+    "href": "examples/abcd.html",
+    "title": "Example notebook",
+    "section": "",
+    "text": "\\[\nx \\sim \\mathcal{N}(0, 1)\n\\]\n\\[\\begin{equation}\ny \\sim \\mathcal{N}(0, 1)\n\\end{equation}\\]\n\\[\\begin{align}\nz &\\sim \\mathcal{N}(0, 1) \\\\\n  &\\sim \\mathcal{N}(0, 2)\n\\end{align}\\]"
+  },
+  {
+    "objectID": "examples/abcd.html#math-check",
+    "href": "examples/abcd.html#math-check",
+    "title": "Example notebook",
+    "section": "",
+    "text": "\\[\nx \\sim \\mathcal{N}(0, 1)\n\\]\n\\[\\begin{equation}\ny \\sim \\mathcal{N}(0, 1)\n\\end{equation}\\]\n\\[\\begin{align}\nz &\\sim \\mathcal{N}(0, 1) \\\\\n  &\\sim \\mathcal{N}(0, 2)\n\\end{align}\\]"
+  },
+  {
+    "objectID": "examples/abcd.html#code-check",
+    "href": "examples/abcd.html#code-check",
+    "title": "Example notebook",
+    "section": "Code check",
+    "text": "Code check\n\nimport numpy as np\n\nnp.random.seed(0)\nnp.random.uniform()\n\n0.5488135039273248"
+  }
+]
