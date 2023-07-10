@@ -1,4 +1,7 @@
-def selectByDate(df, year, group=None, time_period='day'):
+import pandas as pd
+import numpy as np
+    
+def select_by(df:pd.Dataframe, year:str, group:list=None, time_period:str='day'):
     """
     Utility function to cut a given dataframe by year and find the average value
     of each day, month, or year. Optionally, data can be grouped by specified columns.
@@ -20,8 +23,6 @@ def selectByDate(df, year, group=None, time_period='day'):
         A data frame with the average value of each day, month, or year.
         If group is specified, the data will be grouped accordingly.
     """
-    import pandas as pd
-    import numpy as np
     
     df['date'] = pd.to_datetime(df['date'])
     df_year = df[df['date'].dt.year == int(year)]
@@ -43,5 +44,5 @@ def selectByDate(df, year, group=None, time_period='day'):
 
 # =============================================================================
 # df = pd.read_csv("mydata.csv")
-#selectByDate(df1,'2022',group=['latitude','longitude','station'], time_period='month')
+#select_by(df1,'2022',group=['latitude','longitude','station'], time_period='month')
 # =============================================================================
