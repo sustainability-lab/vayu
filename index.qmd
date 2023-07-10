@@ -1,5 +1,5 @@
 # Vayu
 
-Vayu is a visualization tool for environmental data in Python.
+Vayu is a visualization tool for environmental data in Python. It can be helpful for data exploration and post analysis of results.
 
 ![](cover.jpeg){width=200 fig-align="center"}
