@@ -1,4 +1,4 @@
-def googleMaps(df, lat, long, pollutant, date, markersize):
+def googleMaps(df, lat, long, pollutant, date, markersize,zoom):
     """Plots a geographical plot.
 
     Plots a folium plot of longitude and latitude points 
@@ -20,6 +20,8 @@ def googleMaps(df, lat, long, pollutant, date, markersize):
         visualizing the pollutant of a specific date.
     markersize: int
         The int by which the value of pollutant will be multiplied.
+    zoom: int
+        The int by which you want to zoom in the plot
 
     """
     import folium
@@ -29,29 +31,27 @@ def googleMaps(df, lat, long, pollutant, date, markersize):
     import numpy as np
     import pandas as pd
     
-    def googleMaps(df, lat, long, pollutant, date, markersize):
-        df1=df
-        print(date)
-        df1=df[df['date']==date]
-        print(df1)
-    
+   
+    df1 = df[df['date'] == date]
 
     # =============================================================================
     # df = pd.read_csv('interpolData.csv')
     # =============================================================================
 
-        lat= df1[lat].values[0] 
-        long=df1[long].values[0] 
-        my_map4 = folium.Map(location = [lat, long], zoom_start = 10)
+    lat= df1[lat].values[0] 
+    long=df1[long].values[0] 
+    my_map4 = folium.Map(location = [lat, long], zoom_start = zoom)
 
-        for lat,long,pol,st in zip(df['latitude'],df['longitude'],df[pollutant],df['station']):
-            
-            folium.CircleMarker([lat, long],radius=markersize * pol, popup=(str(st).capitalize()+"<br>"+ str(round(pol, 3))), fill=True, fill_opacity=0.7, color = 'red').add_to(my_map4)
+    for lat,long,pol,st in zip(df['latitude'],df['longitude'],df[pollutant],df['station']):
+        folium.CircleMarker([lat, long],radius=markersize * pol, popup=(str(st).capitalize()+"<br>"+ str(round(pol, 3))), fill=True, fill_opacity=0.7, color = 'red').add_to(my_map4)
 
-        my_map4.save("googleMaps.html")
-        print('your map has been saved')
+    my_map4.save("googleMaps.html")
+    print('your map has been saved')
+    return my_map4
 
 
-#Example
+#Example:
 # df = pd.read_csv('interpolData.csv')
-#googleMaps(df, 'latitude', 'longitude', 'pm25', '2022-08-23', 5)
+# Call the function and display the map in Jupyter Notebook
+# map_obj = googleMaps(df, 'latitude', 'longitude', 'pm25', '2022-02-23', 5,10)
+# map_obj
