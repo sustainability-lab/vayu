@@ -16,7 +16,7 @@ website:
 
       - section: "Examples"
         contents:
-          - examples/abcd.ipynb
+          - examples/pollution_rose.ipynb
 
 execute:
   freeze: auto
