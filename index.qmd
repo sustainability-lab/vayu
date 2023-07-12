@@ -2,4 +2,19 @@
 
 Vayu is a visualization tool for environmental data in Python. It can be helpful for data exploration and post analysis of results.
 
+## Installation
+
+Stable version can be installed from PyPI using pip:
+
+```bash
+pip install vayu
+```
+
+To install the latest version from GitHub, use:
+
+```bash
+pip install git+https://github.com/sustainability-lab/vayu.git
+```
+
+
 ![](cover.jpeg){width=200 fig-align="center"}
