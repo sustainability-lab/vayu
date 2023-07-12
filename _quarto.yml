@@ -16,6 +16,7 @@ website:
 
       - section: "Examples"
         contents:
+          - examples/calendar_plot.ipynb
           - examples/pollution_rose.ipynb
 
 execute:
