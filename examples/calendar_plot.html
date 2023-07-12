@@ -6,8 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Apoorv Agnihotri, Zeel B Patel">
 
-<title>Vayu</title>
+<title>Vayu - Calendar Plot</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -57,22 +58,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -93,6 +94,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
 </head>
@@ -123,7 +127,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">Vayu</a> 
+      <a href="../">Vayu</a> 
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -148,7 +152,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./examples/pollution_rose.html" class="sidebar-item-text sidebar-link">
+  <a href="../examples/pollution_rose.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Pollution Rose</span></a>
   </div>
 </li>
@@ -163,25 +167,251 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-
-
-<section id="vayu" class="level1">
-<h1>Vayu</h1>
-<p>Vayu is a visualization tool for environmental data in Python. It can be helpful for data exploration and post analysis of results.</p>
-<section id="installation" class="level2">
-<h2 class="anchored" data-anchor-id="installation">Installation</h2>
-<p>Stable version can be installed from PyPI using pip:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install vayu</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>To install the latest version from GitHub, use:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install git+https://github.com/sustainability-lab/vayu.git</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="cover.jpeg" class="img-fluid figure-img" width="200"></p>
-</figure>
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Calendar Plot</h1>
 </div>
 
 
-</section>
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Apoorv Agnihotri, Zeel B Patel </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p>Sometimes it is useful to visualise data in a familiar way. Calendars are the obvious way to represent data for data on the time scale of days or months. The calendarPlot function provides an effective way to visualise data in this way by showing daily concentrations laid out in a calendar format. The concentration of a species is shown by its colour.</p>
+<p>Standard libraries to be imported for usage</p>
+<div class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> vayu <span class="im">import</span> calendarPlot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Reading data.</p>
+<div class="cell" data-scrolled="true" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">'data/mydata.csv.tar.gz'</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="9">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">date</th>
+<th data-quarto-table-cell-role="th">ws</th>
+<th data-quarto-table-cell-role="th">wd</th>
+<th data-quarto-table-cell-role="th">nox</th>
+<th data-quarto-table-cell-role="th">no2</th>
+<th data-quarto-table-cell-role="th">o3</th>
+<th data-quarto-table-cell-role="th">pm10</th>
+<th data-quarto-table-cell-role="th">so2</th>
+<th data-quarto-table-cell-role="th">co</th>
+<th data-quarto-table-cell-role="th">pm25</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>01/01/1998 00:00</td>
+<td>0.60</td>
+<td>280.0</td>
+<td>285.0</td>
+<td>39.0</td>
+<td>1.0</td>
+<td>29.0</td>
+<td>4.7225</td>
+<td>3.3725</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>01/01/1998 01:00</td>
+<td>2.16</td>
+<td>230.0</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>37.0</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>01/01/1998 02:00</td>
+<td>2.76</td>
+<td>190.0</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>3.0</td>
+<td>34.0</td>
+<td>6.8300</td>
+<td>9.6025</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>01/01/1998 03:00</td>
+<td>2.16</td>
+<td>170.0</td>
+<td>493.0</td>
+<td>52.0</td>
+<td>3.0</td>
+<td>35.0</td>
+<td>7.6625</td>
+<td>10.2175</td>
+<td>NaN</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>01/01/1998 04:00</td>
+<td>2.40</td>
+<td>180.0</td>
+<td>468.0</td>
+<td>78.0</td>
+<td>2.0</td>
+<td>34.0</td>
+<td>8.0700</td>
+<td>8.9125</td>
+<td>NaN</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>Converting <code>date</code> column to be of the type <code>datetime64</code>. And taking daily averages.</p>
+<div class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'date'</span>]<span class="op">=</span> pd.to_datetime(df[<span class="st">'date'</span>])</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>daily_df <span class="op">=</span> df.groupby([df[<span class="st">'date'</span>].dt.date]).mean(numeric_only<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>daily_df <span class="op">=</span> daily_df.reset_index()</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>daily_df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="15">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">date</th>
+<th data-quarto-table-cell-role="th">index</th>
+<th data-quarto-table-cell-role="th">ws</th>
+<th data-quarto-table-cell-role="th">wd</th>
+<th data-quarto-table-cell-role="th">nox</th>
+<th data-quarto-table-cell-role="th">no2</th>
+<th data-quarto-table-cell-role="th">o3</th>
+<th data-quarto-table-cell-role="th">pm10</th>
+<th data-quarto-table-cell-role="th">so2</th>
+<th data-quarto-table-cell-role="th">co</th>
+<th data-quarto-table-cell-role="th">pm25</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>1998-01-01</td>
+<td>11.5</td>
+<td>6.835</td>
+<td>191.666667</td>
+<td>153.954545</td>
+<td>39.363636</td>
+<td>6.869565</td>
+<td>18.166667</td>
+<td>3.152609</td>
+<td>2.699239</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>1998-01-02</td>
+<td>755.5</td>
+<td>1.175</td>
+<td>89.166667</td>
+<td>149.375000</td>
+<td>41.208333</td>
+<td>2.250000</td>
+<td>25.000000</td>
+<td>4.862882</td>
+<td>1.857882</td>
+<td>NaN</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>1998-01-03</td>
+<td>1427.5</td>
+<td>6.750</td>
+<td>232.500000</td>
+<td>250.500000</td>
+<td>51.500000</td>
+<td>3.375000</td>
+<td>23.416667</td>
+<td>9.811528</td>
+<td>2.984965</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>1998-01-04</td>
+<td>2171.5</td>
+<td>2.215</td>
+<td>98.333333</td>
+<td>239.541667</td>
+<td>46.541667</td>
+<td>1.875000</td>
+<td>45.583333</td>
+<td>21.792065</td>
+<td>2.409271</td>
+<td>NaN</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>1998-01-05</td>
+<td>2891.5</td>
+<td>3.570</td>
+<td>325.416667</td>
+<td>79.625000</td>
+<td>34.333333</td>
+<td>17.625000</td>
+<td>23.000000</td>
+<td>2.103958</td>
+<td>0.930347</td>
+<td>16.235294</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<section id="getting-a-date-column" class="level3">
+<h3 class="anchored" data-anchor-id="getting-a-date-column">Getting a date column</h3>
+<p><strong>Note</strong>: Please note the datatypes of the different columns.</p>
+<div class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>calendarPlot(df, pollutant<span class="op">=</span><span class="st">'pm25'</span>, year<span class="op">=</span><span class="st">'2003'</span>, country<span class="op">=</span><span class="st">'India'</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/home/patel_zeel/miniconda3/lib/python3.9/site-packages/vayu/calendarPlot.py:99: FutureWarning: Indexing a DataFrame with a datetimelike index using a single string to slice the rows, like `frame[string]`, is deprecated and will be removed in a future version. Use `frame.loc[string]` instead.
+  df_year = df[year].resample("1D").mean()</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="calendar_plot_files/figure-html/cell-5-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+
+
 </section>
 
 </main> <!-- /main -->

@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://github.com/sustainability-lab/vayu/examples/abcd.html</loc>
-    <lastmod>2023-07-10T12:18:24.903Z</lastmod>
+    <loc>https://github.com/sustainability-lab/vayu/examples/calendar_plot.html</loc>
+    <lastmod>2023-07-12T11:50:53.630Z</lastmod>
   </url>
   <url>
     <loc>https://github.com/sustainability-lab/vayu/index.html</loc>
-    <lastmod>2023-07-10T12:18:24.071Z</lastmod>
+    <lastmod>2023-07-12T11:50:52.274Z</lastmod>
+  </url>
+  <url>
+    <loc>https://github.com/sustainability-lab/vayu/examples/pollution_rose.html</loc>
+    <lastmod>2023-07-12T11:50:53.082Z</lastmod>
   </url>
 </urlset>
